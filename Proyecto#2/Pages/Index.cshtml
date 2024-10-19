@@ -13,86 +13,132 @@
 <!--Modal para usuarios o empleados-->
 
 <div class="text-center">
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalUsuario">
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalEmpleado">
         Registrar Usuario
     </button>
 </div>
 
 
 
-<div class="modal fade show" id="modalUsuario" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true" style="display: @(Model.ShowModal1 ? "block" : "none");">
+<div class="modal fade show" id="modalEmpleado" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true" style="display: @(Model.ShowModal1 ? "block" : "none");">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="modalLabel">Registrar usuario</h5>
+                    <h5 class="modal-title" id="modalLabel">Registrar empleado</h5>
                     <form method="post" asp-page-handler="CerrarModal">
                     <button type="submit" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </form>
                 </div>
                 <div class="modal-body">
                     <!-- Esto es para pasar la info a OnPostGuardarUsuario -->
-                    <form method="post" asp-page-handler="GuardarUsuario">
-                        <div class="modalUsuarioCedula">
-                            <label for="projectUSCedula" class="form-label">Cédula</label>
-                            <input type="text" class="form-control" id="projectUSCedula" name="projectUSCedula" required>
+                    <form method="post" asp-page-handler="GuardarEmpleado">
+                        <div class="modalEmpleadoCedula">
+                            <label for="projectEmpleadoC" class="form-label">Cédula</label>
+                        <input type="text" class="form-control" id="projectEmpleadoC" name="projectEmpleadoC" required>
                         </div>
-                        <div class="modalUSNombreCompleto">
-                            <label for="projectNombreUS" class="form-label">Nombre completo</label>
-                            <input type="text" class="form-control" id="projectNombreUS" name="projectNombreUS" required />
+                        <div class="modalEmpleadoNombre">
+                            <label for="projectEmpleadoN" class="form-label">Nombre</label>
+                        <input type="text" class="form-control" id="projectEmpleadoN" name="projectEmpleadoN" required />
                         </div>
                         <br />
-                        <div class="modalGeneroUS">
-                            <label for="projectGeneroUS" class="form-label">Género</label>
-                            <select name="projectGeneroUS" id="projectGeneroUS">
-                                <option value="Masculino">Masculino</option>
-                                <option value="Femenino">Femenino</option>
-                            </select>
+                        <div class="modalEmpleadoApellido">
+                            <label for="projectEmpleadoAP1" class="form-label">Primer apellido</label>
+                        <input type="text" class="form-control" id="projectEmpleadoAP1" name="projectEmpleadoAP1" required />
                         </div>
-                        <div class="modalRolUS">
-                            <label for="projectRolUS" class="form-label">Rol</label>
-                            <select name="projectRolUS" , id="projectRolUS"
-                                <option value="Edición">Edición</option>
-                                <option value="Visualización">Visualización</option>
-                                <option value="Reporteria">Reporteria</option>
-                                <option value="Vendedor">Vendedor</option>
-                            </select>
-                        </div>
-
-
-                        <div class="modalFechaNacimientoUS">
-                            <label for="projectNacimientoUS" class="form-label">Fecha de nacimiento</label>
-                            <input type="date" class="form-control" id="projectNacimientoUS" name="projectNacimientoUS" required</input>
-                        </div>
-                        <div class="modalResidenciaUS">
-                            <label for="projectResidenciaUS" class="form-label">Lugar de residencia</label>
-                            <input type="text" class="form-control" id="projectResidenciaUS" name="projectResidenciaUS" min="1" max="4" required />
-                        </div>
-
-                        <div class="modalTelefonoUS">
-                            <label for="projectTelefono" class="form-label">Número de teléfono</label>
-                            <input type="text" class="form-control" id="projectTelefono" name="projectTelefono" pattern="[0-9]{8}"  required oninput="this.value = this.value.replace(/[^0-9]/g, '')">
-                        </div>
-
-
-
-                        <div class="modalFechaIngresoUS">
-                            <label for="projectIngresoUS" class="form-label">Fecha de ingreso</label>
-                            <input type="date" class="form-control" id="projectIngresoUS" name="projectIngresoUS" required</input>
-                        </div>
-
-                        <div class="modalSalarioUS">
-                            <label for="projectSalarioUS" class="form-label">Salario actual</label>
-                            <input type="number" id="projectSalarioUS" name="projectSalarioUS" step="0.01" required>
-                        </div>
-
-                        <div class="modalPuestoUS">
-                            <label for="projectPuestoUS" class="form-label">Puesto actual</label>
-                            <input type="text" class="form-control" id="projectPuestoUS" name="projectPuestoUS" required />
-                        </div>
-
-
                         <br />
-                        <button type="submit" class="btn btn-primary">Guardar Usuario</button>
+                        <div class="modalEmpleadoApellido2">
+                            <label for="projectEmpleadoAP2" class="form-label">Segundo apellido</label>
+                        <input type="text" class="form-control" id="projectEmpleadoAP2" name="projectEmpleadoAP2" required />
+                        </div>
+                        <br />
+                        <div class="modalEmpleadoGenero">
+                        <label for="projectEmpleadoGenero" class="form-label">Género</label>
+                        <select name="projectEmpleadoGenero" id="projectEmpleadoGenero">
+                                <option value="M">Masculino</option>
+                                <option value="F">Femenino</option>
+                            </select>
+                        </div>
+                        <br />
+                        <div class="modalEmpleadoFecha">
+                            <label for="projectFecha" class="form-label">Fecha de nacimiento</label>
+                        <input type="date" class="form-control" id="projectFecha" name="projectFecha" required />
+                        </div>
+                        <br />
+                    <div class="modalProvincia">
+                        <label for="projectProvincia" class="form-label">Provincia</label>
+                        <input type="text" class="form-control" id="projectProvincia" name="projectProvincia" required />
+                    </div>
+                    <br />
+                    <div class="modalDireccion">
+                        <label for="projectDireccion" class="form-label">Direccion</label>
+                        <input type="text" class="form-control" id="projectDireccion" name="projectDireccion" required />
+                    </div>
+                    <br />
+                    <div class="modalTelefono">
+                        <label for="projectTelefono" class="form-label">Telefono</label>
+                        <input type="text" class="form-control" id="projectTelefono" name="projectTelefono" required />
+                    </div>
+                    <br />
+
+                    <div class="modalDepartamentos">
+                        <label for="projectDepartamentos" class="form-label">Departamentos</label>
+                        <select class="form-control" id="projectDepartamentos" name="projectDepartamentos" required>
+                            @foreach (var departamento in Model.Departamentos)
+                            {
+                                <option value="@departamento">@departamento</option>
+                            }
+                        </select>
+                    </div>
+                    <br />
+                    <div class="modalPlanillas">
+                        <label for="projectPlanillas" class="form-label">Planillas</label>
+                        <select class="form-control" id="projectPlanillas" name="projectPlanillas" required>
+                            @foreach (var planilla in Model.Planillas)
+                            {
+                                <option value="@planilla">@planilla</option>
+                            }
+                        </select>
+                    </div>
+                    <br />
+
+                    <div class="modalFechaIngreso">
+                        <label for="projectFechaIngreso" class="form-label">Fecha de ingreso</label>
+                        <input type="date" class="form-control" id="projectFechaIngreso" name="projectFechaIngreso" required />
+                    </div>
+                    <br />
+
+                    <div class="modalPuestos">
+                        <label for="projectPuestos" class="form-label">Puestos</label>
+                        <select class="form-control" id="projectPuestos" name="projectPuestos" required>
+                            @foreach (var puesto in Model.Puestos)
+                            {
+                                <option value="@puesto">@puesto</option>
+                            }
+                        </select>
+                    </div>
+                    <br />
+                    <div class="modalRoles">
+                        <label for="projectRoles" class="form-label">Roles</label>
+                        <select class="form-control" id="projectRoles" name="projectRoles" required>
+                            @foreach (var rol in Model.Roles)
+                            {
+                                <option value="@rol">@rol</option>
+                            }
+                        </select>
+                    </div>
+                    <br />
+                    <div class="modalUsuarios">
+                        <label for="projectUsuarios" class="form-label">ID de usuario</label>
+                        <select class="form-control" id="projectUsuarios" name="projectUsuarios" required>
+                            @foreach (var usuario in Model.Usuarios)
+                            {
+                                <option value="@usuario">@usuario</option>
+                            }
+                        </select>
+                    </div>
+                    <br />
+                    
+                    <button type="submit" class="btn btn-primary">Guardar empleado</button>
                     </form>
                 </div>
                 <div class="modal-footer">
@@ -116,7 +162,7 @@
 
 
 
-
+    <!--Toda esta parte es para los roles-->
 
 
 
@@ -165,6 +211,10 @@
 <br />
 
 
+
+
+
+<!--Toda esta parte es para los roles con sus acciones-->
 
 
 
@@ -223,3 +273,7 @@
     </div>
 </div>
 <br />
+
+
+
+<!--Toda esta parte es para los empleados-->

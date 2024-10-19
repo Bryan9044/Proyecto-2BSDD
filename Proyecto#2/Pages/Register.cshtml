@@ -5,9 +5,8 @@
 }
 
 <h2>Registro</h2>
-
-<form method="post">
-    <div class="form-group">
+    <form method="post" asp-page-handler="GuardarCreacion">
+        <div class="form-group">
         <label for="username">Nombre de Usuario</label>
         <input type="text" class="form-control" id="username" name="NombreUS" required>
     </div>
@@ -15,6 +14,7 @@
         <label for="password">Contraseña</label>
         <input type="password" class="form-control" id="password" name="ContrasenaUS" required>
     </div>
+    <br />
     <button type="submit" class="btn btn-primary">Registrarse</button>
 </form>
 
