@@ -11,11 +11,39 @@ CREATE TABLE Estado(
 	PRIMARY KEY (TipoEstado)
 )
 
+insert into Estado(TipoEstado,Descripcion) values
+('Abierta', 'Todavia no se da un veredicto final'),
+('Aprobado', 'Se aprueba la cotizacion yupiiii'),
+('Rechazado', 'Se rechaza la cotizacion mecagoentodo');
+
+create function MostrarEstados()
+returns table
+as
+return
+(
+	select TipoEstado from Estado
+)
+
 CREATE TABLE Probabilidad (
 	Porcentaje FLOAT,
 	ProbabilidadEstimada VARCHAR(20),
 	PRIMARY KEY (Porcentaje)
 )
+
+
+INSERT INTO Probabilidad (Porcentaje, ProbabilidadEstimada)
+VALUES 
+(0.75, 'Alta'),
+(0.50, 'Media'),
+(0.25, 'Baja');
+
+
+create function MostrarProbabilidad()
+returns table 
+as 
+return (
+	select Porcentaje from Probabilidad
+);
 
 CREATE TABLE Prioridad(
 	Nivel INT NOT NULL,
@@ -53,7 +81,14 @@ INSERT INTO Departamento(Codigo, Nombre) values
 ('DEP8', 'Supervisión'),
 ('DEP9', 'Electricidad');
 
+create function ObtenerDepartamentos()
+returns table
+as
+return(
+	select Codigo From Departamento
+	);
 
+	select * from ObtenerDepartamentos()
 
 USE ERPPRUEBA
 GO
@@ -123,16 +158,17 @@ CREATE TABLE Roles (
 );
 --INSERT INTO Roles (IDRol, tipoRol) VALUES (1, 'Administrador');
 
-CREATE FUNCTION ObtenerTiposDeRoles()
-RETURNS TABLE
-AS
-RETURN
+drop function ObtenerTiposDeRoles
+
+CREATE FUNCTION ObtenerRoles()
+returns table
+as
+return
 (
-    SELECT tipoRol
-    FROM Roles
+    select tipoRol
+    from Roles
 );
 
-select  * from ObtenerTiposDeRoles()
 
 
 drop procedure insercionRoles
@@ -186,18 +222,44 @@ INSERT INTO AccionesXrol (tipoRol, tipoAccion) VALUES ('SuperUsuario', 'Reportes
 
 
 
+--Para mostrar los roles y los usuarios por rol
+create function RolesXusuario()
+returns table
+as
+return(
+	select tipoRol, IDUsuario from Empleado
+)
+
+select * from RolesXusuario()  --Luego en la de verdad cambiamos el IDUsuario por el nombre o algo asi
+
+
+
+
+
 CREATE TABLE Planilla (
 	CodigoPlanilla VARCHAR(15) NOT NULL,
-	HorasMensuales INT NOT NULL,
-	HorasLaboradas INT,
+	HorasLaboradas INT not null, 
 	Salario FLOAT NOT NULL,
 	HorasExtra INT,
 	Fecha date,
 	PRIMARY KEY(CodigoPlanilla)
 )
+insert into Planilla(CodigoPlanilla,HorasLaboradas,Salario,HorasExtra,Fecha) values
+('PL1', 200, 250000.00, 30, '2024/05/15'),
+('PL2', 160, 290000.00, 50, '2024/01/31');
+
+
+create function ObtenerPlanilla()
+returns table
+as
+return(
+	select CodigoPlanilla from Planilla
+);
+
+
 
 CREATE TABLE Puesto(
-	TipoPuesto VARCHAR(20) NOT NULL,
+	TipoPuesto VARCHAR(35) NOT NULL,
 	Salario DECIMAL NOT NULL,
 	Descripcion VARCHAR(200) NOT NULL,
 	PRIMARY KEY (TipoPuesto)
@@ -224,6 +286,13 @@ INSERT INTO Puesto(TipoPuesto, Salario, Descripcion) values
 ('Preparador', 250000.00, 'Va guardando y enlistando los productos a utilizar');
 
 
+create function ObtenerPuestos()
+returns table 
+as
+return(
+	select TipoPuesto from Puesto
+)
+
 
 
 
@@ -234,13 +303,40 @@ INSERT INTO Puesto(TipoPuesto, Salario, Descripcion) values
 USE ERPPRUEBA;
 GO
 
+
+alter table Usuarios
+column IDUsuario = int identity(1,1) Primary key
+
+
 CREATE TABLE Usuarios (
-    IDUsuario INT PRIMARY KEY,
+    IDUsuario INT IDENTITY(1,1) PRIMARY KEY,
     NombreUS VARCHAR(50) NOT NULL UNIQUE,
     ContrasenaUS VARCHAR(255) NOT NULL,
 );
-INSERT INTO Usuarios(IDUsuario, NombreUS, ContrasenaUS) values
-(1, 'Administrador','SOYadmin.')
+INSERT INTO Usuarios(NombreUS, ContrasenaUS) values
+('Administrador','SOYadmin.')
+
+drop function ExisteUsuario
+
+
+
+create function ObtenerUsuarios()
+returns table
+as
+return(
+	select IDUsuario from Usuarios
+)
+
+
+create function ObtenerTodoUsuarios()
+returns table
+as
+return(
+	select * from Usuarios
+)
+
+select * from ObtenerTodoUsuarios()
+
 
 create function ExisteUsuario(@NombreUS varchar(50), @ContrasenaUS varchar(255))
 returns int
@@ -258,31 +354,38 @@ begin
 	 return @Existe;
 end
 
+drop function verUsuario
 
-CREATE PROCEDURE InsertarUsuarios
-	@IDUsuario int ,
-	@NombreUS varchar(50),
-	@ContrasenaUS varchar(255),
-	@tipoRol varchar(20) 
+create function VerUsuario()
+returns table
 as
-begin
-	if not exists (select 1 FROM Usuarios where NombreUS = @NombreUS)
+return
+	select IDUsuario from Usuarios
+
+
+select * from VerUsuario()
+
+create procedure InsertarUsuarios
+    @NombreUS VARCHAR(50),
+    @ContrasenaUS VARCHAR(255)
+	as
 	begin
-		insert into Usuarios (
-		IDUsuario, NombreUS, ContrasenaUS, tipoRol
-		) 
-		values 
-		(@IDUsuario,@NombreUS,@ContrasenaUS, @tipoRol);
-		PRINT 'Se creo el usuario'
+		if not exists( select 1 from Usuarios where NombreUS = @NombreUS and ContrasenaUS = @ContrasenaUS)
+		begin
+			insert into Usuarios(NombreUS,ContrasenaUS) values
+			(@NombreUS,@ContrasenaUS)
+		end
+		else
+		begin
+			print('Error no pueden existir usuarios con el mismo nombre y contraseña');
+		end
 	end
-	else
-	begin
-		PRINT 'El nombre de usuario ya existe';
-	end
-end;
 
 
 
+
+
+drop table Empleado
 CREATE TABLE Empleado (
 	Cedula VARCHAR(9) NOT NULL,
 	Nombre varchar(30) not null,
@@ -296,14 +399,69 @@ CREATE TABLE Empleado (
 	CodigoDepartamento VARCHAR(15) NOT NULL,
 	CodigoPlanilla VARCHAR(15) NOT NULL,
 	FechaIngreso DATE NOT NULL,
-	Puesto VARCHAR(20) NOT NULL,
+	Puesto VARCHAR(35) NOT NULL,
 	tipoRol varchar(20),
-	FOREIGN KEY (tipoRol) references Roles(tipoRol)
+	IDUsuario INT,
 	PRIMARY KEY(Cedula),
+	FOREIGN KEY (tipoRol) references Roles(tipoRol),
 	FOREIGN KEY (CodigoDepartamento) REFERENCES Departamento(Codigo),
 	FOREIGN KEY (CodigoPlanilla) REFERENCES Planilla(CodigoPlanilla),
-	FOREIGN KEY (Puesto) REFERENCES Puesto(Nombre)
+	FOREIGN KEY (Puesto) REFERENCES Puesto(TipoPuesto),
+	FOREIGN KEY (IDUsuario) REFERENCES Usuarios(IDUsuario) --Lo podriamos cambiar por el nombre
+);
+
+create function MostrarEmpleados()
+returns table
+as
+return(
+	select Cedula from Empleado
+);
+
+
+
+create function VerEmpleados()
+returns table
+as
+return(
+	select * from Empleado
 )
+
+select * from VerEmpleados()
+
+drop procedure insertarEmpleado
+create procedure insertarEmpleado 
+	@Cedula varchar(9),
+	@Nombre varchar(30),
+	@apellido1 varchar(30),
+	@apellido2 varchar(30),
+	@genero char(1),
+	@FechaNacimiento date,
+	@provincia varchar(30),
+	@Direccion varchar(30),
+	@Telefono varchar(9),
+	@CodigoDepartamento VARCHAR(15),
+	@CodigoPlanilla VARCHAR(15),
+	@FechaIngreso DATE,
+	@Puesto VARCHAR(35),
+	@tipoRol varchar(20),
+	@IDUsuario INT
+	
+as
+begin
+	if not exists (select 1 from Empleado where Cedula = @Cedula)
+	begin
+		insert into Empleado(Cedula,Nombre,apellido1,apellido2,genero,FechaNacimiento,provincia,Direccion,Telefono,CodigoDepartamento,CodigoPlanilla,
+		FechaIngreso,Puesto,tipoRol,IDUsuario) values
+		(@Cedula,@Nombre,@apellido1,@apellido2,@genero,@FechaNacimiento,@provincia,@Direccion,@Telefono,@CodigoDepartamento,@CodigoPlanilla,
+		@FechaIngreso,@Puesto,@tipoRol,@IDUsuario)
+	end
+	else 
+	begin
+		print('No se puede repetir la cedula')
+	end
+end
+
+
 
 CREATE TABLE Historicos (
 	CodigoDepartamento VARCHAR(15) NOT NULL,
@@ -508,8 +666,16 @@ INSERT INTO Zona (Nombre, TamanoKmCuadrado,Descripcion) VALUES
 ('Caribe norte',100 ,'Mucha flora y fauna en exceso'),
 ('Caribe sur', 100,'Las mejores playas y lugar de mucha cultura'),
 ('Valle central', 400,'Donde hay más población y muchas oportunidades de crecimiento'),
-('Zona norte',200 ,'Mucha tierra y muchos cultivos de caña y arroz'),
+('Zona norte',200 ,'Mucha tierra y muchos cultivos de caña y arroz');
 
+
+create function MostrarZonas()
+returns table
+as
+return 
+(
+	select Nombre from Zona
+);
 
 CREATE TABLE Sector (
 	Nombre VARCHAR(20) UNIQUE NOT NULL,
@@ -534,6 +700,14 @@ INSERT INTO Sector (Nombre, Descripcion) VALUES
 ('Alimentación', 'Sector que se ocupa de la producción y distribución de alimentos.');
 
 
+create function MostrarSectores()
+returns table
+as
+return 
+(
+	select Nombre from Sector
+);
+
 
 
 
@@ -542,7 +716,7 @@ CREATE TABLE Cliente (
     Telefono VARCHAR(8) NOT NULL,
     Genero char(1) NOT NULL,
     Nombre VARCHAR(20) NOT NULL,
-    CorreoElectronico VARCHAR(20) NOT NULL,
+    CorreoElectronico VARCHAR(50) NOT NULL,
     Fax VARCHAR(20),
     Sector varchar(20) not null,
     Zona varchar(20) not null,
@@ -561,6 +735,14 @@ INSERT INTO Cliente (Cedula, Telefono, Genero, Nombre, CorreoElectronico, Fax, S
 ('533467853', '99990000', 'F', 'Carmen Díaz', 'carmenz@mail.com', '99991111', 'Educacion', 'Zona norte', '93945412'),
 ('258932147', '11112222', 'M', 'Javier Morales', 'moralesjavier@mail.com', '11113333', 'Deportivo', 'Caribe sur', '45678976'),
 ('369253247', '22223334', 'F', 'Isabel Torres', 'isabel20torres@mail.com', '22224444', 'Cultural', 'Valle central', '23456843');
+
+create function MostrarClientes()
+returns table
+as
+return
+(
+select Cedula from Cliente
+);
 
 
 CREATE TABLE ListaArticulos (
@@ -644,100 +826,93 @@ CREATE TABLE Tarea (
 	FOREIGN KEY (Estado) REFERENCES  Estado(TipoEstado)
 )
 
-
-
+--Esta tabla de arriba y abajo esta re mala pero las cree porque ocupaba la referencia entre tablas
 
 CREATE TABLE Caso (
     CodigoCaso VARCHAR(15) NOT NULL,
-    CedulaPropietario VARCHAR(9) UNIQUE NOT NULL,
+    CedulaPropietario VARCHAR(9) NOT NULL,
     NombreCuenta VARCHAR(20) NOT NULL,
-    TipoCaso VARCHAR(20) NOT NULL,
     Asunto VARCHAR(200) NOT NULL,
     NombreContacto VARCHAR(20) NOT NULL,
     Descripcion VARCHAR(200),
     Ubicacion VARCHAR(200) NOT NULL,
     Prioridad VARCHAR(20) NOT NULL,
     CodigoTarea varchar(15) null, --Agregado
-	PRIMARY KEY (CodigoCaso,CedulaPropietario),
+	PRIMARY KEY (CodigoCaso),
     FOREIGN KEY (CedulaPropietario) REFERENCES Empleado(Cedula),
-    FOREIGN KEY (CodigoTarea) references Tarea(CodigoTarea),
     FOREIGN KEY (Prioridad) references Prioridad(TipoPrioridad) --Agregado,
-    FOREIGN KEY (TipoCaso) references TipoCaso(TipoCaso) --Agregado
 )
 
---Para guardar
-CREATE PROCEDURE CrearTareaYCaso (
-    IN p_CodigoTarea VARCHAR(15),
-    IN p_CodigoEmpleado VARCHAR(9),
-    IN p_Fecha DATE,
-    IN p_Descripcion VARCHAR(200),
-    IN p_Estado VARCHAR(20),
-    IN p_CodigoCaso VARCHAR(15),
-    IN p_CedulaPropietario VARCHAR(9),
-    IN p_NombreCuenta VARCHAR(20),
-    IN p_TipoCaso VARCHAR(20),
-    IN p_Asunto VARCHAR(200),
-    IN p_NombreContacto VARCHAR(20),
-    IN p_Ubicacion VARCHAR(200),
-    IN p_Prioridad VARCHAR(20)
-)
-BEGIN
-    -- Insertar la tarea
-    INSERT INTO Tarea (CodigoTarea, CodigoEmpleado, Fecha, Descripcion, Estado)
-    VALUES (p_CodigoTarea, p_CodigoEmpleado, p_Fecha, p_Descripcion, p_Estado);
-    
-    -- Insertar el caso
-    INSERT INTO Caso (CodigoCaso, CedulaPropietario, NombreCuenta, TipoCaso, Asunto, NombreContacto, Descripcion, Ubicacion, Prioridad, CodigoTarea)
-    VALUES (p_CodigoCaso, p_CedulaPropietario, p_NombreCuenta, p_TipoCaso, p_Asunto, p_NombreContacto, p.Descripcion, p_Ubicacion, p_Prioridad, p_CodigoTarea);
-END;
+
 
 
 
 CREATE TABLE TipoCotizacion(
-	Tipocotizacion varchar(20),
+	Tipocotizacion varchar(50),
 	Descripcion varchar(200),
 	PRIMARY KEY (Tipocotizacion)
 );
 
+INSERT INTO TipoCotizacion(Tipocotizacion,Descripcion) values
+('Cotizacion de servicios','Consta en que se va a generar por los servicios que le fueron prestados'),
+('Cotizacion de articulos','Es una cotización por toda la cantidad de articulos que se van a pedir');
+
+
+create function MostrarTiposCotizacion()
+returns table
+as 
+return 
+(
+	select Tipocotizacion from TipoCotizacion
+);
+
+
+
+drop table Cotizacion
 CREATE TABLE Cotizacion (
-	Codigo VARCHAR(15) NOT NULL,
+	Codigo int identity(1,1) NOT NULL,
 	CedulaCliente VARCHAR(9)  NOT NULL, --Les quite el unique
 	CedulaEmpleado VARCHAR(9)  NOT NULL, -- Les quite el unique
-	OrdenDeCompra VARCHAR(20) NOT NULL,
 	FechaCotizacion DATE NOT NULL,
 	MesProyectadoCierre DATE NOT NULL,
-	CierreFinal DATE NOT NULL,
-	TipoCotizacion VARCHAR(20) NOT NULL,
+	TipoCotizacion VARCHAR(50) NOT NULL,
 	Estado VARCHAR(20) NOT NULL,
 	Probabilidad FLOAT,
-	CodigoCaso VARCHAR(15),
+	Zona VARCHAR(20),
+	Sector VARCHAR(20),
 	PRIMARY KEY(Codigo),
 	FOREIGN KEY (CedulaCliente) REFERENCES Cliente(Cedula),
 	FOREIGN KEY (CedulaEmpleado) REFERENCES Empleado(Cedula),
     FOREIGN KEY (TipoCotizacion) REFERENCES TipoCotizacion(Tipocotizacion),
-	FOREIGN KEY (CodigoCaso) REFERENCES Caso(CodigoCaso),
 	FOREIGN KEY (Probabilidad) REFERENCES Probabilidad(Porcentaje),
-	FOREIGN KEY (Estado) REFERENCES  Estado(TipoEstado)
+	FOREIGN KEY (Estado) REFERENCES  Estado(TipoEstado),
+	FOREIGN KEY (Zona) REFERENCES Zona(Nombre),
+    FOREIGN KEY (Sector) REFERENCES Sector(Nombre),
 )
 
+create procedure GuardarCotizacion
+	@CedulaCliente VARCHAR(9), --Les quite el unique
+	@CedulaEmpleado VARCHAR(9), -- Les quite el unique
+	@FechaCotizacion DATE,
+	@MesProyectadoCierre DATE,
+	@TipoCotizacion VARCHAR(50),
+	@Estado VARCHAR(20) ,
+	@Probabilidad FLOAT,
+	@Zona VARCHAR(20),
+	@Sector VARCHAR(20)
+	as
+	begin
+	insert into Cotizacion(CedulaCliente,CedulaEmpleado,FechaCotizacion,MesProyectadoCierre,TipoCotizacion,Estado,Probabilidad,
+	Zona,Sector) values (@CedulaCliente,@CedulaEmpleado,@FechaCotizacion,@MesProyectadoCierre,@TipoCotizacion,@Estado,@Probabilidad,@Zona,@Sector)
+	end
 
-CREATE TABLE ZonaCotizacion (
-	NombreZona VARCHAR(20) NOT NULL,
-	CodigoCotizacion VARCHAR(15) NOT NULL,
-	PRIMARY KEY (NombreZona,CodigoCotizacion),
-	FOREIGN KEY (NombreZona) REFERENCES Zona(Nombre),
-	FOREIGN KEY (CodigoCotizacion) REFERENCES Cotizacion(Codigo)
-)
+
+--Necesito hacer Zona
+--Sector
+--Clientes
+--Estado tambien
 
 
-
-CREATE TABLE SectorCotizacion (
-	NombreSector VARCHAR(20) NOT NULL,
-	CodigoCotizacion VARCHAR(15) NOT NULL,
-	PRIMARY KEY (NombreSector,CodigoCotizacion),
-	FOREIGN KEY (NombreSector) REFERENCES Sector(Nombre),
-	FOREIGN KEY (CodigoCotizacion) REFERENCES Cotizacion(Codigo)
-)
 
 CREATE TABLE Factura (
     Codigo VARCHAR(15) NOT NULL,
