@@ -274,6 +274,245 @@
 </div>
 <br />
 
+<div class="text-center">
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#rolesModal">
+        Roles por usuario
+    </button>
+</div>
+
+
+
+
+
+
+
+<!-- Botón para abrir el modal -->
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#rolesModal">
+    Ver Roles del Usuario
+</button>
+
+
+<!-- Modal para mostrar los roles del usuario y su ID -->
+<div class="modal fade" id="rolesModal" tabindex="-1" aria-labelledby="rolesModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="rolesModalLabel">Roles del Usuario</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>ID Usuario</th>
+                            <th>Rol</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (int i = 0; i < Model.RolesUsuario.Count; i++)
+                        {
+                            <tr>
+                                <td>@Model.IDUsuarios[i]</td>
+                                <td>@Model.RolesUsuario[i]</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
 
 
 <!--Toda esta parte es para los empleados-->
+<!-- Botón para abrir el modal -->
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#todosEmpleados">
+    Ver todos los empleados
+</button>
+
+<div class="modal fade" id="todosEmpleados" tabindex="-1" aria-labelledby="empleadosModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <!-- Tamaño de modal ampliado -->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="empleadosModalLabel">Lista de Empleados</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-striped table-hover">
+                    <!-- Tabla con estilo -->
+                    <thead>
+                        <tr>
+                            <th>Cédula</th>
+                            <th>Nombre Completo</th>
+                            <th>Género</th>
+                            <th>Fecha de Nacimiento</th>
+                            <th>Provincia</th>
+                            <th>Direccion</th>
+                            <th>Teléfono</th>
+                            <th>Departamento</th>
+                            <th>Planilla</th>
+                            <th>Fecha de ingreso</th>
+                            <th>Puesto</th>
+                            <th>Rol</th>
+                            <th>ID</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (int i = 0; i < Model.CedulaEmp.Count; i++)
+                        {
+                            <tr>
+                                <td>@Model.CedulaEmp[i]</td>
+                                <td>@Model.NombreEmp[i] @Model.ApellidoEmp1[i] @Model.ApellidoEmp2[i]</td> <!-- Nombre completo -->
+                                <td>@Model.GeneroEmp[i]</td>
+                                <td>@Model.FechaNacimientoEmp[i].ToShortDateString()</td> <!-- Formato de fecha -->
+                                <td>@Model.ProvinciaEmp[i]</td>
+                                <td>@Model.DireccionEmp[i]</td>
+                                <td>@Model.TelefonoEmp[i]</td>
+                                <td>@Model.CodigoEmp[i]</td>
+                                <td>@Model.PlanillaEmp[i]</td>
+                                <td>@Model.FechaIngresoEmp[i]</td>
+                                <td>@Model.PuestoEmp[i]</td>
+                                <td>@Model.tipoRolEmp[i]</td>
+                                <td>@Model.IDUsuarioEmp[i]</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalCotizacion">
+    Crear cotización
+</button>
+
+
+<div class="modal fade show" id="modalCotizacion" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true" style="display: @(Model.ShowModal2 ? "block" : "none");">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalLabel">Registrar cotización</h5>
+                <form method="post" asp-page-handler="CerrarModal">
+                    <button type="submit" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </form>
+            </div>
+            <div class="modal-body">
+                <!-- Esto es para pasar la info a OnPostGuardarUsuario -->
+                <form method="post" asp-page-handler="GuardarCotizacion">
+                    <div class="modalClienteC">
+                        <label for="projectClienteC" class="form-label">Cliente</label>
+                        <select class="form-control" id="projectClienteC" name="projectClienteC" required>
+                            @foreach (var cliente in Model.Clientes)
+                            {
+                                <option value="@cliente">@cliente</option>
+                            }
+                        </select>
+                    </div>
+                    <br />
+
+                    <div class="modalEmpleadoC">
+                        <label for="projectEmpleadoC" class="form-label">Empleado</label>
+                        <select class="form-control" id="projectEmpleadoC" name="projectEmpleadoC" required>
+                            @foreach (var empleado in Model.Empleados)
+                            {
+                                <option value="@empleado">@empleado</option>
+                            }
+                        </select>
+                    </div>
+                    <br />
+
+                    <div class="modalFechaCotizacion">
+                        <label for="projectFechaC" class="form-label">Fecha en que se cotizo</label> 
+                        <input type="date" class="form-control" id="projectFechaC" name="projectFechaC" required>
+                    </div>
+                    <br />
+
+                    <div class="modalFechaCotizacionF">
+                        <label for="projectFechaF" class="form-label">Fecha en que se cierra la cotizacion</label>
+                        <input type="date" class="form-control" id="projectFechaF" name="projectFechaF" required>
+                    </div>
+
+                    <br />
+
+                    <div class="modalTipoC">
+                        <label for="projectTipoC" class="form-label">Tipo de cotizacion</label>
+                        <select class="form-control" id="projectTipoC" name="projectTipoC" required>
+                            @foreach (var cotizacion in Model.TiposCotizacion)
+                            {
+                                <option value="@cotizacion">@cotizacion</option>
+                            }
+                        </select>
+                    </div>
+                    <br />
+
+                    <div class="modalEstado">
+                        <label for="projectEstadoC" class="form-label">Estado de cotizacion</label>
+                        <select class="form-control" id="projectEstadoC" name="projectEstadoC" required>
+                            @foreach (var estado in Model.TiposEstadosC)
+                            {
+                                <option value="@estado">@estado</option>
+                            }
+                        </select>
+                    </div>
+                    <br />
+
+                    <div class="modalProbabilidad">
+                        <label for="projectProbabilidadC" class="form-label">Probabilidad de cotizacion</label>
+                        <select class="form-control" id="projectProbabilidadC" name="projectProbabilidadC" required>
+                            @foreach (var probabilidad in Model.Probabilidades)
+                            {
+                                <option value="@probabilidad">@probabilidad</option>
+                            }
+                        </select>
+                    </div>
+                    <br />
+
+
+                    <div class="modalZona">
+                        <label for="projectZona" class="form-label">Zona</label>
+                        <select class="form-control" id="projectZona" name="projectZona" required>
+                            @foreach (var zona in Model.Zonas)
+                            {
+                                <option value="@zona">@zona</option>
+                            }
+                        </select>
+                    </div>
+
+                    <br />
+                    <div class="modalSector">
+                        <label for="projectSector" class="form-label">Sector</label>
+                        <select class="form-control" id="projectSector" name="projectSector" required>
+                            @foreach (var sector in Model.Sectores)
+                            {
+                                <option value="@sector">@sector</option>
+                            }
+                        </select>
+                    </div>
+                    <br />
+                    <button type="submit" class="btn btn-primary">Guardar cotizacion</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <!-- Esto es para cerrar -->
+                <form method="post" asp-page-handler="CerrarModal">
+                    <button type="submit" class="btn btn-secondary">Cerrar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<br />
