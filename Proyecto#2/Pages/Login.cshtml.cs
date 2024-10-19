@@ -23,7 +23,7 @@ public class LoginModel : PageModel
 
     public IActionResult OnGet()
     {
-        // Aquí podrías redirigir si el usuario ya está logueado, si es necesario.
+        
         return Page();
     }
 

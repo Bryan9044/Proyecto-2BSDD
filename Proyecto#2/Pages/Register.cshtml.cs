@@ -19,13 +19,7 @@ public class RegisterModel : PageModel
 
     public IActionResult OnPost()
     {
-        // Crear el usuario en la base de datos
 
-
-        //_context.Usuarios.Add(nuevoUsuario);
-       // _context.SaveChanges();
-
-        // Redirigir al login
         return RedirectToPage("/Login");
     }
 }
