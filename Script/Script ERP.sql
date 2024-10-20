@@ -11,6 +11,7 @@ CREATE TABLE Departamento (
 
 CREATE TABLE Puesto (
 	NombrePuesto VARCHAR(20),
+	Salario FLOAT,
 	Descripcion VARCHAR(15),
 	PRIMARY KEY (NombrePuesto)
 
@@ -32,7 +33,6 @@ CREATE TABLE Empleado (
     Residencia INT,
     Telefono VARCHAR(20),
     FechaIngreso DATE,
-    SalarioActual FLOAT,
     PuestoActual VARCHAR(20),
     DepartamentoActual VARCHAR(15),
 	PRIMARY KEY (CedulaEmpleado),
@@ -48,7 +48,6 @@ CREATE TABLE Historicos (
     FechaFin DATE,
     NombrePuesto VARCHAR(20),
     CodigoDepartamento VARCHAR(15),
-    Monto FLOAT,
 	PRIMARY KEY (CodigoHistorico),
     FOREIGN KEY (CedulaEmpleado) REFERENCES Empleado(CedulaEmpleado),
     FOREIGN KEY (CodigoDepartamento) REFERENCES Departamento(CodigoDepartamento),
@@ -56,29 +55,22 @@ CREATE TABLE Historicos (
 
 )
 
-
-CREATE TABLE Edicion (
+CREATE TABLE Modulo (
+    NumeroModulo INT,
 	CedulaEmpleado VARCHAR(15),
-	PRIMARY KEY (CedulaEmpleado),
+    NombreModulo VARCHAR(20) UNIQUE NOT NULL,
+    Descripcion VARCHAR(200),
+	PRIMARY KEY (NumeroModulo),
 	FOREIGN KEY (CedulaEmpleado) REFERENCES Empleado(CedulaEmpleado)
 )
 
-CREATE TABLE Visualizacion (
-	CedulaEmpleado VARCHAR(15),
-	PRIMARY KEY (CedulaEmpleado),
-	FOREIGN KEY (CedulaEmpleado) REFERENCES Empleado(CedulaEmpleado)
-)
-
-CREATE TABLE Reportes (
-	CedulaEmpleado VARCHAR(15),
-	PRIMARY KEY (CedulaEmpleado),
-	FOREIGN KEY (CedulaEmpleado) REFERENCES Empleado(CedulaEmpleado)
-)
-
-CREATE TABLE Ventas (
-	CedulaEmpleado VARCHAR(15),
-	PRIMARY KEY (CedulaEmpleado),
-	FOREIGN KEY (CedulaEmpleado) REFERENCES Empleado(CedulaEmpleado)
+CREATE TABLE Accion (
+    NumeroAccion INT NOT NULL,
+	NumeroModulo INT,
+    tipoAccion VARCHAR(20) UNIQUE,
+    descripcion VARCHAR(200),
+    PRIMARY KEY (NumeroAccion),
+	FOREIGN KEY (NumeroModulo) REFERENCES Modulo(NumeroModulo)
 )
 
 CREATE TABLE Familia (
@@ -190,7 +182,7 @@ CREATE TABLE Cliente (
 
 CREATE TABLE Estado (
 	NombreEstado VARCHAR(20),
-	DescripcionEstado VARCHAR(200),
+	Descripcion VARCHAR(200),
 	PRIMARY KEY (NombreEstado)
 )
 
@@ -218,10 +210,11 @@ CREATE TABLE Cotizacion (
 )
 
 CREATE TABLE Tarea (
+	NumeroTarea INT,
     CedulaEmpleado VARCHAR(15),
     NumeroCotizacion INT,
     Descripcion VARCHAR(200),
-    PRIMARY KEY (CedulaEmpleado, NumeroCotizacion),
+    PRIMARY KEY (NumeroTarea),
     FOREIGN KEY (CedulaEmpleado) REFERENCES Empleado(CedulaEmpleado),
     FOREIGN KEY (NumeroCotizacion) REFERENCES Cotizacion(NumeroCotizacion)
 )
