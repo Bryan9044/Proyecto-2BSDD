@@ -3,6 +3,10 @@
   "WorkspaceRootPath": "C:\\Users\\bryan\\source\\repos\\Proyecto#2\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{612A5928-E304-438F-AF70-3E8A82B47796}|Proyecto#2.csproj|c:\\users\\bryan\\source\\repos\\proyecto#2\\pages\\register.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{612A5928-E304-438F-AF70-3E8A82B47796}|Proyecto#2.csproj|solutionrelative:pages\\register.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{612A5928-E304-438F-AF70-3E8A82B47796}|Proyecto#2.csproj|c:\\users\\bryan\\source\\repos\\proyecto#2\\pages\\register.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{612A5928-E304-438F-AF70-3E8A82B47796}|Proyecto#2.csproj|solutionrelative:pages\\register.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -23,10 +27,6 @@
       "RelativeMoniker": "D:0:0:{612A5928-E304-438F-AF70-3E8A82B47796}|Proyecto#2.csproj|solutionrelative:pages\\login.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{612A5928-E304-438F-AF70-3E8A82B47796}|Proyecto#2.csproj|c:\\users\\bryan\\source\\repos\\proyecto#2\\pages\\register.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{612A5928-E304-438F-AF70-3E8A82B47796}|Proyecto#2.csproj|solutionrelative:pages\\register.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{612A5928-E304-438F-AF70-3E8A82B47796}|Proyecto#2.csproj|c:\\users\\bryan\\source\\repos\\proyecto#2\\pages\\login.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{612A5928-E304-438F-AF70-3E8A82B47796}|Proyecto#2.csproj|solutionrelative:pages\\login.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -42,11 +42,11 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 6,
+          "SelectedChildIndex": 5,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 4,
               "Title": "site.css",
               "DocumentMoniker": "C:\\Users\\bryan\\source\\repos\\Proyecto#2\\wwwroot\\css\\site.css",
               "RelativeDocumentMoniker": "wwwroot\\css\\site.css",
@@ -54,12 +54,11 @@
               "RelativeToolTip": "wwwroot\\css\\site.css",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
-              "WhenOpened": "2024-10-19T20:22:40.345Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-10-19T20:22:40.345Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "Index.cshtml",
               "DocumentMoniker": "C:\\Users\\bryan\\source\\repos\\Proyecto#2\\Pages\\Index.cshtml",
               "RelativeDocumentMoniker": "Pages\\Index.cshtml",
@@ -67,12 +66,11 @@
               "RelativeToolTip": "Pages\\Index.cshtml",
               "ViewState": "AQIAAOMBAAAAAAAAAAAqwO8BAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-10-19T04:17:29.939Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-10-19T04:17:29.939Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "Index.cshtml.cs",
               "DocumentMoniker": "C:\\Users\\bryan\\source\\repos\\Proyecto#2\\Pages\\Index.cshtml.cs",
               "RelativeDocumentMoniker": "Pages\\Index.cshtml.cs",
@@ -80,12 +78,11 @@
               "RelativeToolTip": "Pages\\Index.cshtml.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAADECAABLAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-19T16:31:22.579Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-10-19T16:31:22.579Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 5,
               "Title": "Login.cshtml",
               "DocumentMoniker": "C:\\Users\\bryan\\source\\repos\\Proyecto#2\\Pages\\Login.cshtml",
               "RelativeDocumentMoniker": "Pages\\Login.cshtml",
@@ -93,8 +90,7 @@
               "RelativeToolTip": "Pages\\Login.cshtml",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAABEAAAAKAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-10-18T15:06:09.783Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-10-18T15:06:09.783Z"
             },
             {
               "$type": "Document",
@@ -110,7 +106,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 0,
               "Title": "Register.cshtml",
               "DocumentMoniker": "C:\\Users\\bryan\\source\\repos\\Proyecto#2\\Pages\\Register.cshtml",
               "RelativeDocumentMoniker": "Pages\\Register.cshtml",
@@ -118,11 +114,12 @@
               "RelativeToolTip": "Pages\\Register.cshtml",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAABAAAAAKAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-10-18T19:28:20.541Z"
+              "WhenOpened": "2024-10-18T19:28:20.541Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "Register.cshtml.cs",
               "DocumentMoniker": "C:\\Users\\bryan\\source\\repos\\Proyecto#2\\Pages\\Register.cshtml.cs",
               "RelativeDocumentMoniker": "Pages\\Register.cshtml.cs",
