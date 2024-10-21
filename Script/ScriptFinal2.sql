@@ -1,9 +1,8 @@
-CREATE DATABASE ERPPRUEBA5
+CREATE DATABASE ERPPRUEBA
 GO
 
-USE ERPPRUEBA5;
+USE ERPPRUEBA;
 GO
-
 
 CREATE TABLE Usuarios (
     IDUsuario INT IDENTITY(1,1) PRIMARY KEY,
@@ -279,7 +278,7 @@ CREATE TABLE Planilla (
 	FechaPlanilla date not null,   
 	CedulaEmpleado varchar(9) not null,
 	HorasRealizadas int not null,
-	Salario decimal not null,
+	Salario decimal, --HAY QUE CAMBIARLO URGENTE DEBE SER NULO PORQUE SE CALCULA DESPUES DE LAS HORAS
 	foreign key (CedulaEmpleado) references Empleado(Cedula),
 	Primary key (CodigoPlanilla, CedulaEmpleado)
 
@@ -756,3 +755,370 @@ CREATE TABLE ListaCotizacion (
 	FOREIGN KEY (CodigoProducto) REFERENCES Articulo(Codigo),
 	FOREIGN KEY (CodigoCotizacion) REFERENCES Cotizacion(Codigo)
 );
+
+
+--Esto hay que ejecutarlo ahora
+
+--Esto es para el login para que revise si esta el usuario
+
+
+GO
+
+create function ExisteUsuario(@NombreUS varchar(50), @ContrasenaUS varchar(255))
+returns int
+as
+begin
+	 declare @Existe int;
+	 IF EXISTS (select 1 from Usuarios where NombreUS = @NombreUS and ContrasenaUS = @ContrasenaUS)
+	 begin
+		set @Existe = 1;
+	 end
+	 else
+	 begin
+		set @Existe = 0;
+	 end
+	 return @Existe;
+end;
+
+
+
+GO
+
+--Esto es para el registro
+
+create procedure InsertarUsuarios
+    @NombreUS VARCHAR(50),
+    @ContrasenaUS VARCHAR(255)
+	as
+	begin
+		if not exists( select 1 from Usuarios where NombreUS = @NombreUS and ContrasenaUS = @ContrasenaUS)
+		begin
+			insert into Usuarios(NombreUS,ContrasenaUS) values
+			(@NombreUS,@ContrasenaUS)
+		end
+		else
+		begin
+			print('Error no pueden existir usuarios con el mismo nombre y contraseña');
+		end
+	end;
+
+	--Para mostrar los departamentos
+
+
+
+
+GO
+	create function ObtenerDepartamentos()
+returns table
+as
+return(
+	select Codigo From Departamento
+	);
+
+	
+
+
+
+GO
+	--Para mostrar los Puestos
+	create function ObtenerPuestos()
+returns table 
+as
+return(
+	select TipoPuesto from Puesto
+);
+
+
+GO
+--Para ver los roles
+CREATE FUNCTION ObtenerRoles()
+returns table
+as
+return
+(
+    select tipoRol
+    from Roles
+);
+
+
+GO
+--Para ver los usuarios
+create function ObtenerUsuarios()
+returns table
+as
+return(
+	select IDUsuario from Usuarios
+);
+
+
+
+GO
+--Para ver las acciones
+create function ObtenerTipoAcciones()
+returns table
+as
+return
+(
+select tipoAccion from Acciones
+);
+
+
+GO
+--Para guardar un empleado
+create procedure insertarEmpleado 
+	@Cedula varchar(9),
+	@Nombre varchar(30),
+	@apellido1 varchar(30),
+	@apellido2 varchar(30),
+	@genero char(1),
+	@FechaNacimiento date,
+	@provincia varchar(30),
+	@Direccion varchar(30),
+	@Telefono varchar(9),
+	@CodigoDepartamento VARCHAR(15),
+	@FechaIngreso DATE,
+	@Puesto VARCHAR(35),
+	@tipoRol varchar(20),
+	@IDUsuario INT,
+	@SalarioActual decimal
+	
+as
+begin
+	if not exists (select 1 from Empleado where Cedula = @Cedula)
+	begin
+		insert into Empleado(Cedula,Nombre,apellido1,apellido2,genero,FechaNacimiento,provincia,Direccion,Telefono,CodigoDepartamento,
+		FechaIngreso,Puesto,tipoRol,IDUsuario,SalarioActual) values
+		(@Cedula,@Nombre,@apellido1,@apellido2,@genero,@FechaNacimiento,@provincia,@Direccion,@Telefono,@CodigoDepartamento,
+		@FechaIngreso,@Puesto,@tipoRol,@IDUsuario,@SalarioActual)
+	end
+	else 
+	begin
+		print('No se puede repetir la cedula')
+	end
+end;
+
+
+
+GO
+
+--Para ver los empleados
+create function VerEmpleados()
+returns table
+as
+return(
+	select * from Empleado
+);
+
+
+
+GO
+--Para guardar los roles
+
+create procedure insercionRoles
+	@tipoRol varchar(20),
+	@Descripcion varchar(20)
+as
+begin
+	IF NOT EXISTS (SELECT 1 FROM Roles WHERE tipoRol = @tipoRol)
+	begin
+		insert into Roles(tipoRol, Descripcion) values
+		(@tipoRol, @Descripcion);
+	end
+	else
+	begin
+		print('Ya existe ese nombre de rol')
+	end
+end;
+
+
+GO
+--Para guardar las acciones de los roles
+create procedure insertarAccionesXRol
+	@tipoRol VARCHAR(20),
+	@tipoAccion VARCHAR(40)
+	as
+	begin
+		IF NOT EXISTS(select 1 from AccionesXrol where tipoRol = @tipoRol and tipoAccion = @tipoAccion)
+		begin
+			insert into AccionesXrol(tipoRol,tipoAccion) values
+			(@tipoRol,@tipoAccion)
+		end
+		else 
+		begin
+			PRINT ('Ya existe un rolXAccion');
+		end
+	end;
+
+
+
+
+
+GO
+create function MostrarZonas()
+returns table
+as
+return 
+(
+	select Nombre from Zona
+);
+
+
+
+GO
+create function MostrarSectores()
+returns table
+as
+return 
+(
+	select Nombre from Sector
+);
+
+
+
+GO
+create function MostrarClientes()
+returns table
+as
+return
+(
+select Cedula from Cliente
+);
+
+
+GO
+create function MostrarEmpleados()
+returns table
+as
+return(
+	select Cedula from Empleado
+);
+
+
+GO
+create function MostrarTiposCotizacion()
+returns table
+as 
+return 
+(
+	select Tipocotizacion from TipoCotizacion
+);
+
+GO
+create function MostrarEstados()
+returns table
+as
+return
+(
+	select TipoEstado from Estado
+);
+
+
+
+GO
+create function MostrarProbabilidad()
+returns table 
+as 
+return (
+	select Porcentaje from Probabilidad
+);
+
+
+GO
+create procedure GuardarCotizacion
+	@CedulaCliente VARCHAR(9), --Les quite el unique
+	@CedulaEmpleado VARCHAR(9), -- Les quite el unique
+	@FechaCotizacion DATE,
+	@MesProyectadoCierre DATE,
+	@TipoCotizacion VARCHAR(50),
+	@Estado VARCHAR(20) ,
+	@Probabilidad FLOAT,
+	@Zona VARCHAR(20),
+	@Sector VARCHAR(20)
+	as
+	begin
+	insert into Cotizacion(CedulaCliente,CedulaEmpleado,FechaCotizacion,MesProyectadoCierre,TipoCotizacion,Estado,Probabilidad,
+	Zona,Sector) values (@CedulaCliente,@CedulaEmpleado,@FechaCotizacion,@MesProyectadoCierre,@TipoCotizacion,@Estado,@Probabilidad,@Zona,@Sector)
+	end;
+
+
+
+
+GO
+	--Para mostrar los roles y los usuarios por rol
+create function RolesXusuario()
+returns table
+as
+return(
+	select tipoRol, IDUsuario from Empleado
+);
+
+
+GO
+create procedure ModificarEmpleado
+	@Cedula varchar(9),
+	@Puesto VARCHAR(35),
+	@SalarioActual decimal
+	as
+	begin
+		update Empleado
+		set Puesto = @Puesto,
+		SalarioActual = @SalarioActual
+		where Cedula = @Cedula
+	end;
+
+
+
+	--TODO ESTO ES PARA MODIFICAR EMPLEADO
+
+GO
+create function actualizarHistoricoPuesto(@Cedula varchar(9))
+returns table
+as
+return(
+select FechaIngreso, CodigoDepartamento, Puesto from Empleado where Cedula = @Cedula
+);
+
+
+
+GO
+create function actualizarHistoricoSalario(@Cedula varchar(9))
+returns table
+as
+return(
+select FechaIngreso, CodigoDepartamento, Puesto,SalarioActual from Empleado where Cedula = @Cedula
+);
+
+
+
+GO
+create procedure actualizarHistoricoPuesto2
+	@CedulaEmpleado VARCHAR(9), -- Agregado
+    @FechaInicio DATE, 
+    @FechaFin DATE, 
+    @Departamento VARCHAR(50),
+	@NombrePuesto VARCHAR(50)
+	as
+	begin
+	insert into HistoricoPuesto(CedulaEmpleado,FechaInicio,FechaFin,NombrePuesto,Departamento) values
+	(@CedulaEmpleado,@FechaInicio,@FechaFin ,@NombrePuesto,@Departamento)
+	end;
+
+
+GO
+create procedure actualizarHistoricoSalario2
+	@CedulaEmpleado VARCHAR(9), -- Agregado
+    @FechaInicio DATE, 
+    @FechaFin DATE,
+	@Monto decimal,
+    @Departamento VARCHAR(50),
+	@NombrePuesto VARCHAR(50)
+	as
+	begin
+	insert into HistoricoSalario(CedulaEmpleado,FechaInicio,FechaFin,Monto ,NombrePuesto,Departamento) values
+	(@CedulaEmpleado,@FechaInicio,@FechaFin,@Monto,@NombrePuesto,@Departamento)
+	end;
+
+
+
+
+	--TODO ESTO ES PARA MODIFICAR EMPLEADO
