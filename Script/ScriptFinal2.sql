@@ -10,7 +10,8 @@ CREATE TABLE Usuarios (
     ContrasenaUS VARCHAR(255) NOT NULL
 );
 INSERT INTO Usuarios(NombreUS, ContrasenaUS) values
-('Administrador','SOYadmin.')
+('p1','pp'),
+('Administrador','SOYadmin.');
 
 
 
@@ -201,30 +202,30 @@ INSERT INTO AccionesXrol (tipoRol, tipoAccion) VALUES ('SuperUsuario', 'Reporter
 
 CREATE TABLE Puesto(
 	TipoPuesto VARCHAR(35) NOT NULL,
-	Salario DECIMAL NOT NULL,
+	Salario int NOT NULL,
 	Descripcion VARCHAR(200) NOT NULL,
 	PRIMARY KEY (TipoPuesto)
 );
 
 INSERT INTO Puesto(TipoPuesto, Salario, Descripcion) values
-('Electricista', 500000.00, 'Se encarga de los cables y todo el fluido electrico'),
-('Ingeniero', 700000.00, 'Se encarga de diseñar y elaborar planes para mejorar la eficiencia'),
-('Control de Calidad', 480000.00, 'Garantiza que los productos cumplen con los estándares de calidad'),
-('Encargado de Inventarios', 450000.00, 'Mantiene un registro actualizado del inventario'),
-('Ayudante', 200000.00, 'Se encarga de todos los trabajos que le sean asignados'),
-('Bodeguero', 350000.00, 'Tiene que realizar chequeos de bodega y mover mercancia'),
-('MontaCargas', 400000.00, 'Tiene que mover mercancia pesada o de gran cantidad'),
-('Recepcionista', 320000.00, 'Atiende a los clientes que lleguen al negocio'),
-('Administrador', 450000.00, 'Se encarga de dirigir y ver como van los avances'),
-('Operador', 370000.00, 'Usa maquinas y dirige de mejor forma las cargas de productos'),
-('Auxiliar', 400000.00, 'Realiza de todo un poco de los trabajos que hay en la bodega'),
-('Vendedor', 500000.00, 'Se encarga de buscar o atender clientes que quieran comprar productos'),
-('Supervisor', 600000.00, 'Debe realizar chequeos constantes para ver que todo este en orden y nada falle'),
-('Empacador', 350000.00, 'Da las ultimas ordenes de donde llevar la mercancia y guardarla'),
-('Despachador', 320000.00, 'Busca a los vehiculos a los cuales va a cargar los productos de salida'),
-('Coordinador', 320000.00, 'Coordina todas las entregas y posibles rutas a tomar'),
-('Reparaciones', 420000.00, 'Tiene que hacer trabajos de reparamiento a las maquinas o bodegas'),
-('Preparador', 250000.00, 'Va guardando y enlistando los productos a utilizar');
+('Electricista', 500000, 'Se encarga de los cables y todo el fluido electrico'),
+('Ingeniero', 700000, 'Se encarga de diseñar y elaborar planes para mejorar la eficiencia'),
+('Control de Calidad', 480000, 'Garantiza que los productos cumplen con los estándares de calidad'),
+('Encargado de Inventarios', 450000, 'Mantiene un registro actualizado del inventario'),
+('Ayudante', 200000, 'Se encarga de todos los trabajos que le sean asignados'),
+('Bodeguero', 350000, 'Tiene que realizar chequeos de bodega y mover mercancia'),
+('MontaCargas', 400000, 'Tiene que mover mercancia pesada o de gran cantidad'),
+('Recepcionista', 320000, 'Atiende a los clientes que lleguen al negocio'),
+('Administrador', 450000, 'Se encarga de dirigir y ver como van los avances'),
+('Operador', 370000, 'Usa maquinas y dirige de mejor forma las cargas de productos'),
+('Auxiliar', 400000, 'Realiza de todo un poco de los trabajos que hay en la bodega'),
+('Vendedor', 500000, 'Se encarga de buscar o atender clientes que quieran comprar productos'),
+('Supervisor', 600000, 'Debe realizar chequeos constantes para ver que todo este en orden y nada falle'),
+('Empacador', 350000, 'Da las ultimas ordenes de donde llevar la mercancia y guardarla'),
+('Despachador', 320000, 'Busca a los vehiculos a los cuales va a cargar los productos de salida'),
+('Coordinador', 320000, 'Coordina todas las entregas y posibles rutas a tomar'),
+('Reparaciones', 420000, 'Tiene que hacer trabajos de reparamiento a las maquinas o bodegas'),
+('Preparador', 250000, 'Va guardando y enlistando los productos a utilizar');
 
 
 CREATE TABLE Empleado (
@@ -242,13 +243,14 @@ CREATE TABLE Empleado (
 	Puesto VARCHAR(35) NOT NULL,
 	tipoRol varchar(20) not null,
 	IDUsuario INT not null,
-	SalarioActual decimal not null
+	SalarioActual int not null
 	PRIMARY KEY(Cedula),
 	FOREIGN KEY (tipoRol) references Roles(tipoRol),
 	FOREIGN KEY (CodigoDepartamento) REFERENCES Departamento(Codigo),
 	FOREIGN KEY (Puesto) REFERENCES Puesto(TipoPuesto),
 	FOREIGN KEY (IDUsuario) REFERENCES Usuarios(IDUsuario) --Lo podriamos cambiar por el nombre
 );
+
 
 
 CREATE TABLE HistoricoPuesto (
@@ -278,7 +280,7 @@ CREATE TABLE Planilla (
 	FechaPlanilla date not null,   
 	CedulaEmpleado varchar(9) not null,
 	HorasRealizadas int not null,
-	Salario decimal, --HAY QUE CAMBIARLO URGENTE DEBE SER NULO PORQUE SE CALCULA DESPUES DE LAS HORAS
+	Salario int, --HAY QUE CAMBIARLO URGENTE DEBE SER NULO PORQUE SE CALCULA DESPUES DE LAS HORAS
 	foreign key (CedulaEmpleado) references Empleado(Cedula),
 	Primary key (CodigoPlanilla, CedulaEmpleado)
 
@@ -880,8 +882,7 @@ create procedure insertarEmpleado
 	@Puesto VARCHAR(35),
 	@tipoRol varchar(20),
 	@IDUsuario INT,
-	@SalarioActual decimal
-	
+	@SalarioActual int 	
 as
 begin
 	if not exists (select 1 from Empleado where Cedula = @Cedula)
@@ -916,7 +917,7 @@ GO
 
 create procedure insercionRoles
 	@tipoRol varchar(20),
-	@Descripcion varchar(20)
+	@Descripcion varchar(200)
 as
 begin
 	IF NOT EXISTS (SELECT 1 FROM Roles WHERE tipoRol = @tipoRol)
@@ -1057,7 +1058,7 @@ GO
 create procedure ModificarEmpleado
 	@Cedula varchar(9),
 	@Puesto VARCHAR(35),
-	@SalarioActual decimal
+	@SalarioActual int
 	as
 	begin
 		update Empleado

@@ -13,57 +13,57 @@
 <!--Modal para usuarios o empleados-->
 
 <div class="text-center">
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalEmpleado">
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalEmpleado" asp-page-handler="MostrarModal">
         Registrar Usuario
     </button>
 </div>
 
 
 
-<div class="modal fade show" id="modalEmpleado" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true" style="display: @(Model.ShowModal1 ? "block" : "none");">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modalLabel">Registrar empleado</h5>
-                    <form method="post" asp-page-handler="CerrarModal">
+<div class="modal fade" id="modalEmpleado" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalLabel">Registrar empleado</h5>
+                <form method="post" asp-page-handler="CerrarModal">
                     <button type="submit" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </form>
-                </div>
-                <div class="modal-body">
-                    <!-- Esto es para pasar la info a OnPostGuardarUsuario -->
-                    <form method="post" asp-page-handler="GuardarEmpleado">
-                        <div class="modalEmpleadoCedula">
-                            <label for="projectEmpleadoC" class="form-label">Cédula</label>
+                </form>
+            </div>
+            <div class="modal-body">
+                <!-- Esto es para pasar la info a OnPostGuardarUsuario -->
+                <form method="post" asp-page-handler="GuardarEmpleado">
+                    <div class="modalEmpleadoCedula">
+                        <label for="projectEmpleadoC" class="form-label">Cédula</label>
                         <input type="text" class="form-control" id="projectEmpleadoC" name="projectEmpleadoC" required>
-                        </div>
-                        <div class="modalEmpleadoNombre">
-                            <label for="projectEmpleadoN" class="form-label">Nombre</label>
+                    </div>
+                    <div class="modalEmpleadoNombre">
+                        <label for="projectEmpleadoN" class="form-label">Nombre</label>
                         <input type="text" class="form-control" id="projectEmpleadoN" name="projectEmpleadoN" required />
-                        </div>
-                        <br />
-                        <div class="modalEmpleadoApellido">
-                            <label for="projectEmpleadoAP1" class="form-label">Primer apellido</label>
+                    </div>
+                    <br />
+                    <div class="modalEmpleadoApellido">
+                        <label for="projectEmpleadoAP1" class="form-label">Primer apellido</label>
                         <input type="text" class="form-control" id="projectEmpleadoAP1" name="projectEmpleadoAP1" required />
-                        </div>
-                        <br />
-                        <div class="modalEmpleadoApellido2">
-                            <label for="projectEmpleadoAP2" class="form-label">Segundo apellido</label>
+                    </div>
+                    <br />
+                    <div class="modalEmpleadoApellido2">
+                        <label for="projectEmpleadoAP2" class="form-label">Segundo apellido</label>
                         <input type="text" class="form-control" id="projectEmpleadoAP2" name="projectEmpleadoAP2" required />
-                        </div>
-                        <br />
-                        <div class="modalEmpleadoGenero">
+                    </div>
+                    <br />
+                    <div class="modalEmpleadoGenero">
                         <label for="projectEmpleadoGenero" class="form-label">Género</label>
                         <select name="projectEmpleadoGenero" id="projectEmpleadoGenero">
-                                <option value="M">Masculino</option>
-                                <option value="F">Femenino</option>
-                            </select>
-                        </div>
-                        <br />
-                        <div class="modalEmpleadoFecha">
-                            <label for="projectFecha" class="form-label">Fecha de nacimiento</label>
+                            <option value="M">Masculino</option>
+                            <option value="F">Femenino</option>
+                        </select>
+                    </div>
+                    <br />
+                    <div class="modalEmpleadoFecha">
+                        <label for="projectFecha" class="form-label">Fecha de nacimiento</label>
                         <input type="date" class="form-control" id="projectFecha" name="projectFecha" required />
-                        </div>
-                        <br />
+                    </div>
+                    <br />
                     <div class="modalProvincia">
                         <label for="projectProvincia" class="form-label">Provincia</label>
                         <input type="text" class="form-control" id="projectProvincia" name="projectProvincia" required />
@@ -90,17 +90,6 @@
                         </select>
                     </div>
                     <br />
-                    <div class="modalPlanillas">
-                        <label for="projectPlanillas" class="form-label">Planillas</label>
-                        <select class="form-control" id="projectPlanillas" name="projectPlanillas" required>
-                            @foreach (var planilla in Model.Planillas)
-                            {
-                                <option value="@planilla">@planilla</option>
-                            }
-                        </select>
-                    </div>
-                    <br />
-
                     <div class="modalFechaIngreso">
                         <label for="projectFechaIngreso" class="form-label">Fecha de ingreso</label>
                         <input type="date" class="form-control" id="projectFechaIngreso" name="projectFechaIngreso" required />
@@ -137,66 +126,13 @@
                         </select>
                     </div>
                     <br />
-                    
-                    <button type="submit" class="btn btn-primary">Guardar empleado</button>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <!-- Esto es para cerrar -->
-                    <form method="post" asp-page-handler="CerrarModal">
-                        <button type="submit" class="btn btn-secondary">Cerrar</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-    <br />
-
-
-
-
-
-
-
-
-
-
-
-    <!--Toda esta parte es para los roles-->
-
-
-
-<div class="text-center">
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalRoles">
-        Registrar roles
-    </button>
-</div>
-
-
-
-<div class="modal fade show" id="modalRoles" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true" style="display: @(Model.ShowModal2 ? "block" : "none");">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modalLabel">Registrar rol</h5>
-                <form method="post" asp-page-handler="CerrarModal">
-                    <button type="submit" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </form>
-            </div>
-            <div class="modal-body">
-                <!-- Esto es para pasar la info a OnPostGuardarUsuario -->
-                <form method="post" asp-page-handler="GuardarRol">
-                    <div class="modalTipoRol">
-                        <label for="projectTipoRol" class="form-label">Tipo de rol</label>
-                        <input type="text" class="form-control" id="projectTipoRol" name="projectTipoRol" required>
-                    </div>
-                    <div class="modalDescripcionRol">
-                        <label for="projectDescripcionRol" class="form-label">Descripción del rol</label>
-                        <textarea class="form-control" id="projectDescripcionRol" name="projectDescripcionRol"  required></textarea>
-
+                    <div class="modalSalarioAc">
+                        <label for="projectSalarioAC" class="form-label">Salario actual</label>
+                        <input type="number" id="projectSalarioAC" name="projectSalarioAC" required>
                     </div>
                     <br />
-                    <button type="submit" class="btn btn-primary">Guardar Rol</button>
+
+                    <button type="submit" class="btn btn-primary">Guardar empleado</button>
                 </form>
             </div>
             <div class="modal-footer">
@@ -214,19 +150,82 @@
 
 
 
+
+
+
+
+
+
+<!--Toda esta parte es para los roles-->
+
+
+
+<div class="text-center">
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalRoles" asp-page-handler="MostrarModal2">
+        Registrar roles
+    </button>
+
+</div>
+
+
+
+
+<div class="modal fade" id="modalRoles" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalLabel">Registrar rol</h5>
+                <form method="post" asp-page-handler="CerrarModal">
+                    <button type="submit" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </form>
+            </div>
+            <div class="modal-body">
+                <!-- Esto es para pasar la info a OnPostGuardarUsuario -->
+                <form method="post" asp-page-handler="GuardarRol">
+                    <div class="modalTipoRol">
+                        <label for="projectTipoRol" class="form-label">Tipo de rol</label>
+                        <input type="text" class="form-control" id="projectTipoRol" name="projectTipoRol" required>
+                    </div>
+                    <div class="modalDescripcionRol">
+                        <label for="projectDescripcionRol" class="form-label">Descripción del rol</label>
+                        <textarea class="form-control" id="projectDescripcionRol" name="projectDescripcionRol" required></textarea>
+
+                    </div>
+                    <br />
+                    <button type="submit" class="btn btn-primary">Guardar Rol</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <!-- Esto es para cerrar -->
+                <form method="post" asp-page-handler="CerrarModal2">
+                    <button type="submit" class="btn btn-secondary">Cerrar</button>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+<br />
+
+
+
+
+
 <!--Toda esta parte es para los roles con sus acciones-->
 
 
 
 <div class="text-center">
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAccionesRol">
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAccionesRol" asp-page-handler="MostrarModal3">
         Registrar acciones por rol
     </button>
+
 </div>
 
 
 
-<div class="modal fade show" id="modalAccionesRol" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true" style="display: @(Model.ShowModal3 ? "block" : "none");">
+
+<div class="modal fade" id="modalAccionesRol" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -265,7 +264,7 @@
             </div>
             <div class="modal-footer">
                 <!-- Esto es para cerrar -->
-                <form method="post" asp-page-handler="CerrarModal">
+                <form method="post" asp-page-handler="CerrarModal3">
                     <button type="submit" class="btn btn-secondary">Cerrar</button>
                 </form>
             </div>
@@ -274,26 +273,81 @@
 </div>
 <br />
 
+
+
+
 <div class="text-center">
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#rolesModal">
-        Roles por usuario
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalModificarEmpleado" asp-page-handler="MostrarModal4">
+        Modificar empleado
     </button>
+
 </div>
 
 
 
+<div class="modal fade" id="modalModificarEmpleado" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalLabel">Modificar empleado</h5>
+                <form method="post" asp-page-handler="CerrarModal">
+                    <button type="submit" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </form>
+            </div>
+            <div class="modal-body">
+                <!-- Esto es para pasar la info a OnPostGuardarUsuario -->
+                <form method="post" asp-page-handler="ModificarEmpleado">
+
+                    <div class="modalEmpleadoC">
+                        <label for="projectEmpleadoM" class="form-label">Empleado</label>
+                        <select class="form-control" id="projectEmpleadoM" name="projectEmpleadoM" required>
+                            @foreach (var empleado in Model.Empleados)
+                            {
+                                <option value="@empleado">@empleado</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="modalPuestosM">
+                        <label for="projectPuestosM" class="form-label">Puestos</label>
+                        <select class="form-control" id="projectPuestosM" name="projectPuestosM" required>
+                            @foreach (var puesto in Model.Puestos)
+                            {
+                                <option value="@puesto">@puesto</option>
+                            }
+                        </select>
+                    </div>
+                    <br />
+                    <div class="modalSalarioAc">
+                        <label for="projectSalarioACM" class="form-label">Salario</label>
+                        <input type="number" id="projectSalarioACM" name="projectSalarioACM" required>
+                    </div>
+                    <br />
+                    <button type="submit" class="btn btn-primary">´Modificar empleado</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <!-- Esto es para cerrar -->
+                <form method="post" asp-page-handler="CerrarModal4">
+                    <button type="submit" class="btn btn-secondary">Cerrar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<br />
 
 
 
 
 <!-- Botón para abrir el modal -->
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#rolesModal">
-    Ver Roles del Usuario
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#rolesModal" asp-page-handler="MostrarModal5">
+    ver roles del Usuario
 </button>
 
 
 <!-- Modal para mostrar los roles del usuario y su ID -->
-<div class="modal fade" id="rolesModal" tabindex="-1" aria-labelledby="rolesModalLabel" aria-hidden="true">
+
+<div class="modal fade" id="rolesModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -319,9 +373,10 @@
                     </tbody>
                 </table>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-            </div>
+            <form method="post" asp-page-handler="CerrarModal5">
+                <button type="submit" class="btn btn-secondary">Cerrar</button>
+            </form>
+
         </div>
     </div>
 </div>
@@ -332,11 +387,12 @@
 
 <!--Toda esta parte es para los empleados-->
 <!-- Botón para abrir el modal -->
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#todosEmpleados">
-    Ver todos los empleados
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#todosEmpleados" asp-page-handler="MostrarModal6">
+    Ver todos los empleados 
 </button>
 
-<div class="modal fade" id="todosEmpleados" tabindex="-1" aria-labelledby="empleadosModalLabel" aria-hidden="true">
+
+<div class="modal fade" id="todosEmpleados" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <!-- Tamaño de modal ampliado -->
         <div class="modal-content">
@@ -357,11 +413,11 @@
                             <th>Direccion</th>
                             <th>Teléfono</th>
                             <th>Departamento</th>
-                            <th>Planilla</th>
                             <th>Fecha de ingreso</th>
                             <th>Puesto</th>
                             <th>Rol</th>
                             <th>ID</th>
+                            <th>Salario actual</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -376,32 +432,35 @@
                                 <td>@Model.DireccionEmp[i]</td>
                                 <td>@Model.TelefonoEmp[i]</td>
                                 <td>@Model.CodigoEmp[i]</td>
-                                <td>@Model.PlanillaEmp[i]</td>
                                 <td>@Model.FechaIngresoEmp[i]</td>
                                 <td>@Model.PuestoEmp[i]</td>
                                 <td>@Model.tipoRolEmp[i]</td>
                                 <td>@Model.IDUsuarioEmp[i]</td>
+                                <th>@Model.SalarioEmp</th>
                             </tr>
                         }
                     </tbody>
                 </table>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-            </div>
+
+            <form method="post" asp-page-handler="CerrarModal6">
+                <button type="submit" class="btn btn-secondary">Cerrar</button>
+            </form>
+
         </div>
     </div>
 </div>
 
+<!--Al de empleado le puedo agregar edad-->
 
 
-
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalCotizacion">
-    Crear cotización
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalCotizacion" asp-page-handler="MostrarModal7">
+    Crear cotizacion
 </button>
 
 
-<div class="modal fade show" id="modalCotizacion" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true" style="display: @(Model.ShowModal2 ? "block" : "none");">
+
+<div class="modal fade" id="modalCotizacion" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -436,7 +495,7 @@
                     <br />
 
                     <div class="modalFechaCotizacion">
-                        <label for="projectFechaC" class="form-label">Fecha en que se cotizo</label> 
+                        <label for="projectFechaC" class="form-label">Fecha en que se cotizo</label>
                         <input type="date" class="form-control" id="projectFechaC" name="projectFechaC" required>
                     </div>
                     <br />
@@ -508,7 +567,7 @@
             </div>
             <div class="modal-footer">
                 <!-- Esto es para cerrar -->
-                <form method="post" asp-page-handler="CerrarModal">
+                <form method="post" asp-page-handler="CerrarModal7">
                     <button type="submit" class="btn btn-secondary">Cerrar</button>
                 </form>
             </div>
@@ -516,3 +575,68 @@
     </div>
 </div>
 <br />
+
+
+
+
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalPlanilla" asp-page-handler="MostrarModal8">
+    Registrar planilla
+</button>
+
+
+
+
+<div class="modal fade show" id="modalPlanilla" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true" style="display: @(Model.ShowModal3 ? "block" : "none");">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalLabel">Modificar empleado</h5>
+                <form method="post" asp-page-handler="CerrarModal">
+                    <button type="submit" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </form>
+            </div>
+            <div class="modal-body">
+                <!-- Esto es para pasar la info a OnPostGuardarUsuario -->
+                <form method="post" asp-page-handler="GuardarPlanilla">
+
+                    <div class="modalCodigoPlanilla">
+                        <label for="projectPlanillaCodigo" class="form-label">Codigo de planilla</label>
+                        <input type="text" id="projectPlanillaCodigo" name="projectPlanillaCodigo" required>
+                    </div>
+                    <br />
+                    <div class="modalFechaPlanilla">
+                        <label for="projectFechaPlanilla" class="form-label">Fecha de creación</label>
+                        <input type="date" id="projectFechaPlanilla" name="projectFechaPlanilla" required>
+                    </div>
+                    <br />
+                    <div class="modalEmpleadoP">
+                        <label for="projectEmpleadoP" class="form-label">Empleado</label>
+                        <select class="form-control" id="projectEmpleadoP" name="projectEmpleadoP" required>
+                            @foreach (var empleado in Model.Empleados)
+                            {
+                                <option value="@empleado">@empleado</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="modalPlanillaHoras">
+                        <label for="projectPlanillaHoras" class="form-label">Cantidad de horas trabajadas</label>
+                        <input type="number" id="projectPlanillaHoras" name="projectPlanillaHoras" required>
+                    </div>
+                    <br />
+
+
+                    <button type="submit" class="btn btn-primary">Guardar Planilla</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <!-- Esto es para cerrar -->
+                <form method="post" asp-page-handler="CerrarModal8">
+                    <button type="submit" class="btn btn-secondary">Cerrar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<br />
+
+
