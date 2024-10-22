@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
 using System.Data;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
@@ -31,6 +32,7 @@ namespace Proyecto_2.Pages
 
         public bool ShowModal8 { get; set; }
 
+        public bool ShowModal9 { get; set; }
         public List<string> Roles { get; set; } = new List<string>();//ya
 
         public List<string> Acciones { get; set; } = new List<string>(); //ya
@@ -76,6 +78,7 @@ namespace Proyecto_2.Pages
         public List<string> Clientes { get; set; } = new List<string>();//ya
         public List<string> Empleados { get; set; } = new List<string>();//ya
         public List<string> TiposEstadosC { get; set; } = new List<string>(); //ya
+        public List<int> Cotizaciones { get; set; } = new List<int>(); //ya
 
 
 
@@ -112,6 +115,7 @@ namespace Proyecto_2.Pages
             Clientes = new List<string>();
             Empleados = new List<string>();
             TiposEstadosC = new List<string>();
+            Cotizaciones = new List<int>();  
 
             string connectionString = _configuration.GetConnectionString("DefaultConnection");
 
@@ -407,6 +411,24 @@ namespace Proyecto_2.Pages
                 }
             }
             //Hasta aqui Tipos de estado de una cotizacion
+
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                string query = "select * from MostrarCodigoCotizacion()";
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            Cotizaciones.Add(reader.GetInt32(0));
+                        }
+                    }
+                }
+            }
+            //Hasta aqui Tipos de estado de una cotizacion
         }
 
 
@@ -420,8 +442,8 @@ namespace Proyecto_2.Pages
 
         public IActionResult OnPostCerrarModal()
         {
-            ShowModal1 = false; 
-            return RedirectToPage(); 
+            ShowModal1 = false;
+            return RedirectToPage();
         }
 
         public IActionResult OnGetMostrarModal2()
@@ -508,6 +530,19 @@ namespace Proyecto_2.Pages
         public IActionResult OnPostCerrarModal8()
         {
             ShowModal8 = false;
+            return RedirectToPage();
+        }
+
+
+        public IActionResult OnGetMostrarModal9()
+        {
+            ShowModal9 = true; // Mostrar el modal
+            return Page();
+        }
+
+        public IActionResult OnPostCerrarModal9()
+        {
+            ShowModal9 = false;
             return RedirectToPage();
         }
 
@@ -681,8 +716,110 @@ namespace Proyecto_2.Pages
 
 
 
+        //Realiza el cambio del puesto y del salario
+        //Ademas realiza el cambio en el historial
 
-        public IActionResult OnPostModificarEmpleado(string projectEmpleadoM, string projectPuestosM, int projectSalarioACM)
+        public IActionResult OnPostModificarEmpleado(string projectEmpleadoM, string projectPuestosM, int projectSalarioACM, DateOnly projectFechaFin)
+        {
+            string connectionString = _configuration.GetConnectionString("DefaultConnection");
+
+            // Usar una nueva conexión para cada comando
+            using (SqlConnection connectionHistorial = new SqlConnection(connectionString))
+            {
+                try
+                {
+                    connectionHistorial.Open();
+
+                    // Consulta de información actual para actualizar el historial
+                    string queryHistorialSalario = "SELECT * FROM actualizarHistoricoSalario(@Cedula)";
+                    using (SqlCommand commandHistorialSalario = new SqlCommand(queryHistorialSalario, connectionHistorial))
+                    {
+                        commandHistorialSalario.Parameters.Add(new SqlParameter("@Cedula", projectEmpleadoM));
+                        using (SqlDataReader reader = commandHistorialSalario.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                DateOnly fechaIngreso = DateOnly.FromDateTime(reader.GetDateTime(0));
+                                string departamento = reader.GetString(1);
+                                string puesto = reader.GetString(2);
+                                int salarioActual = reader.GetInt32(3);
+
+                                // Llamar a la stored procedure para actualizar el historial del puesto
+                                using (SqlConnection connectionUpdatePuesto = new SqlConnection(connectionString))
+                                {
+                                    connectionUpdatePuesto.Open();
+                                    string queryUpdatePuesto = "EXEC actualizarHistoricoPuesto2 @CedulaEmpleado, @FechaInicio, @FechaFin, @Departamento, @NombrePuesto";
+                                    using (SqlCommand commandUpdatePuesto = new SqlCommand(queryUpdatePuesto, connectionUpdatePuesto))
+                                    {
+                                        commandUpdatePuesto.Parameters.Add(new SqlParameter("@CedulaEmpleado", projectEmpleadoM));
+                                        commandUpdatePuesto.Parameters.Add(new SqlParameter("@FechaInicio", fechaIngreso));
+                                        commandUpdatePuesto.Parameters.Add(new SqlParameter("@FechaFin", projectFechaFin));
+                                        commandUpdatePuesto.Parameters.Add(new SqlParameter("@Departamento", departamento));
+                                        commandUpdatePuesto.Parameters.Add(new SqlParameter("@NombrePuesto", puesto));
+
+                                        commandUpdatePuesto.ExecuteNonQuery();
+                                    }
+                                }
+
+                                // Llamar a la stored procedure para actualizar el historial del salario
+                                using (SqlConnection connectionUpdateSalario = new SqlConnection(connectionString))
+                                {
+                                    connectionUpdateSalario.Open();
+                                    string queryUpdateSalario = "EXEC actualizarHistoricoSalario2 @CedulaEmpleado, @FechaInicio, @FechaFin, @Monto, @Departamento, @NombrePuesto";
+                                    using (SqlCommand commandUpdateSalario = new SqlCommand(queryUpdateSalario, connectionUpdateSalario))
+                                    {
+                                        commandUpdateSalario.Parameters.Add(new SqlParameter("@CedulaEmpleado", projectEmpleadoM));
+                                        commandUpdateSalario.Parameters.Add(new SqlParameter("@FechaInicio", fechaIngreso));
+                                        commandUpdateSalario.Parameters.Add(new SqlParameter("@FechaFin", projectFechaFin));
+                                        commandUpdateSalario.Parameters.Add(new SqlParameter("@Monto", salarioActual));
+                                        commandUpdateSalario.Parameters.Add(new SqlParameter("@Departamento", departamento));
+                                        commandUpdateSalario.Parameters.Add(new SqlParameter("@NombrePuesto", puesto));
+
+                                        commandUpdateSalario.ExecuteNonQuery();
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                // Manejar caso en que no se encuentra el empleado
+                                ModelState.AddModelError(string.Empty, "Empleado no encontrado.");
+                                return Page();
+                            }
+                        }
+                    }
+                }
+                catch (SqlException ex)
+                {
+                    _logger.LogError(ex, "Error al modificar el empleado.");
+                    ModelState.AddModelError(string.Empty, "Error al modificar el empleado.");
+                    return Page();
+                }
+            }
+
+            // Modificar el empleado después de actualizar los historiales
+            using (SqlConnection connectionModificar = new SqlConnection(connectionString))
+            {
+                connectionModificar.Open();
+                string queryModificarEmpleado = "EXEC ModificarEmpleado @Cedula, @Puesto, @SalarioActual";
+                using (SqlCommand commandModificarEmpleado = new SqlCommand(queryModificarEmpleado, connectionModificar))
+                {
+                    commandModificarEmpleado.Parameters.Add(new SqlParameter("@Cedula", projectEmpleadoM));
+                    commandModificarEmpleado.Parameters.Add(new SqlParameter("@Puesto", projectPuestosM));
+                    commandModificarEmpleado.Parameters.Add(new SqlParameter("@SalarioActual", projectSalarioACM));
+
+                    commandModificarEmpleado.ExecuteNonQuery();
+                }
+            }
+
+            return Page();
+        }
+
+
+
+
+        //Guarda la planilla y realiza el calculo del salario
+
+        public IActionResult OnPostGuardarPlanilla(string projectPlanillaCodigo, DateOnly projectFechaPlanilla, string projectEmpleadoP, int projectPlanillaHoras)
         {
             string connectionString = _configuration.GetConnectionString("DefaultConnection");
 
@@ -691,37 +828,84 @@ namespace Proyecto_2.Pages
                 try
                 {
                     connection.Open();
-                    string query = "EXEC ModificarEmpleado @Cedula, @Puesto, @SalarioActual";
 
-                    using (SqlCommand command = new SqlCommand(query, connection))
+                    // Agregar la planilla
+                    string query = "EXEC AgregarPlanilla @CodigoPlanilla, @FechaPlanilla, @CedulaEmpleado, @HorasRealizadas";
+                    using (SqlCommand commandPlanilla = new SqlCommand(query, connection))
                     {
-                        command.Parameters.Add(new SqlParameter("@Cedula", projectEmpleadoM));
-                        command.Parameters.Add(new SqlParameter("@Puesto", projectPuestosM));
-                        command.Parameters.Add(new SqlParameter("@SalarioActual", projectSalarioACM));
-                        Console.WriteLine($"Cedula: {projectEmpleadoM}, Puesto: {projectPuestosM}, Salario Actual: {projectSalarioACM}");
+                        commandPlanilla.Parameters.Add(new SqlParameter("@CodigoPlanilla", projectPlanillaCodigo));
+                        commandPlanilla.Parameters.Add(new SqlParameter("@FechaPlanilla", projectFechaPlanilla));
+                        commandPlanilla.Parameters.Add(new SqlParameter("@CedulaEmpleado", projectEmpleadoP));
+                        commandPlanilla.Parameters.Add(new SqlParameter("@HorasRealizadas", projectPlanillaHoras));
 
-
-
-                        command.ExecuteNonQuery();
+                        commandPlanilla.ExecuteNonQuery();
                     }
+
+                    // Calcular el salario
+                    string queryUpdatePago = "EXEC CalcularPago @CodigoPlanilla";
+                    using (SqlCommand commandUpdateSalario = new SqlCommand(queryUpdatePago, connection))
+                    {
+                        commandUpdateSalario.Parameters.Add(new SqlParameter("@CodigoPlanilla", projectPlanillaCodigo));
+                        commandUpdateSalario.ExecuteNonQuery();
+                    }
+
+                    return RedirectToPage(); // Redirigir después de guardar
                 }
                 catch (SqlException ex)
                 {
-
-                    _logger.LogError(ex, "Error al insertar el rol por accion.");
-                    ModelState.AddModelError(string.Empty, "Error al guardar el rol por accion.");
+                    _logger.LogError(ex, "Error al guardar la planilla.");
+                    ModelState.AddModelError(string.Empty, "Error al guardar la planilla.");
                     return Page();
                 }
             }
-
-            Console.WriteLine("Si se inserto la acción por rol");
-            return Page();
-
-
-
-
         }
 
     }
-}
 
+
+    public IActionResult OnPostModificarCotizacion(int projectCotizacionC, string projectClienteC, string projectEmpleadoC, DateOnly projectFechaC,
+            DateOnly projectFechaF, string projectTipoC, string projectEstadoC, double projectProbabilidadC,
+            string projectZona, string projectSector)
+    {
+        string connectionString = _configuration.GetConnectionString("DefaultConnection");
+
+        using (SqlConnection connection = new SqlConnection(connectionString))
+        {
+            try
+            {
+                connection.Open();
+                string query = "EXEC actualizarCotizacion @Codigo, @CedulaCliente, @CedulaEmpleado, @FechaCotizacion,@MesProyectadoCierre, @TipoCotizacion, @Estado, @Probabilidad, @Zona, @Sector";
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.Add(new SqlParameter("@CedulaCliente", projectClienteC));
+                    command.Parameters.Add(new SqlParameter("@CedulaEmpleado", projectEmpleadoC));
+                    command.Parameters.Add(new SqlParameter("@FechaCotizacion", projectFechaC));
+                    command.Parameters.Add(new SqlParameter("@MesProyectadoCierre", projectFechaF));
+                    command.Parameters.Add(new SqlParameter("@TipoCotizacion", projectTipoC));
+                    command.Parameters.Add(new SqlParameter("@Estado", projectEstadoC));
+                    command.Parameters.Add(new SqlParameter("@Probabilidad", projectProbabilidadC));
+                    command.Parameters.Add(new SqlParameter("@Zona", projectZona));
+                    command.Parameters.Add(new SqlParameter("@Sector", projectSector));
+
+
+                    command.ExecuteNonQuery();
+                }
+            }
+            catch (SqlException ex)
+            {
+
+                _logger.LogError(ex, "Error al insertar el rol por accion.");
+                ModelState.AddModelError(string.Empty, "Error al guardar el rol por accion.");
+                return Page();
+            }
+        }
+
+        Console.WriteLine("Si se inserto la acción por rol");
+        return Page();
+
+
+
+
+    }
+}

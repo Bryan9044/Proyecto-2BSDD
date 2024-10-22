@@ -7,8 +7,7 @@ GO
 CREATE TABLE Usuarios (
     IDUsuario INT IDENTITY(1,1) PRIMARY KEY,
     NombreUS VARCHAR(50) NOT NULL UNIQUE,
-    ContrasenaUS VARCHAR(255) NOT NULL,
-	CHECK (IDUsuario >=0)
+    ContrasenaUS VARCHAR(255) NOT NULL
 );
 INSERT INTO Usuarios(NombreUS, ContrasenaUS) values
 ('p1','pp'),
@@ -20,8 +19,7 @@ CREATE TABLE Zona (
 	Nombre VARCHAR(20) UNIQUE NOT NULL,
 	TamanoKmCuadrado INT NOT NULL,
 	Descripcion VARCHAR(200),
-	PRIMARY KEY (Nombre),
-	CHECK (TamanoKmCuadrado >=0)
+	PRIMARY KEY (Nombre)
 );
 
 
@@ -75,7 +73,7 @@ insert into Estado(TipoEstado,Descripcion) values
 
 
 CREATE TABLE Probabilidad (
-	Porcentaje FLOAT NOT NULL,
+	Porcentaje FLOAT,
 	ProbabilidadEstimada VARCHAR(20),
 	PRIMARY KEY (Porcentaje)
 );
@@ -91,7 +89,7 @@ VALUES
 
 CREATE TABLE Prioridad(
 	TipoPrioridad VARCHAR(20) NOT NULL,
-	Descripcion VARCHAR(200) not null
+	Descripcion varchar(200) not null
 	PRIMARY KEY (TipoPrioridad)
 );
 
@@ -132,10 +130,9 @@ INSERT INTO Departamento(Codigo, Nombre) values
 
 
 CREATE TABLE Modulos (
-    IDModulo INT PRIMARY KEY NOT NULL,
+    IDModulo INT PRIMARY KEY,
     NombreModulo VARCHAR(50) UNIQUE NOT NULL,
-    Descripcion VARCHAR(200),
-	CHECK (IDModulo >=0)
+    Descripcion VARCHAR(200)
 );
 
 INSERT INTO Modulos(IDModulo,NombreModulo,Descripcion) values
@@ -152,8 +149,7 @@ CREATE TABLE Acciones (
     IDAccion INT NOT NULL,
     tipoAccion VARCHAR(40) UNIQUE,
     descripcion VARCHAR(200),
-    PRIMARY KEY (IDAccion),
-	CHECK (IDAccion >=0)
+    PRIMARY KEY (IDAccion)
 );
 
 INSERT INTO Acciones(IDAccion,tipoAccion,descripcion) values
@@ -165,8 +161,8 @@ INSERT INTO Acciones(IDAccion,tipoAccion,descripcion) values
 
 
 CREATE TABLE ModulosXAcciones (
-    NombreModulo varchar(50) NOT NULL,
-    tipoAccion varchar(40) NOT NULL,
+    NombreModulo varchar(50),
+    tipoAccion varchar(40),
     PRIMARY KEY (NombreModulo, tipoAccion),
     FOREIGN KEY (NombreModulo) REFERENCES Modulos(NombreModulo),
     FOREIGN KEY (tipoAccion) REFERENCES Acciones(tipoAccion)
@@ -178,11 +174,10 @@ insert into ModulosXAcciones(NombreModulo,tipoAccion) values
 
 
 CREATE TABLE Roles (
-    IDRol INT IDENTITY(1,1) NOT NULL, --Preguntar si se puede autoIncrementar
-    tipoRol VARCHAR(20) UNIQUE NOT NULL,
+    IDRol INT IDENTITY(1,1) , --Preguntar si se puede autoIncrementar
+    tipoRol VARCHAR(20) UNIQUE,
 	Descripcion varchar(200),
-    PRIMARY KEY (IDRol),
-	CHECK (IDRol >=0)
+    PRIMARY KEY (IDRol)
 );
 insert into Roles(tipoRol,Descripcion) values
 ('Ayudante','Ayuda en todas las tareas al admin'),
@@ -190,8 +185,8 @@ insert into Roles(tipoRol,Descripcion) values
 
 
 CREATE TABLE AccionesXrol (
-    tipoRol VARCHAR(20) NOT NULL,
-    tipoAccion VARCHAR(40) NOT NULL,
+    tipoRol VARCHAR(20),
+    tipoAccion VARCHAR(40),
     PRIMARY KEY (tipoRol, tipoAccion),
     FOREIGN KEY (tipoRol) REFERENCES Roles(tipoRol),
     FOREIGN KEY (tipoAccion) REFERENCES Acciones(tipoAccion)
@@ -207,10 +202,9 @@ INSERT INTO AccionesXrol (tipoRol, tipoAccion) VALUES ('SuperUsuario', 'Reporter
 
 CREATE TABLE Puesto(
 	TipoPuesto VARCHAR(35) NOT NULL,
-	Salario INT NOT NULL,
+	Salario int NOT NULL,
 	Descripcion VARCHAR(200) NOT NULL,
-	PRIMARY KEY (TipoPuesto),
-	CHECK (Salario >=0)
+	PRIMARY KEY (TipoPuesto)
 );
 
 INSERT INTO Puesto(TipoPuesto, Salario, Descripcion) values
@@ -266,8 +260,7 @@ CREATE TABLE HistoricoPuesto (
     FechaFin DATE not null, 
     NombrePuesto VARCHAR(50) not null, 
     Departamento VARCHAR(50) not null,
-    FOREIGN KEY (CedulaEmpleado) REFERENCES Empleado(Cedula),
-	CHECK (IdHistoricoPuesto >=0)
+    FOREIGN KEY (CedulaEmpleado) REFERENCES Empleado(Cedula)
 );
 
 CREATE TABLE HistoricoSalario (
@@ -278,30 +271,20 @@ CREATE TABLE HistoricoSalario (
     Monto Decimal not null, 
     NombrePuesto VARCHAR(50) not null, 
     Departamento VARCHAR(50) not null,
-    FOREIGN KEY (CedulaEmpleado) REFERENCES Empleado(Cedula),
-	CHECK (IdHistoricoSalario >=0)
+    FOREIGN KEY (CedulaEmpleado) REFERENCES Empleado(Cedula)
 );
 
 
 CREATE TABLE Planilla (
 	CodigoPlanilla VARCHAR(15) NOT NULL,
 	FechaPlanilla date not null,   
-	CedulaEmpleado varchar(9) not null,  --Creo que esto solo permitiria 1 empleado por planilla
+	CedulaEmpleado varchar(9) not null,
 	HorasRealizadas int not null,
 	Salario int, --HAY QUE CAMBIARLO URGENTE DEBE SER NULO PORQUE SE CALCULA DESPUES DE LAS HORAS
 	foreign key (CedulaEmpleado) references Empleado(Cedula),
 	Primary key (CodigoPlanilla, CedulaEmpleado)
 
 );
-
---CREATE TABLE EmpleadoPlanilla (
---	CodigoPlanilla VARCHAR(15) NOT NULL,
---	CedulaEmpleado VARCHAR(15) NOT NULL,
---	HorasRealizadas INT NOT NULL,
---	PRIMARY KEY (CodigoPlanilla, CedulaEmpleado),
---	FOREIGN KEY (CodigoPlanilla) REFERENCES Planilla(CodigoPlanilla),  Esta de aqui no va a servir hasta que Planilla solo tenga CodigoPlanilla como unica PK
---	FOREIGN KEY (CedulaEmpleado) REFERENCES Empleado(Cedula),
---)
 
 
 CREATE TABLE Familia (
@@ -349,10 +332,7 @@ CREATE TABLE Articulo (
 	PrecioEstandar decimal not null,
 	Descripcion VARCHAR(200) not null,
 	PRIMARY KEY (Codigo),
-	FOREIGN KEY (CodigoFamilia) references Familia(CodigoFamilia),
-	CHECK (Peso >=0),
-	CHECK (Costo >=0),
-	CHECK (PrecioEstandar >=0)
+	FOREIGN KEY (CodigoFamilia) references Familia(CodigoFamilia)
 );
 
 INSERT INTO Articulo (CodigoFamilia, Codigo, Nombre,Activo, Peso, Costo,PrecioEstandar,Descripcion) VALUES
@@ -473,20 +453,7 @@ CREATE TABLE Bodega (
 	Ubicacion VARCHAR(20) NOT NULL,
 	EspacioCubico int NOT NULL,
 	CapacidadTon int NOT NULL,
-	PRIMARY KEY (Codigo),
-	CHECK (EspacioCubico >=0),
-	CHECK (CapacidadTon >=0)
-);
-
-CREATE TABLE BodegaArticulo ( --Para poder tener existencias, a lo que entendi, asi se tiene capacidad y la tabla familiabodega se encarga de validar si ese articulo puede estar en la bodega
-	CodigoBodega VARCHAR(15) NOT NULL,
-	CodigoArticulo VARCHAR(15) NOT NULL,
-	Existencias INT,
-	PRIMARY KEY (CodigoBodega, CodigoArticulo),
-	FOREIGN KEY (CodigoBodega) REFERENCES Bodega(Codigo),
-	FOREIGN KEY (CodigoArticulo) REFERENCES Articulo(Codigo),
-	CHECK (Existencias >=0),
-	DEFAULT 0 FOR Existencias
+	PRIMARY KEY (Codigo)
 );
 
 INSERT INTO Bodega(Codigo, Nombre,Ubicacion,EspacioCubico,CapacidadTon) values
@@ -544,12 +511,12 @@ insert into FamiliaBodega(CodigoBodega,CodigoFamilia) values
 CREATE TABLE Cliente (
     Cedula VARCHAR(9) NOT NULL,
     Telefono VARCHAR(8) NOT NULL,
-    Genero CHAR(1) NOT NULL,
+    Genero char(1) NOT NULL,
     Nombre VARCHAR(20) NOT NULL,
     CorreoElectronico VARCHAR(50) NOT NULL,
     Fax VARCHAR(20) not null,
-    Sector VARCHAR(20) not null,
-    Zona VARCHAR(20) not null,
+    Sector varchar(20) not null,
+    Zona varchar(20) not null,
 	Celular VARCHAR(8) NOT NULL,
 	PRIMARY KEY (Cedula)
 );
@@ -625,8 +592,7 @@ CREATE TABLE Cotizacion (
 	FOREIGN KEY (Probabilidad) REFERENCES Probabilidad(Porcentaje),
 	FOREIGN KEY (Estado) REFERENCES  Estado(TipoEstado),
 	FOREIGN KEY (Zona) REFERENCES Zona(Nombre),
-    FOREIGN KEY (Sector) REFERENCES Sector(Nombre),
-	CHECK (Codigo >=0)
+    FOREIGN KEY (Sector) REFERENCES Sector(Nombre)
 );
 
 CREATE TABLE Caso (
@@ -706,7 +672,6 @@ CREATE TABLE ListaMovimiento (
 	PRIMARY KEY (CodigoArticulo, CodigoMovimiento),
 	FOREIGN KEY (CodigoArticulo) REFERENCES Articulo(Codigo),
 	FOREIGN KEY (CodigoMovimiento) REFERENCES Movimiento(IDMovimiento),
-	CHECK (CantidadArticulo >=0),
 );
 -------------
 
@@ -1026,7 +991,7 @@ create function MostrarEmpleados()
 returns table
 as
 return(
-	select Nombre,Cedula from Empleado
+	select Cedula from Empleado
 );
 
 
@@ -1153,136 +1118,99 @@ create procedure actualizarHistoricoSalario2
 	insert into HistoricoSalario(CedulaEmpleado,FechaInicio,FechaFin,Monto ,NombrePuesto,Departamento) values
 	(@CedulaEmpleado,@FechaInicio,@FechaFin,@Monto,@NombrePuesto,@Departamento)
 	end;
-GO
+
 
 
 
 	--TODO ESTO ES PARA MODIFICAR EMPLEADO
 
---Funcion para calcular el salario de una planilla
 
---CREATE FUNCTION calcularSalario(@CodigoPlanilla VARCHAR(15)) 
---RETURNS INT
---AS
---BEGIN
---	DECLARE @SalarioTotal INT;
---	SELECT @SalarioTotal = SUM(p.Salario * p.HorasRealizadas)
---	FROM EmpleadoPlanilla ep
---	JOIN Planilla p ON ep.CodigoPlanilla = p.CodigoPlanilla
---	JOIN Empleado e ON ep.CodigoEmpleado = e.CodigoEmpleado
---	JOIN Puesto pu ON e.TipoPuesto = pu.TipoPuesto
---	WHERE @CodigoPlanilla = p.CodigoPlanilla
---	RETURN @SalarioTotal
---END;
 
---GO
---Updates para modificacion de tablas
 
---Agrega la cantidad @Existencias a la tabla BodegaArticulo
-CREATE PROCEDURE AgregarExistenciasBodegaArticulo
-	@CodigoBodega VARCHAR(15),
-	@CodigoArticulo VARCHAR(15),
-	@Existencias INT
-AS
-	BEGIN UPDATE BodegaArticulo
-	SET Existencias = Existencias + @Existencias
-	WHERE CodigoBodega = @CodigoBodega AND CodigoArticulo = @CodigoArticulo
+	CREATE TABLE Planilla (
+	CodigoPlanilla VARCHAR(15) NOT NULL,
+	FechaPlanilla date not null,   
+	CedulaEmpleado varchar(9) not null,
+	HorasRealizadas int not null,
+	Salario int NULL, --HAY QUE CAMBIARLO URGENTE DEBE SER NULO PORQUE SE CALCULA DESPUES DE LAS HORAS
+	foreign key (CedulaEmpleado) references Empleado(Cedula),
+	Primary key (CodigoPlanilla, CedulaEmpleado)
+
+);
+
+
+
+go
+	create procedure AgregarPlanilla
+	@CodigoPlanilla VARCHAR(15),
+	@FechaPlanilla date,   
+	@CedulaEmpleado varchar(9),
+	@HorasRealizadas int
+	as
+	begin
+		insert into Planilla(CodigoPlanilla,FechaPlanilla,CedulaEmpleado,HorasRealizadas) values
+		(@CodigoPlanilla,@FechaPlanilla,@CedulaEmpleado,@HorasRealizadas)
+	end;
+
+
+	go
+	--Para calcular el pago de una planilla
+	CREATE PROCEDURE CalcularPago
+    @CodigoPlanilla VARCHAR(15) 
+AS 
+BEGIN
+    DECLARE @HorasRealizadas INT;
+    DECLARE @Cedula VARCHAR(9);
+    DECLARE @SalarioActual int;
+    DECLARE @NuevoSalario int;
+    DECLARE @Excedente INT; 
+
+    SELECT @HorasRealizadas = HorasRealizadas, 
+           @Cedula = CedulaEmpleado
+    FROM Planilla
+    WHERE CodigoPlanilla = @CodigoPlanilla;
+
+    SELECT @SalarioActual = SalarioActual
+    FROM Empleado
+    WHERE Cedula = @Cedula;
+	    -- Calcular el nuevo salario
+    IF @HorasRealizadas > 200
+    BEGIN 
+        SET @Excedente = @HorasRealizadas - 200;  --Estas vienen a ser las horas extras
+        SET @NuevoSalario = (@SalarioActual / 200) * @Excedente * 1.5 + @SalarioActual ;
+    END
+    ELSE
+    BEGIN
+        SET @NuevoSalario = @SalarioActual 
+    END
+
+    -- Actualizar el salario en la tabla Planilla
+    UPDATE Planilla
+    SET Salario = @NuevoSalario
+    WHERE CodigoPlanilla = @CodigoPlanilla;
 END;
+
+
+
+
+
 GO
---Resta la cantidad @Existencias a la tabla BodegaArticulo, tiene funcionalidad para validar que 
-CREATE PROCEDURE RestarExistenciasBodegaArticulo
-    @CodigoBodega VARCHAR(15),
-    @CodigoArticulo VARCHAR(15),
-    @Existencias INT
+CREATE PROCEDURE actualizarCotizacion
+    @Codigo INT, -- Agregado
+    @CedulaCliente VARCHAR(9), 
+    @CedulaEmpleado VARCHAR(9),
+    @FechaCotizacion DATE,
+    @MesProyectadoCierre DATE,
+    @TipoCotizacion VARCHAR(50),
+    @Estado VARCHAR(20),
+    @Probabilidad FLOAT,
+    @Zona VARCHAR(20),
+    @Sector VARCHAR(20)
 AS
 BEGIN
-    BEGIN TRY
-        DECLARE @ExistenciasActuales INT;
-
-        SELECT @ExistenciasActuales = Existencias
-        FROM BodegaArticulo
-        WHERE CodigoBodega = @CodigoBodega AND CodigoArticulo = @CodigoArticulo;
-
-        IF (@ExistenciasActuales - @Existencias) < 0
-        BEGIN
-            RAISERROR('No es posible restar más existencias de las disponibles. Existencias actuales: %d, Cantidad solicitada: %d.', 16, 1, @ExistenciasActuales, @Existencias);
-            RETURN;
-        END
-
-        UPDATE BodegaArticulo
-        SET Existencias = Existencias - @Existencias
-        WHERE CodigoBodega = @CodigoBodega AND CodigoArticulo = @CodigoArticulo;
-
-    END TRY
-    BEGIN CATCH
-        DECLARE @ErrorMessage NVARCHAR(4000) = ERROR_MESSAGE();
-        DECLARE @ErrorSeverity INT = ERROR_SEVERITY();
-        DECLARE @ErrorState INT = ERROR_STATE();
-        
-        RAISERROR('Existencias insuficientes: %s', @ErrorSeverity, @ErrorState, @ErrorMessage);
-    END CATCH;
+    UPDATE Cotizacion
+    SET 
+        CedulaCliente = @CedulaCliente,CedulaEmpleado = @CedulaEmpleado, FechaCotizacion = @FechaCotizacion, MesProyectadoCierre = @MesProyectadoCierre,
+        TipoCotizacion = @TipoCotizacion, Estado = @Estado, Probabilidad = @Probabilidad, Zona = @Zona, Sector = @Sector
+    WHERE Codigo = @Codigo;
 END;
-GO
-
---Para actulizar los datos de un cliente, Este es universal por que verifica si existe o no el dato a actualizar antes de usarlo, me avisa si le gusta este estilo o prefiere por separado
-CREATE PROCEDURE ActualizarCliente
-    @CedulaCliente VARCHAR(15),
-    @NuevoNombre VARCHAR(20) = NULL,
-    @NuevoCorreoElectronico VARCHAR(20) = NULL,
-    @NuevoCelular VARCHAR(8) = NULL,
-    @NuevoFax VARCHAR(20) = NULL,
-    @NuevaZona VARCHAR(20) = NULL,
-    @NuevoSector VARCHAR(20) = NULL
-AS
-BEGIN
-    BEGIN TRY
-        IF @NuevoNombre IS NOT NULL
-        BEGIN
-            UPDATE Cliente
-            SET Nombre = @NuevoNombre
-            WHERE CedulaCliente = @CedulaCliente;
-        END
-        IF @NuevoCorreoElectronico IS NOT NULL
-        BEGIN
-            UPDATE Cliente
-            SET CorreoElectronico = @NuevoCorreoElectronico
-            WHERE CedulaCliente = @CedulaCliente;
-        END
-
-        IF @NuevoCelular IS NOT NULL
-        BEGIN
-            UPDATE Cliente
-            SET Celular = @NuevoCelular
-            WHERE CedulaCliente = @CedulaCliente;
-        END
-
-        IF @NuevoFax IS NOT NULL
-        BEGIN
-            UPDATE Cliente
-            SET Fax = @NuevoFax
-            WHERE CedulaCliente = @CedulaCliente;
-        END
-
-        IF @NuevaZona IS NOT NULL
-        BEGIN
-            UPDATE Cliente
-            SET Zona = @NuevaZona
-            WHERE CedulaCliente = @CedulaCliente;
-        END
-
-        IF @NuevoSector IS NOT NULL
-        BEGIN
-            UPDATE Cliente
-            SET Sector = @NuevoSector
-            WHERE CedulaCliente = @CedulaCliente;
-        END
-    END TRY
-    BEGIN CATCH
-        DECLARE @ErrorMessage NVARCHAR(4000) = ERROR_MESSAGE();
-        DECLARE @ErrorSeverity INT = ERROR_SEVERITY();
-        DECLARE @ErrorState INT = ERROR_STATE();
-        
-        RAISERROR('Error al actualizar el cliente: %s', @ErrorSeverity, @ErrorState, @ErrorMessage);
-    END CATCH;
-END;
-GO
