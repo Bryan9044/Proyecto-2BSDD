@@ -657,7 +657,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="modalLabel">Registrar cotización</h5>
+                <h5 class="modal-title" id="modalLabel">Modificar cotización</h5>
                 <form method="post" asp-page-handler="CerrarModal9">
                     <button type="submit" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </form>
@@ -666,7 +666,7 @@
                 <!-- Esto es para pasar la info a OnPostGuardarUsuario -->
                 <form method="post" asp-page-handler="ModificarCotizacion">
                     <div class="modalCotizacionC">
-                        <label for="projectCotizacionC" class="form-label">Cliente</label>
+                        <label for="projectCotizacionC" class="form-label">Cotizaciones</label>
                         <select class="form-control" id="projectCotizacionC" name="projectCotizacionC" required>
                             @foreach (var cotizacion in Model.Cotizaciones)
                             {
@@ -764,6 +764,70 @@
                             }
                         </select>
                     </div>
+                    <br />
+                    <button type="submit" class="btn btn-primary">Guardar cotizacion</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <!-- Esto es para cerrar -->
+                <form method="post" asp-page-handler="CerrarModal9">
+                    <button type="submit" class="btn btn-secondary">Cerrar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<br />
+
+
+
+
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalCotizacionA" asp-page-handler="MostrarModal10">
+    Agregar articulos a cotizacion
+</button>
+
+
+
+<div class="modal fade" id="modalCotizacionA" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalLabel">Agregar aticulos a una cotización</h5>
+                <form method="post" asp-page-handler="CerrarModal10">
+                    <button type="submit" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </form>
+            </div>
+            <div class="modal-body">
+                <!-- Esto es para pasar la info a OnPostGuardarUsuario -->
+                <form method="post" asp-page-handler="AgregarArticulosCotizacion">
+                    <div class="modalCotizacionC">
+                        <label for="projecCotizacionAr" class="form-label">Escoja un producto</label>
+                        <select class="form-control" id="projecCotizacionAr" name="projecCotizacionAr" required>
+                            @foreach (var articulo in Model.Articulos)
+                            {
+                                <option value="@articulo">@articulo</option>
+                            }
+                        </select>
+                    </div>
+
+
+                    <div class="modalCantidadProduc">
+                        <label for="projectProductos" class="form-label">Cantidad</label>
+                        <input type="number" class="form-control" id="projectProductos" name="projectProductos" required>
+                    </div>
+                    <br />
+
+
+                    <div class="modalCotizacionC">
+                        <label for="projectCotizacionC" class="form-label">Cotizaciones</label>
+                        <select class="form-control" id="projectCotizacionC" name="projectCotizacionC" required>
+                            @foreach (var cotizacion in Model.Cotizaciones)
+                            {
+                                <option value="@cotizacion">@cotizacion</option>
+                            }
+                        </select>
+                    </div>
+           
                     <br />
                     <button type="submit" class="btn btn-primary">Guardar cotizacion</button>
                 </form>

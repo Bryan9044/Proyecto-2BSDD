@@ -1,6 +1,50 @@
 CREATE DATABASE ERPPRUEBA
 GO
+    public IActionResult OnPostModificarCotizacion(int projectCotizacionC, string projectClienteC, string projectEmpleadoC, DateOnly projectFechaC,
+            DateOnly projectFechaF, string projectTipoC, string projectEstadoC, double projectProbabilidadC,
+            string projectZona, string projectSector)
+    {
+        string connectionString = _configuration.GetConnectionString("DefaultConnection");
 
+        using (SqlConnection connection = new SqlConnection(connectionString))
+        {
+            try
+            {
+                connection.Open();
+                string query = "EXEC actualizarCotizacion @Codigo, @CedulaCliente, @CedulaEmpleado, @FechaCotizacion,@MesProyectadoCierre, @TipoCotizacion, @Estado, @Probabilidad, @Zona, @Sector";
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.Add(new SqlParameter("@CedulaCliente", projectClienteC));
+                    command.Parameters.Add(new SqlParameter("@CedulaEmpleado", projectEmpleadoC));
+                    command.Parameters.Add(new SqlParameter("@FechaCotizacion", projectFechaC));
+                    command.Parameters.Add(new SqlParameter("@MesProyectadoCierre", projectFechaF));
+                    command.Parameters.Add(new SqlParameter("@TipoCotizacion", projectTipoC));
+                    command.Parameters.Add(new SqlParameter("@Estado", projectEstadoC));
+                    command.Parameters.Add(new SqlParameter("@Probabilidad", projectProbabilidadC));
+                    command.Parameters.Add(new SqlParameter("@Zona", projectZona));
+                    command.Parameters.Add(new SqlParameter("@Sector", projectSector));
+
+
+                    command.ExecuteNonQuery();
+                }
+            }
+            catch (SqlException ex)
+            {
+
+                _logger.LogError(ex, "Error al insertar el rol por accion.");
+                ModelState.AddModelError(string.Empty, "Error al guardar el rol por accion.");
+                return Page();
+            }
+        }
+
+        Console.WriteLine("Si se inserto la acción por rol");
+        return Page();
+
+
+
+
+    }
 USE ERPPRUEBA;
 GO
 
@@ -334,6 +378,8 @@ CREATE TABLE Articulo (
 	PRIMARY KEY (Codigo),
 	FOREIGN KEY (CodigoFamilia) references Familia(CodigoFamilia)
 );
+
+
 
 INSERT INTO Articulo (CodigoFamilia, Codigo, Nombre,Activo, Peso, Costo,PrecioEstandar,Descripcion) VALUES
 ('Fam1', 'ART1', 'Lápiz HB', 'Si', 0.02, 0.5, 100.0, 'Lápiz de grafito para escritura.'),
@@ -757,6 +803,8 @@ CREATE TABLE ListaCotizacion (
 	FOREIGN KEY (CodigoProducto) REFERENCES Articulo(Codigo),
 	FOREIGN KEY (CodigoCotizacion) REFERENCES Cotizacion(Codigo)
 );
+
+
 
 
 --Esto hay que ejecutarlo ahora
@@ -1214,3 +1262,42 @@ BEGIN
         TipoCotizacion = @TipoCotizacion, Estado = @Estado, Probabilidad = @Probabilidad, Zona = @Zona, Sector = @Sector
     WHERE Codigo = @Codigo;
 END;
+
+
+GO
+create function MostrarCodigoCotizacion()
+returns table
+as
+return
+(
+	select Codigo from Cotizacion
+);
+
+
+
+go
+
+create function MostrarArticulos()
+returns table
+as
+return(
+	select Nombre from Articulo
+);
+
+
+go
+create procedure AgregarListaCotizacion
+    @CantidadProducto INT,
+    @CodigoCotizacion INT,
+    @Nombre VARCHAR(40)
+as
+begin
+    declare @CodigoProducto VARCHAR(15);
+
+    select @CodigoProducto = Codigo 
+    from Articulo  
+    where Nombre = @Nombre;
+
+    insert into ListaCotizacion(CodigoProducto, CantidadProducto, CodigoCotizacion) 
+    values (@CodigoProducto, @CantidadProducto, @CodigoCotizacion);
+end;

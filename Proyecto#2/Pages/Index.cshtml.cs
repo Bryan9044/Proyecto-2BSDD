@@ -33,6 +33,7 @@ namespace Proyecto_2.Pages
         public bool ShowModal8 { get; set; }
 
         public bool ShowModal9 { get; set; }
+        public bool ShowModal10 { get; set; }
         public List<string> Roles { get; set; } = new List<string>();//ya
 
         public List<string> Acciones { get; set; } = new List<string>(); //ya
@@ -79,6 +80,8 @@ namespace Proyecto_2.Pages
         public List<string> Empleados { get; set; } = new List<string>();//ya
         public List<string> TiposEstadosC { get; set; } = new List<string>(); //ya
         public List<int> Cotizaciones { get; set; } = new List<int>(); //ya
+        public List<string> Articulos { get; set; } = new List<string>(); //ya
+
 
 
 
@@ -115,7 +118,7 @@ namespace Proyecto_2.Pages
             Clientes = new List<string>();
             Empleados = new List<string>();
             TiposEstadosC = new List<string>();
-            Cotizaciones = new List<int>();  
+            Cotizaciones = new List<int>();
 
             string connectionString = _configuration.GetConnectionString("DefaultConnection");
 
@@ -429,6 +432,25 @@ namespace Proyecto_2.Pages
                 }
             }
             //Hasta aqui Tipos de estado de una cotizacion
+
+
+            //Esta parte es para obtener todos las zonas que hayan sido registradas en la base de datos
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                string query = "select * from MostrarArticulos()";
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            Articulos.Add(reader.GetString(0));
+                        }
+                    }
+                }
+            }
+            //Hasta aqui zonas
         }
 
 
@@ -436,7 +458,7 @@ namespace Proyecto_2.Pages
 
         public IActionResult OnGetMostrarModal()
         {
-            ShowModal1 = true; // Mostrar el modal
+            ShowModal1 = true; 
             return Page();
         }
 
@@ -448,7 +470,7 @@ namespace Proyecto_2.Pages
 
         public IActionResult OnGetMostrarModal2()
         {
-            ShowModal2 = true; // Mostrar el modal
+            ShowModal2 = true; 
             return Page();
         }
 
@@ -461,7 +483,7 @@ namespace Proyecto_2.Pages
 
         public IActionResult OnGetMostrarModal3()
         {
-            ShowModal3 = true; // Mostrar el modal
+            ShowModal3 = true; 
             return Page();
         }
 
@@ -474,7 +496,7 @@ namespace Proyecto_2.Pages
 
         public IActionResult OnGetMostrarModal4()
         {
-            ShowModal4 = true; // Mostrar el modal
+            ShowModal4 = true; 
             return Page();
         }
 
@@ -486,7 +508,7 @@ namespace Proyecto_2.Pages
 
         public IActionResult OnGetMostrarModal5()
         {
-            ShowModal5 = true; // Mostrar el modal
+            ShowModal5 = true; 
             return Page();
         }
 
@@ -497,7 +519,7 @@ namespace Proyecto_2.Pages
         }
         public IActionResult OnGetMostrarModal6()
         {
-            ShowModal6 = true; // Mostrar el modal
+            ShowModal6 = true; 
             return Page();
         }
 
@@ -510,7 +532,7 @@ namespace Proyecto_2.Pages
 
         public IActionResult OnGetMostrarModal7()
         {
-            ShowModal7 = true; // Mostrar el modal
+            ShowModal7 = true;
             return Page();
         }
 
@@ -523,7 +545,7 @@ namespace Proyecto_2.Pages
 
         public IActionResult OnGetMostrarModal8()
         {
-            ShowModal8 = true; // Mostrar el modal
+            ShowModal8 = true;
             return Page();
         }
 
@@ -536,13 +558,26 @@ namespace Proyecto_2.Pages
 
         public IActionResult OnGetMostrarModal9()
         {
-            ShowModal9 = true; // Mostrar el modal
+            ShowModal9 = true; 
             return Page();
         }
 
         public IActionResult OnPostCerrarModal9()
         {
             ShowModal9 = false;
+            return RedirectToPage();
+        }
+
+
+        public IActionResult OnGetMostrarModal10()
+        {
+            ShowModal10 = true; 
+            return Page();
+        }
+
+        public IActionResult OnPostCerrarModa10()
+        {
+            ShowModal10 = false;
             return RedirectToPage();
         }
 
@@ -860,49 +895,91 @@ namespace Proyecto_2.Pages
             }
         }
 
-    }
 
 
-    public IActionResult OnPostModificarCotizacion(int projectCotizacionC, string projectClienteC, string projectEmpleadoC, DateOnly projectFechaC,
-            DateOnly projectFechaF, string projectTipoC, string projectEstadoC, double projectProbabilidadC,
-            string projectZona, string projectSector)
-    {
-        string connectionString = _configuration.GetConnectionString("DefaultConnection");
 
-        using (SqlConnection connection = new SqlConnection(connectionString))
+        public IActionResult OnPostModificarCotizacion(int projectCotizacionC, string projectClienteC, string projectEmpleadoC, DateOnly projectFechaC,
+                DateOnly projectFechaF, string projectTipoC, string projectEstadoC, double projectProbabilidadC,
+                string projectZona, string projectSector)
         {
-            try
+            string connectionString = _configuration.GetConnectionString("DefaultConnection");
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                connection.Open();
-                string query = "EXEC actualizarCotizacion @Codigo, @CedulaCliente, @CedulaEmpleado, @FechaCotizacion,@MesProyectadoCierre, @TipoCotizacion, @Estado, @Probabilidad, @Zona, @Sector";
-
-                using (SqlCommand command = new SqlCommand(query, connection))
+                try
                 {
-                    command.Parameters.Add(new SqlParameter("@CedulaCliente", projectClienteC));
-                    command.Parameters.Add(new SqlParameter("@CedulaEmpleado", projectEmpleadoC));
-                    command.Parameters.Add(new SqlParameter("@FechaCotizacion", projectFechaC));
-                    command.Parameters.Add(new SqlParameter("@MesProyectadoCierre", projectFechaF));
-                    command.Parameters.Add(new SqlParameter("@TipoCotizacion", projectTipoC));
-                    command.Parameters.Add(new SqlParameter("@Estado", projectEstadoC));
-                    command.Parameters.Add(new SqlParameter("@Probabilidad", projectProbabilidadC));
-                    command.Parameters.Add(new SqlParameter("@Zona", projectZona));
-                    command.Parameters.Add(new SqlParameter("@Sector", projectSector));
+                    connection.Open();
+                    string query = "EXEC actualizarCotizacion @Codigo, @CedulaCliente, @CedulaEmpleado, @FechaCotizacion,@MesProyectadoCierre, @TipoCotizacion, @Estado, @Probabilidad, @Zona, @Sector";
+
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.Add(new SqlParameter("@Codigo", projectCotizacionC));
+                        command.Parameters.Add(new SqlParameter("@CedulaCliente", projectClienteC));
+                        command.Parameters.Add(new SqlParameter("@CedulaEmpleado", projectEmpleadoC));
+                        command.Parameters.Add(new SqlParameter("@FechaCotizacion", projectFechaC));
+                        command.Parameters.Add(new SqlParameter("@MesProyectadoCierre", projectFechaF));
+                        command.Parameters.Add(new SqlParameter("@TipoCotizacion", projectTipoC));
+                        command.Parameters.Add(new SqlParameter("@Estado", projectEstadoC));
+                        command.Parameters.Add(new SqlParameter("@Probabilidad", projectProbabilidadC));
+                        command.Parameters.Add(new SqlParameter("@Zona", projectZona));
+                        command.Parameters.Add(new SqlParameter("@Sector", projectSector));
 
 
-                    command.ExecuteNonQuery();
+                        command.ExecuteNonQuery();
+                    }
+                }
+                catch (SqlException ex)
+                {
+
+                    _logger.LogError(ex, "Error al insertar el rol por accion.");
+                    ModelState.AddModelError(string.Empty, "Error al guardar el rol por accion.");
+                    return Page();
                 }
             }
-            catch (SqlException ex)
-            {
 
-                _logger.LogError(ex, "Error al insertar el rol por accion.");
-                ModelState.AddModelError(string.Empty, "Error al guardar el rol por accion.");
-                return Page();
-            }
+            Console.WriteLine("Si se inserto la acción por rol");
+            return Page();
+
+
+
+
         }
 
-        Console.WriteLine("Si se inserto la acción por rol");
-        return Page();
+
+
+        public IActionResult OnPostAgregarArticulosCotizacion(string projecCotizacionAr, int projectCantidadProducto, int projectCotizacionC)
+        {
+            string connectionString = _configuration.GetConnectionString("DefaultConnection");
+            Console.WriteLine(projectCotizacionC);
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                try
+                {
+                    connection.Open();
+                    string query = "EXEC AgregarListaCotizacion @CantidadProducto, @CodigoCotizacion, @Nombre";
+
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.Add(new SqlParameter("@CantidadProducto", projectCantidadProducto));
+                        command.Parameters.Add(new SqlParameter("@CodigoCotizacion", projectCotizacionC));
+                        command.Parameters.Add(new SqlParameter("@Nombre", projecCotizacionAr));
+
+                        command.ExecuteNonQuery();
+                    }
+                }
+                catch (SqlException ex)
+                {
+                    _logger.LogError(ex, "Error al agregar el artículo a la cotización.");
+                    ModelState.AddModelError(string.Empty, "Error al agregar el artículo a la cotización.");
+                    return Page();
+                }
+            }
+
+            Console.WriteLine("Se insertó el artículo en la cotización correctamente.");
+            return Page();
+        }
+
+
 
 
 
