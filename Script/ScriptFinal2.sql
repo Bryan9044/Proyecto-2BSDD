@@ -110,7 +110,7 @@ CREATE TABLE Estado(
 	PRIMARY KEY (TipoEstado)
 );
 
-insert into Estado(TipoEstado,Descripcion) values
+insert into Estado(Tipo1,Descripcion) values
 ('Abierta', 'Todavia no se da un veredicto final'),
 ('Aprobado', 'Se aprueba la cotizacion yupiiii'),
 ('Rechazado', 'Se rechaza la cotizacion mecagoentodo');
@@ -591,22 +591,100 @@ CREATE TABLE ListaArticulos (
 );
 
 
+create table TipoTareaCotizacion (
+	TipoTarea varchar(30),
+	descripcion varchar(200)
+	Primary key (TipoTarea)
+)
 
+insert into TipoTareaCotizacion(TipoTarea,descripcion) values
+('Seguimiento','El empleado debe estar en constante vigilancia de la cotización para ver el progreso que esta tiene'),
+('Archivacion','Guardar toda la información con respecto a una cotización en un documento especifico'),
+('Orden','Generar una orden con la lista de productos de la cotizacion para revisar si estan disponibles'),
+('Envio','Asegurarse de que el envio de los productos en caso de que se quieran se puedan enviar'),
+('Documentación','Generar todo el listado de los productos y cantidad que se va a requerir en un documento formal'),
+('Control de calidad','Revisar que todos los productos que se quieran en la cotizacion esten en buen estado'),
+('Revisión de precios','Revisar que todos los precios que fueron dados en la cotización sean los correctos'),
+('Negociación','Hablar con el cliente y persuadirlo para que realice la compra en el momento');
+--Creada ya
+
+go
+create function MostrarTareasCOT()
+returns table
+as
+return (
+	select TipoTarea from TipoTareaCotizacion
+); --Creada ya
+
+
+
+
+
+create table TipoTareaCaso (
+	TipoTarea varchar(30) not null,
+	descripcion varchar(200)not null,
+	Primary key (TipoTarea)
+)
+
+insert into TipoTareaCaso(TipoTarea,descripcion) values
+('Devolucion','Revisar el por qué es que se debe devolver el producto'),
+('Reclamo','Atender al cliente y verificar la situación para aliviar el problema'),
+('Garantia','Revisar la garantía del producto e informale al cliente si es posible');
+
+
+
+create table TipoTareaEstado (
+	tipoEstado varchar(30) not null,
+	descripcion varchar(200)not null,
+	Primary key (tipoEstado)
+)
+
+
+--Creado de aqui
+insert into TipoTareaEstado(tipoEstado,descripcion) values
+('Iniciada','Es una tarea que recien se empieza'),
+('En proceso', 'Es una tarea que sigue en marcha'),
+('Terminada', 'Es una tarea que ya termuno');
+
+create function MostrarEstadosTarea()
+returns table
+as 
+return (
+	select tipoEstado from TipoTareaEstado
+); 
+
+--Hasta aqui
 
 
 CREATE TABLE Tarea (
     CodigoTarea VARCHAR(15) NOT NULL,
-    CodigoEmpleado VARCHAR(9) NOT NULL,
+	tipoTareaCotizacion varchar(30) null,
+	tipoTareaCaso varchar(30) null,
     Fecha DATE NOT NULL,
     Descripcion VARCHAR(200) NOT NULL,
-    Estado VARCHAR(20) NOT NULL,
-	PRIMARY KEY (CodigoTarea,CodigoEmpleado),
-    FOREIGN KEY (CodigoEmpleado) REFERENCES Empleado(Cedula),
-	FOREIGN KEY (Estado) REFERENCES Estado(TipoEstado)
+    Estado VARCHAR(30) NOT NULL,
+	PRIMARY KEY (CodigoTarea),
+	FOREIGN KEY (Estado) REFERENCES TipoTareaEstado(tipoEstado),
+	FOREIGN KEY (tipoTareaCotizacion) References TipoTareaCotizacion(TipoTarea),
+	FOREIGN KEY (tipoTareaCaso) References TipoTareaCaso(TipoTarea)
 );
+insert into Tarea(CodigoTarea,tipoTareaCotizacion,tipoTareaCaso ,Fecha,Descripcion,Estado) values
+('T1','Devolucion','','2024/10/22','Tiene que mover la mercancia hasta el camion','Abierta'),
+('T2','Reclamo','','2024/05/15','descargar equipo','Aprobado'),
+('T3','Garantia','','2022/10/24','Saber como comunicarse con el cliente','Rechazado');
 
-
-
+go
+create procedure InsertarTarea
+@CodigoTarea VARCHAR(15),
+@tipoTareaCotizacion varchar(30),
+@Fecha DATE,
+@Descripcion VARCHAR(200),
+@Estado VARCHAR(30)
+as
+begin
+	insert into Tarea(CodigoTarea,tipoTareaCotizacion,Fecha,Descripcion,Estado) values
+	(@CodigoTarea,@tipoTareaCotizacion,@Fecha,@Descripcion,@Estado)
+end;
 
 
 CREATE TABLE TipoCotizacion(
@@ -660,13 +738,30 @@ CREATE TABLE Caso (
 	FOREIGN KEY (PropietarioCaso) references Cliente(Cedula),
 	FOREIGN KEY (Prioridad) references Prioridad(TipoPrioridad)
 );
+insert into Caso(CodigoCaso,PropietarioCaso,OrigenCaso,NombreCuenta,NombreContacto,Asunto, Direccion, Descripcion,EstadoCaso, TipoCaso,Prioridad)
+
+
+--Me falta esperar a hacer cotizaciones
+
 
 
 CREATE TABLE TareaCaso (
     CodigoTarea VARCHAR(15) NOT NULL,
 	CodigoCaso varchar(15) not null,
-	PRIMARY KEY (CodigoTarea,CodigoCaso)
+	PRIMARY KEY (CodigoTarea,CodigoCaso),
+	foreign key (CodigoCaso) references Caso(CodigoCaso)
 );
+('T1', ''),
+('T2', ''),
+('T3', ''),
+('', ''),
+('', ''),
+('', ''),
+('', ''),
+
+
+
+
 
 CREATE TABLE TareaCotizacion (
     CodigoTarea VARCHAR(15) NOT NULL,
@@ -674,6 +769,7 @@ CREATE TABLE TareaCotizacion (
 	PRIMARY KEY (CodigoTarea,Codigo),
     FOREIGN KEY (Codigo) REFERENCES Cotizacion(Codigo)
 );
+
 
 
 
