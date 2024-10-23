@@ -842,3 +842,86 @@
     </div>
 </div>
 <br />
+
+
+
+
+
+
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalTareasC" asp-page-handler="MostrarModal11">
+    Agregar tareas para una cotizacion
+</button>
+
+
+
+<div class="modal fade" id="modalTareasC" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalLabel">Agregar tareas a una cotización</h5>
+                <form method="post" asp-page-handler="CerrarModal11">
+                    <button type="submit" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </form>
+            </div>
+            <div class="modal-body">
+                <!-- Esto es para pasar la info a OnPostGuardarUsuario -->
+                <form method="post" asp-page-handler="AgregarTareaCOT">
+
+
+                    <div class="modalCodigoTarea">
+                        <label for="projectCodigoTarea" class="form-label">Codigo de tarea</label>
+                        <input type="text" class="form-control" id="projectCodigoTarea" name="projectCodigoTarea" required>
+                    </div>
+                    <br />
+
+                    <div class="modalTipoTarea">
+                        <label for="projectTipoTarea" class="form-label">Tipo de tarea</label>
+                        <select class="form-control" id="projectTipoTarea" name="projectTipoTarea" required>
+                            @foreach (var tarea in Model.Tareas)
+                            {
+                                <option value="@tarea">@tarea</option>
+                            }
+                        </select>
+                    </div>
+                    <br />
+
+
+                    <div class="modalFechaTarea">
+                        <label for="projectCodigoFecha" class="form-label">Fecha</label>
+                        <input type="date" class="form-control" id="projectCodigoFecha" name="projectCodigoFecha" required>
+                    </div>
+                    <br />
+
+
+
+                    <div class="modalDescripcion">
+                        <label for="projectDescripcionCOT" class="form-label">Descripción de la tarea</label>
+                        <textarea class="form-control" id="projectDescripcionCOT" name="projectDescripcionCOT" required></textarea>
+                    </div>
+
+
+                    <div class="modalTipoEstados">
+                        <label for="projectEstadosT" class="form-label">Estados de la tarea</label>
+                        <select class="form-control" id="projectEstadosT" name="projectEstadosT" required>
+                            @foreach (var estado2 in Model.TipoTareas)
+                            {
+                                <option value="@estado2">@estado2</option>
+                            }
+                        </select>
+                    </div>
+
+                    <br />
+
+                    <button type="submit" class="btn btn-primary">Guardar tarea</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <!-- Esto es para cerrar -->
+                <form method="post" asp-page-handler="CerrarModal11">
+                    <button type="submit" class="btn btn-secondary">Cerrar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<br />

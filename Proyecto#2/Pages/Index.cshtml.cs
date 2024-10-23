@@ -82,6 +82,10 @@ namespace Proyecto_2.Pages
         public List<int> Cotizaciones { get; set; } = new List<int>(); //ya
         public List<string> Articulos { get; set; } = new List<string>(); //ya
 
+        public List<string> Tareas { get; set; } = new List<string>();
+        public List<string> TipoTareas { get; set; } = new List<string>();
+
+
 
 
 
@@ -119,6 +123,8 @@ namespace Proyecto_2.Pages
             Empleados = new List<string>();
             TiposEstadosC = new List<string>();
             Cotizaciones = new List<int>();
+            Tareas = new List<string>();
+            TipoTareas = new List<string>();
 
             string connectionString = _configuration.GetConnectionString("DefaultConnection");
 
@@ -451,14 +457,55 @@ namespace Proyecto_2.Pages
                 }
             }
             //Hasta aqui zonas
+
+
+            //Esta parte es para obtener todos las tareas que hayan sido registradas en la base de datos
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                string query = "select * from MostrarTareasCOT()";
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            Tareas.Add(reader.GetString(0));
+                        }
+                    }
+                }
+            }
+            //Hasta aqui tareas
+
+
+            //Esta parte es para obtener todos las tareas que hayan sido registradas en la base de datos
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                string query = "select * from MostrarEstadosTarea()";
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            TipoTareas.Add(reader.GetString(0));
+                        }
+                    }
+                }
+            }
+            //Hasta aqui tareas
         }
+
+
+
 
 
 
 
         public IActionResult OnGetMostrarModal()
         {
-            ShowModal1 = true; 
+            ShowModal1 = true;
             return Page();
         }
 
@@ -470,7 +517,7 @@ namespace Proyecto_2.Pages
 
         public IActionResult OnGetMostrarModal2()
         {
-            ShowModal2 = true; 
+            ShowModal2 = true;
             return Page();
         }
 
@@ -483,7 +530,7 @@ namespace Proyecto_2.Pages
 
         public IActionResult OnGetMostrarModal3()
         {
-            ShowModal3 = true; 
+            ShowModal3 = true;
             return Page();
         }
 
@@ -496,7 +543,7 @@ namespace Proyecto_2.Pages
 
         public IActionResult OnGetMostrarModal4()
         {
-            ShowModal4 = true; 
+            ShowModal4 = true;
             return Page();
         }
 
@@ -508,7 +555,7 @@ namespace Proyecto_2.Pages
 
         public IActionResult OnGetMostrarModal5()
         {
-            ShowModal5 = true; 
+            ShowModal5 = true;
             return Page();
         }
 
@@ -519,7 +566,7 @@ namespace Proyecto_2.Pages
         }
         public IActionResult OnGetMostrarModal6()
         {
-            ShowModal6 = true; 
+            ShowModal6 = true;
             return Page();
         }
 
@@ -558,7 +605,7 @@ namespace Proyecto_2.Pages
 
         public IActionResult OnGetMostrarModal9()
         {
-            ShowModal9 = true; 
+            ShowModal9 = true;
             return Page();
         }
 
@@ -571,7 +618,7 @@ namespace Proyecto_2.Pages
 
         public IActionResult OnGetMostrarModal10()
         {
-            ShowModal10 = true; 
+            ShowModal10 = true;
             return Page();
         }
 
@@ -982,6 +1029,42 @@ namespace Proyecto_2.Pages
 
 
 
+
+
+
+        public IActionResult OnPostAgregarTareaCOT(string projectCodigoTarea, string projectTipoTarea, DateOnly projectCodigoFecha, string projectDescripcionCOT,
+            string projectEstadosT)
+        {
+            string connectionString = _configuration.GetConnectionString("DefaultConnection");
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                try
+                {
+                    connection.Open();
+                    string query = "EXEC InsertarTarea @CodigoTarea,@tipoTareaCotizacion,@Fecha,@Descripcion,@Estado";
+
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.Add(new SqlParameter("@CodigoTarea", projectCodigoTarea));
+                        command.Parameters.Add(new SqlParameter("@tipoTareaCotizacion", projectTipoTarea));
+                        command.Parameters.Add(new SqlParameter("@Fecha", projectCodigoFecha));
+                        command.Parameters.Add(new SqlParameter("@Descripcion", projectDescripcionCOT));
+                        command.Parameters.Add(new SqlParameter("@Estado", projectEstadosT));
+
+                        command.ExecuteNonQuery();
+                    }
+                }
+                catch (SqlException ex)
+                {
+                    _logger.LogError(ex, "Error al agregar el artículo a la cotización.");
+                    ModelState.AddModelError(string.Empty, "Error al agregar el artículo a la cotización.");
+                    return Page();
+                }
+            }
+
+            Console.WriteLine("Se insertó el artículo en la cotización correctamente.");
+            return Page();
+        }
 
 
     }
