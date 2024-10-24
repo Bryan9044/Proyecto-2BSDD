@@ -344,11 +344,18 @@
 
 
 
+
+
+
+
+
 <!-- Botón para abrir el modal -->
+
+<div class="text-center">
 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#rolesModal" asp-page-handler="MostrarModal5">
     ver roles del Usuario
 </button>
-
+</div>
 
 <!-- Modal para mostrar los roles del usuario y su ID -->
 
@@ -385,17 +392,18 @@
         </div>
     </div>
 </div>
-
+<br />
 
 
 
 
 <!--Toda esta parte es para los empleados-->
 <!-- Botón para abrir el modal -->
+<div class="text-center">
 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#todosEmpleados" asp-page-handler="MostrarModal6">
     Ver todos los empleados 
 </button>
-
+</div>
 
 <div class="modal fade" id="todosEmpleados" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -455,14 +463,14 @@
         </div>
     </div>
 </div>
-
+<br> </br>
 <!--Al de empleado le puedo agregar edad-->
 
-
+<div class="text-center">
 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalCotizacion" asp-page-handler="MostrarModal7">
     Crear cotizacion
 </button>
-
+</div>
 
 
 <div class="modal fade" id="modalCotizacion" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
@@ -583,11 +591,11 @@
 
 
 
-
+<div class="text-center">
 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalPlanilla" asp-page-handler="MostrarModal8">
     Registrar planilla
 </button>
-
+</div>
 
 
 
@@ -646,11 +654,11 @@
 
 
 
-
+<div class="text-center">
 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalCotizacionM" asp-page-handler="MostrarModal9">
-    Crear cotizacion
+    Modificar cotizacion
 </button>
-
+</div>
 
 
 <div class="modal fade" id="modalCotizacionM" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
@@ -781,11 +789,11 @@
 
 
 
-
+<div class="text-center">
 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalCotizacionA" asp-page-handler="MostrarModal10">
     Agregar articulos a cotizacion
 </button>
-
+</div>
 
 
 <div class="modal fade" id="modalCotizacionA" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
@@ -847,11 +855,11 @@
 
 
 
-
+<div class="text-center">
 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalTareasC" asp-page-handler="MostrarModal11">
     Agregar tareas para una cotizacion
 </button>
-
+</div>
 
 
 <div class="modal fade" id="modalTareasC" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
@@ -918,6 +926,188 @@
             <div class="modal-footer">
                 <!-- Esto es para cerrar -->
                 <form method="post" asp-page-handler="CerrarModal11">
+                    <button type="submit" class="btn btn-secondary">Cerrar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<br />
+
+
+
+<!--Toda esta parte es para los empleados-->
+<!-- Botón para abrir el modal -->
+<div class="text-center">
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#TodasCotizaciones" asp-page-handler="MostrarModal12">
+    Ver cotizaciones
+</button>
+</div>
+
+<div class="modal fade" id="TodasCotizaciones" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <!-- Tamaño de modal ampliado -->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="CotizacionesModal">Lista de cotizaciones</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-striped table-hover">
+                    <!-- Tabla con estilo -->
+                    <thead>
+                        <tr>
+                            <th>Codigo de cotización</th>
+                            <th>Cedula del cliente</th>
+                            <th>Cedula del empleado</th>
+                            <th>Fecha de cotizacion</th>
+                            <th>Fecha de cierre</th>
+                            <th>Tipo de cotización</th>
+                            <th>Estado de la cotizacion</th>
+                            <th>Probabilidad</th>
+                            <th>Zona</th>
+                            <th>Sector</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (int i = 0; i < Model.CodigoC.Count; i++)
+                        {
+                            <tr>
+                                <td>@Model.CodigoC[i]</td>
+                                <td>@Model.ClienteC[i] </td> <!-- Nombre completo -->
+                                <td>@Model.EmpleadoC[i]</td>
+                                <td>@Model.FechaC[i].ToShortDateString()</td> <!-- Formato de fecha -->
+                                <td>@Model.MesC[i]</td>
+                                <td>@Model.TiposCotizaciones[i]</td>
+                                <td>@Model.EstadosC[i]</td>
+                                <td>@Model.ProbabilidadesC[i]</td>
+                                <td>@Model.ZonasC[i]</td>
+                                <td>@Model.SectorC[i]</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <form method="post" asp-page-handler="CerrarModal12">
+                <button type="submit" class="btn btn-secondary">Cerrar</button>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+<br />
+<!--Este todavia no funcioa-->
+
+
+<!--Al de empleado le puedo agregar edad-->
+<!--Toda esta parte es para los empleados-->
+<!-- Botón para abrir el modal -->
+<div class="text-center">
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#TodasTareaACotizaciom" asp-page-handler="MostrarModal12">
+    Ver tareas de una cotizacion
+</button>
+</div>
+
+<div class="modal fade" id="TodasTareaACotizaciom" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <!-- Tamaño de modal ampliado -->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="CotizacionesModal">Lista de cotizaciones</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-striped table-hover">
+                    <!-- Tabla con estilo -->
+                    <thead>
+                        <tr>
+                            <th>Codigo de cotización</th>
+                            <th>Cedula del cliente</th>
+                            <th>Cedula del empleado</th>
+                            <th>Fecha de cotizacion</th>
+                            <th>Fecha de cierre</th>
+                            <th>Tipo de cotización</th>
+                            <th>Estado de la cotizacion</th>
+                            <th>Probabilidad</th>
+                            <th>Zona</th>
+                            <th>Sector</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (int i = 0; i < Model.CodigoC.Count; i++)
+                        {
+                            <tr>
+                                <td>@Model.CodigoC[i]</td>
+                                <td>@Model.ClienteC[i] </td> <!-- Nombre completo -->
+                                <td>@Model.EmpleadoC[i]</td>
+                                <td>@Model.FechaC[i].ToShortDateString()</td> <!-- Formato de fecha -->
+                                <td>@Model.MesC[i]</td>
+                                <td>@Model.TiposCotizaciones[i]</td>
+                                <td>@Model.EstadosC[i]</td>
+                                <td>@Model.ProbabilidadesC[i]</td>
+                                <td>@Model.ZonasC[i]</td>
+                                <td>@Model.SectorC[i]</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <form method="post" asp-page-handler="CerrarModal12">
+                <button type="submit" class="btn btn-secondary">Cerrar</button>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<!--Al de empleado le puedo agregar edad-->
+
+
+
+<br />
+
+<div class="text-center">
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalCotizacionELI" asp-page-handler="MostrarModal13">
+        Eliminar cotizacion
+    </button>
+</div>
+
+
+<div class="modal fade" id="modalCotizacionELI" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalLabel">Agregar aticulos a una cotización</h5>
+                <form method="post" asp-page-handler="CerrarModal13">
+                    <button type="submit" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </form>
+            </div>
+            <div class="modal-body">
+                <!-- Esto es para pasar la info a OnPostGuardarUsuario -->
+                <form method="post" asp-page-handler="EliminarCotizacion">
+                    <div class="modalCotizacionEl">
+                        <label for="projectEliCotizacion" class="form-label">Cotizaciones</label>
+                        <select class="form-control" id="projectEliCotizacion" name="projectEliCotizacion" required>
+                            @foreach (var cotizacion in Model.Cotizaciones)
+                            {
+                                <option value="@cotizacion">@cotizacion</option>
+                            }
+                        </select>
+                    </div>
+
+                    <br />
+                    <button type="submit" class="btn btn-primary">Eliminar cotizacion</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <!-- Esto es para cerrar -->
+                <form method="post" asp-page-handler="CerrarModal13">
                     <button type="submit" class="btn btn-secondary">Cerrar</button>
                 </form>
             </div>

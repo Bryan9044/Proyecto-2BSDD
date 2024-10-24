@@ -34,6 +34,8 @@ namespace Proyecto_2.Pages
 
         public bool ShowModal9 { get; set; }
         public bool ShowModal10 { get; set; }
+        public bool ShowModal11 { get; set; }
+        public bool ShowModal12 { get; set; }
         public List<string> Roles { get; set; } = new List<string>();//ya
 
         public List<string> Acciones { get; set; } = new List<string>(); //ya
@@ -84,6 +86,25 @@ namespace Proyecto_2.Pages
 
         public List<string> Tareas { get; set; } = new List<string>();
         public List<string> TipoTareas { get; set; } = new List<string>();
+        public List<int> CodigoC { get; set; } = new List<int>();
+        public List<string> ClienteC { get; set; } = new List<string>();
+        public List<string> EmpleadoC { get; set; } = new List<string>();
+
+        public List<DateOnly> FechaC { get; set; } = new List<DateOnly>();
+        public List<DateOnly> MesC { get; set; } = new List<DateOnly>();
+
+        public List<string> TiposCotizaciones { get; set; } = new List<string>();
+        public List<string> EstadosC { get; set; } = new List<string>();
+        public List<float> ProbabilidadesC { get; set; } = new List<float>();
+
+        public List<string> ZonasC { get; set; } = new List<string>();
+
+        public List<string> SectorC { get; set; } = new List<string>();
+
+        public List<string> CodigoTareaC { get; set; } = new List<string>();
+
+        public List<int> CodigoCtarea { get; set; } = new List<int>();
+
 
 
 
@@ -282,6 +303,59 @@ namespace Proyecto_2.Pages
 
 
 
+
+                        }
+                    }
+                }
+            }
+            //Hasta aqui empleados 
+
+            //Esta parte es para obtener todos las cotizaciones que hayan sido registradas en la base de datos
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                string query = "select * from VerCotizaciones()";
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            CodigoC.Add(reader.GetInt32(0));
+                            ClienteC.Add(reader.GetString(1));
+                            EmpleadoC.Add(reader.GetString(2));
+                            FechaC.Add(DateOnly.FromDateTime(reader.GetDateTime(3)));
+                            MesC.Add(DateOnly.FromDateTime(reader.GetDateTime(4)));
+                            TiposCotizaciones.Add(reader.GetString(5));
+                            EstadosC.Add(reader.GetString(6));
+                            ProbabilidadesC.Add((float)reader.GetDouble(7));
+                            ZonasC.Add(reader.GetString(8));
+                            SectorC.Add(reader.GetString(9));
+
+
+
+
+
+                        }
+                    }
+                }
+            }
+            //Hasta aqui empleados 
+
+
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                string query = "select * from mostrarTareasC()";
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            CodigoTareaC.Add(reader.GetString(0));
+                            CodigoCtarea.Add(reader.GetInt32(1));
 
                         }
                     }
@@ -512,7 +586,7 @@ namespace Proyecto_2.Pages
         public IActionResult OnPostCerrarModal()
         {
             ShowModal1 = false;
-            return RedirectToPage();
+            return Page();
         }
 
         public IActionResult OnGetMostrarModal2()
@@ -524,7 +598,7 @@ namespace Proyecto_2.Pages
         public IActionResult OnPostCerrarModal2()
         {
             ShowModal2 = false;
-            return RedirectToPage();
+            return Page();
         }
 
 
@@ -537,7 +611,7 @@ namespace Proyecto_2.Pages
         public IActionResult OnPostCerrarModal3()
         {
             ShowModal3 = false;
-            return RedirectToPage();
+            return Page();
         }
 
 
@@ -550,7 +624,7 @@ namespace Proyecto_2.Pages
         public IActionResult OnPostCerrarModal4()
         {
             ShowModal4 = false;
-            return RedirectToPage();
+            return Page();
         }
 
         public IActionResult OnGetMostrarModal5()
@@ -562,7 +636,7 @@ namespace Proyecto_2.Pages
         public IActionResult OnPostCerrarModal5()
         {
             ShowModal5 = false;
-            return RedirectToPage();
+            return Page();
         }
         public IActionResult OnGetMostrarModal6()
         {
@@ -573,7 +647,7 @@ namespace Proyecto_2.Pages
         public IActionResult OnPostCerrarModal6()
         {
             ShowModal6 = false;
-            return RedirectToPage();
+            return Page();
         }
 
 
@@ -586,7 +660,7 @@ namespace Proyecto_2.Pages
         public IActionResult OnPostCerrarModal7()
         {
             ShowModal7 = false;
-            return RedirectToPage();
+            return Page();
         }
 
 
@@ -599,7 +673,7 @@ namespace Proyecto_2.Pages
         public IActionResult OnPostCerrarModal8()
         {
             ShowModal8 = false;
-            return RedirectToPage();
+            return Page();
         }
 
 
@@ -612,7 +686,7 @@ namespace Proyecto_2.Pages
         public IActionResult OnPostCerrarModal9()
         {
             ShowModal9 = false;
-            return RedirectToPage();
+            return Page();
         }
 
 
@@ -625,8 +699,35 @@ namespace Proyecto_2.Pages
         public IActionResult OnPostCerrarModa10()
         {
             ShowModal10 = false;
+            return Page();
+        }
+
+
+        public IActionResult OnGetMostrarModal11()
+        {
+            ShowModal11 = true;
+            return Page();
+        }
+
+        public IActionResult OnPostCerrarModa11()
+        {
+            ShowModal11 = false;
+            return Page();
+        }
+
+
+        public IActionResult OnGetMostrarModal12()
+        {
+            ShowModal12 = true;
+            return Page();
+        }
+
+        public IActionResult OnPostCerrarModa12()
+        {
+            ShowModal12 = false;
             return RedirectToPage();
         }
+
 
         public IActionResult OnPostGuardarRol(string projectTipoRol, string projectDescripcionRol)
         {
@@ -1050,6 +1151,38 @@ namespace Proyecto_2.Pages
                         command.Parameters.Add(new SqlParameter("@Fecha", projectCodigoFecha));
                         command.Parameters.Add(new SqlParameter("@Descripcion", projectDescripcionCOT));
                         command.Parameters.Add(new SqlParameter("@Estado", projectEstadosT));
+
+                        command.ExecuteNonQuery();
+                    }
+                }
+                catch (SqlException ex)
+                {
+                    _logger.LogError(ex, "Error al agregar el artículo a la cotización.");
+                    ModelState.AddModelError(string.Empty, "Error al agregar el artículo a la cotización.");
+                    return Page();
+                }
+            }
+
+            Console.WriteLine("Se insertó el artículo en la cotización correctamente.");
+            return Page();
+        }
+
+
+
+        public IActionResult OnPostEliminarCotizacion(int projectEliCotizacion)
+        {
+            string connectionString = _configuration.GetConnectionString("DefaultConnection");
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                try
+                {
+                    connection.Open();
+                    string query = "EXEC EliminarCotizacion @CodigoCotizacion";
+
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.Add(new SqlParameter("@CodigoCotizacion", projectEliCotizacion));
+
 
                         command.ExecuteNonQuery();
                     }
