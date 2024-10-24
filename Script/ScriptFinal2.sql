@@ -1,50 +1,6 @@
 CREATE DATABASE ERPPRUEBA
 GO
-    public IActionResult OnPostModificarCotizacion(int projectCotizacionC, string projectClienteC, string projectEmpleadoC, DateOnly projectFechaC,
-            DateOnly projectFechaF, string projectTipoC, string projectEstadoC, double projectProbabilidadC,
-            string projectZona, string projectSector)
-    {
-        string connectionString = _configuration.GetConnectionString("DefaultConnection");
 
-        using (SqlConnection connection = new SqlConnection(connectionString))
-        {
-            try
-            {
-                connection.Open();
-                string query = "EXEC actualizarCotizacion @Codigo, @CedulaCliente, @CedulaEmpleado, @FechaCotizacion,@MesProyectadoCierre, @TipoCotizacion, @Estado, @Probabilidad, @Zona, @Sector";
-
-                using (SqlCommand command = new SqlCommand(query, connection))
-                {
-                    command.Parameters.Add(new SqlParameter("@CedulaCliente", projectClienteC));
-                    command.Parameters.Add(new SqlParameter("@CedulaEmpleado", projectEmpleadoC));
-                    command.Parameters.Add(new SqlParameter("@FechaCotizacion", projectFechaC));
-                    command.Parameters.Add(new SqlParameter("@MesProyectadoCierre", projectFechaF));
-                    command.Parameters.Add(new SqlParameter("@TipoCotizacion", projectTipoC));
-                    command.Parameters.Add(new SqlParameter("@Estado", projectEstadoC));
-                    command.Parameters.Add(new SqlParameter("@Probabilidad", projectProbabilidadC));
-                    command.Parameters.Add(new SqlParameter("@Zona", projectZona));
-                    command.Parameters.Add(new SqlParameter("@Sector", projectSector));
-
-
-                    command.ExecuteNonQuery();
-                }
-            }
-            catch (SqlException ex)
-            {
-
-                _logger.LogError(ex, "Error al insertar el rol por accion.");
-                ModelState.AddModelError(string.Empty, "Error al guardar el rol por accion.");
-                return Page();
-            }
-        }
-
-        Console.WriteLine("Si se inserto la acción por rol");
-        return Page();
-
-
-
-
-    }
 USE ERPPRUEBA;
 GO
 
@@ -54,6 +10,10 @@ CREATE TABLE Usuarios (
     ContrasenaUS VARCHAR(255) NOT NULL
 );
 INSERT INTO Usuarios(NombreUS, ContrasenaUS) values
+('Prueba','Nashe'),
+('Cartel','desanta'),
+('rapapa','disco'),
+('perros', 'gatos'),
 ('p1','pp'),
 ('Administrador','SOYadmin.');
 
@@ -224,8 +184,10 @@ CREATE TABLE Roles (
     PRIMARY KEY (IDRol)
 );
 insert into Roles(tipoRol,Descripcion) values
-('Ayudante','Ayuda en todas las tareas al admin'),
-('SuperUsuario','El maneja todo');
+('Encargado', 'Se encarga de que todo este bien'),
+('Vendedor', 'Se encarga de vender productos'),
+('Bodeguero', 'Se encarga de la bodega'),
+('Ayudante','Ayuda en todas las tareas al admin');
 
 
 CREATE TABLE AccionesXrol (
@@ -294,6 +256,16 @@ CREATE TABLE Empleado (
 	FOREIGN KEY (Puesto) REFERENCES Puesto(TipoPuesto),
 	FOREIGN KEY (IDUsuario) REFERENCES Usuarios(IDUsuario) --Lo podriamos cambiar por el nombre
 );
+insert into Empleado(Cedula,Nombre,apellido1,apellido2,genero,FechaNacimiento,provincia,Direccion,Telefono,CodigoDepartamento,FechaIngreso,Puesto,tipoRol,IDUsuario,SalarioActual)
+values
+('123456789', 'Jose', 'Perez', 'Rodriguez', 'M', '1990-05-12', 'San José', 'San pedro 50 metros norte', '22223333', 'DEP1', '2015-03-10', 'Electricista', 'Encargado', 1, 500000),
+('987654321', 'Sofia', 'Lopez', 'Jimenez', 'F', '1985-09-15', 'Alajuela', 'Alajuelita underground', '22334455', 'DEP2', '2010-07-22', 'Ingeniero', 'Vendedor', 2, 700000),
+('112233445', 'Fabian', 'Martinez', 'Solis', 'M', '1995-12-05', 'Heredia', 'Guarari', '22445566', 'DEP3', '2018-01-19', 'Control de Calidad', 'Bodeguero', 3, 480000),
+('556677889', 'Valka', 'Gomez', 'Alvarado', 'F', '1992-03-28', 'Cartago', 'Lomas del sur', '22556677', 'DEP4', '2017-09-15', 'Administrador', 'Encargado', 4, 450000),
+('334455667', 'Andres', 'Vargas', 'Campos', 'M', '1998-11-23', 'Puntarenas', 'Del faro a 30 metros', '22667788', 'DEP5', '2019-11-25', 'Recepcionista', 'Vendedor', 5, 320000),
+('998877665', 'Clarisa', 'Castro', 'Mora', 'F', '1991-06-30', 'Guanacaste', 'Playa samara casa 50', '22778899', 'DEP6', '2016-04-13', 'Vendedor', 'Ayudante', 1, 500000);
+
+
 
 
 
@@ -655,6 +627,7 @@ return (
 
 --Hasta aqui
 
+SELECT * FROM TipoTareaCaso;
 
 CREATE TABLE Tarea (
     CodigoTarea VARCHAR(15) NOT NULL,
@@ -668,10 +641,17 @@ CREATE TABLE Tarea (
 	FOREIGN KEY (tipoTareaCotizacion) References TipoTareaCotizacion(TipoTarea),
 	FOREIGN KEY (tipoTareaCaso) References TipoTareaCaso(TipoTarea)
 );
-insert into Tarea(CodigoTarea,tipoTareaCotizacion,tipoTareaCaso ,Fecha,Descripcion,Estado) values
-('T1','Devolucion','','2024/10/22','Tiene que mover la mercancia hasta el camion','Abierta'),
-('T2','Reclamo','','2024/05/15','descargar equipo','Aprobado'),
-('T3','Garantia','','2022/10/24','Saber como comunicarse con el cliente','Rechazado');
+INSERT INTO Tarea (CodigoTarea, tipoTareaCotizacion, tipoTareaCaso, Fecha, Descripcion, Estado) 
+VALUES
+('T1', NULL,'Devolucion','2024/10/22','Tiene que mover la mercancia hasta el camion','Terminada'),
+('T2', NULL, 'Reclamo', '2024/05/15', 'descargar equipo', 'Iniciada'),
+('T3', NULL, 'Garantia', '2022/10/24', 'Saber como comunicarse con el cliente', 'En proceso'),
+('T4', NULL, 'Devolucion', '2023/07/03', 'Tiene que verificar el tipo de producto a devolver', 'En proceso'),
+('T5', NULL, 'Reclamo', '2024/06/28', 'debe revisar si el reclamo es valido', 'Iniciada'),
+('T6', NULL, 'Garantia', '2022/12/31', 'Revisar si todavía es valida y ver el producto', 'Terminada');
+
+
+
 
 go
 create procedure InsertarTarea
@@ -694,8 +674,13 @@ CREATE TABLE TipoCotizacion(
 );
 
 INSERT INTO TipoCotizacion(Tipocotizacion,Descripcion) values
+('Cotizacion abierta','Es una cotizacion la cual su precio puede variar'),
+('Cotizacion cerrada','Es una cotizacion fija en la cual se busca que se mantenga un precio'),
+('Cotizacion preliminar','Es una cotizacion en la cual solo se busca saber el precio'),
 ('Cotizacion de servicios','Consta en que se va a generar por los servicios que le fueron prestados'),
 ('Cotizacion de articulos','Es una cotización por toda la cantidad de articulos que se van a pedir');
+
+
 
 
 CREATE TABLE Cotizacion (
@@ -719,6 +704,29 @@ CREATE TABLE Cotizacion (
     FOREIGN KEY (Sector) REFERENCES Sector(Nombre)
 );
 
+insert into Cotizacion(CedulaCliente,CedulaEmpleado,FechaCotizacion,MesProyectadoCierre,TipoCotizacion,Estado,Probabilidad,Zona,Sector) values
+('754323489','123456789','2020/10/15','2020/12/15','Cotizacion abierta','Abierta' ,0.25, 'Caribe norte','Alimentación'),
+('369253247','987654321','2017/06/04','2018/06/04','Cotizacion cerrada','Aprobado' ,0.5, 'Caribe sur','Automotriz'),
+('432124368','112233445','2024/10/24','2024/12/24','Cotizacion de articulos','Rechazado' ,0.75, 'Pacifico central','Comercial'),
+('456789123','556677889','2023/05/03','2023/09/03','Cotizacion de servicios', 'Aprobado',0.5, 'Pacifico norte','Constructor'),
+('533467853','334455667','2021/02/02','2021/05/02','Cotizacion preliminar','Abierta' ,0.25, 'Pacifico sur','Cultural'),
+('754323489','998877665','2015/05/15','2017/05/15','Cotizacion de articulos', 'Rechazado',0.75,'Valle central','Deportivo');
+
+go
+create procedure EliminarCotizacion
+	@CodigoCotizacion int
+	as
+	begin
+	delete from ListaCotizacion  where @CodigoCotizacion = CodigoCotizacion;
+
+	 delete from Cotizacion where @CodigoCotizacion = Codigo;
+	end;
+	
+
+
+	
+
+
 CREATE TABLE Caso (
     CodigoCaso VARCHAR(15) NOT NULL,
 	PropietarioCaso varchar(9) not null,
@@ -738,8 +746,13 @@ CREATE TABLE Caso (
 	FOREIGN KEY (PropietarioCaso) references Cliente(Cedula),
 	FOREIGN KEY (Prioridad) references Prioridad(TipoPrioridad)
 );
-insert into Caso(CodigoCaso,PropietarioCaso,OrigenCaso,NombreCuenta,NombreContacto,Asunto, Direccion, Descripcion,EstadoCaso, TipoCaso,Prioridad)
-
+insert into Caso(CodigoCaso,PropietarioCaso,OrigenCaso,NombreCuenta,NombreContacto,Asunto, Direccion, Descripcion,EstadoCaso, TipoCaso,Prioridad) values
+('CS1','754323489',3 , 'Personal','Salamar' ,'Necesitamos una ayuda inmediata', 'San jose en el centro de la capital', 'Se tiene que verificar el tipo de ayuda que necesita','Abierta', 'Devolucion','Alta'),
+('CS2','369253247',4 , 'Empresarial','Dospinos' ,'Queremos hablar con un encargado', 'Alajuela a un costado del mercado', 'Se procedera a enviar la queja al encargado','Aprobado', 'Devolucion','Alta'),
+('CS3','432124368',5 , 'Personal','Aurua','Tuvimos problemas', 'En San carlos debajo de una catarata ', 'Se busca el tipo de problemas','Rechazado', 'Garantia','Baja'),
+('CS4','456789123',6 , 'Personal','Dianeys' ,'Hubo un problema', 'En la casa habitacion #58 en limon', 'Se habla para ver el problema','Aprobado', 'Garantia','Baja'),
+('CS5','533467853',7 , 'Empresarial','Nike' ,'Algo fallo en los pedidos', 'San jose a la par de amazon', 'Se indica el fallo que hubo','Abierta', 'Reclamo','Media'),
+('CS6','754323489',8 , 'Empresarial','Adidas' ,'Es un asunto de urgencia', 'San jose por el mall san pedro','se habla con el administrador', 'Rechazado', 'Reclamo','Media');
 
 --Me falta esperar a hacer cotizaciones
 
@@ -751,13 +764,13 @@ CREATE TABLE TareaCaso (
 	PRIMARY KEY (CodigoTarea,CodigoCaso),
 	foreign key (CodigoCaso) references Caso(CodigoCaso)
 );
-('T1', ''),
-('T2', ''),
-('T3', ''),
-('', ''),
-('', ''),
-('', ''),
-('', ''),
+insert into TareaCaso(CodigoTarea,CodigoCaso) values
+('T1', 'CS1'),
+('T2', 'CS2'),
+('T3', 'CS3'),
+('T4', 'CS4'),
+('T5', 'CS5'),
+('T6', 'CS6');
 
 
 
@@ -771,6 +784,12 @@ CREATE TABLE TareaCotizacion (
 );
 
 
+go
+create function mostrarTareasC()
+returns table
+as return(
+	select * from TareaCotizacion
+)
 
 
 
@@ -1053,6 +1072,15 @@ as
 return(
 	select * from Empleado
 );
+
+go
+create function VerCotizaciones()
+returns table
+as
+return(
+	select * from Cotizacion
+);
+
 
 
 
