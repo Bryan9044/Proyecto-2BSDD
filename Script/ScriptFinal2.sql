@@ -327,7 +327,7 @@ INSERT INTO Familia(CodigoFamilia,Nombre,activo,Descripcion) values
 ('Fam13', 'Jardinería', 'No','Herramientas y productos para el cuidado de jardines'),
 ('Fam14', 'Automotriz', 'Si','Accesorios y repuestos para vehículos'),
 ('Fam15', 'Construcción', 'Si','Materiales para la construcción '),
-('Fam16', 'Deportes', 'No','articulos deportivos hechos solo para deporte'),
+('Fam16', 'Deportes', 'No',' s deportivos hechos solo para deporte'),
 ('Fam17', 'Mascotas', 'Si','Productos para el cuidado de mascotas'),
 ('Fam18', 'Ropa', 'Si','Prendas de vestir'),
 ('Fam19', 'Muebles', 'Si','Artículos de mobiliario'),
@@ -486,6 +486,8 @@ INSERT INTO Bodega(Codigo, Nombre,Ubicacion,EspacioCubico,CapacidadTon) values
 ('BO9','Tovar','Guanacaste', 10,3 ),
 ('BO10','Escondida','San jose', 35,2 ),
 ('BO11','Shaft','Limon', 40, 1);
+ 
+
 
 
 
@@ -578,16 +580,6 @@ insert into TipoTareaCotizacion(TipoTarea,descripcion) values
 ('Control de calidad','Revisar que todos los productos que se quieran en la cotizacion esten en buen estado'),
 ('Revisión de precios','Revisar que todos los precios que fueron dados en la cotización sean los correctos'),
 ('Negociación','Hablar con el cliente y persuadirlo para que realice la compra en el momento');
---Creada ya
-
-go
-create function MostrarTareasCOT()
-returns table
-as
-return (
-	select TipoTarea from TipoTareaCotizacion
-); --Creada ya
-
 
 
 
@@ -618,16 +610,7 @@ insert into TipoTareaEstado(tipoEstado,descripcion) values
 ('En proceso', 'Es una tarea que sigue en marcha'),
 ('Terminada', 'Es una tarea que ya termuno');
 
-create function MostrarEstadosTarea()
-returns table
-as 
-return (
-	select tipoEstado from TipoTareaEstado
-); 
-
---Hasta aqui
-
-SELECT * FROM TipoTareaCaso;
+ 
 
 CREATE TABLE Tarea (
     CodigoTarea VARCHAR(15) NOT NULL,
@@ -652,19 +635,6 @@ VALUES
 
 
 
-
-go
-create procedure InsertarTarea
-@CodigoTarea VARCHAR(15),
-@tipoTareaCotizacion varchar(30),
-@Fecha DATE,
-@Descripcion VARCHAR(200),
-@Estado VARCHAR(30)
-as
-begin
-	insert into Tarea(CodigoTarea,tipoTareaCotizacion,Fecha,Descripcion,Estado) values
-	(@CodigoTarea,@tipoTareaCotizacion,@Fecha,@Descripcion,@Estado)
-end;
 
 
 CREATE TABLE TipoCotizacion(
@@ -712,15 +682,6 @@ insert into Cotizacion(CedulaCliente,CedulaEmpleado,FechaCotizacion,MesProyectad
 ('533467853','334455667','2021/02/02','2021/05/02','Cotizacion preliminar','Abierta' ,0.25, 'Pacifico sur','Cultural'),
 ('754323489','998877665','2015/05/15','2017/05/15','Cotizacion de articulos', 'Rechazado',0.75,'Valle central','Deportivo');
 
-go
-create procedure EliminarCotizacion
-	@CodigoCotizacion int
-	as
-	begin
-	delete from ListaCotizacion  where @CodigoCotizacion = CodigoCotizacion;
-
-	 delete from Cotizacion where @CodigoCotizacion = Codigo;
-	end;
 	
 
 
@@ -754,7 +715,6 @@ insert into Caso(CodigoCaso,PropietarioCaso,OrigenCaso,NombreCuenta,NombreContac
 ('CS5','533467853',7 , 'Empresarial','Nike' ,'Algo fallo en los pedidos', 'San jose a la par de amazon', 'Se indica el fallo que hubo','Abierta', 'Reclamo','Media'),
 ('CS6','754323489',8 , 'Empresarial','Adidas' ,'Es un asunto de urgencia', 'San jose por el mall san pedro','se habla con el administrador', 'Rechazado', 'Reclamo','Media');
 
---Me falta esperar a hacer cotizaciones
 
 
 
@@ -784,39 +744,74 @@ CREATE TABLE TareaCotizacion (
 );
 
 
-go
-create function mostrarTareasC()
-returns table
-as return(
-	select * from TareaCotizacion
-)
+
+create table estadoFactura(
+	tipoFactura varchar(30) not null,
+	descripcion varchar(200) not null,
+	primary key (tipoFactura)
+
+);
+
+insert into estadoFactura(tipoFactura, descripcion) values 
+('Emitida','Recien se creo la factura'),
+('Pagada','El cliente ya pago toda la factura'),
+('Cancelada','El cliente cancela la factura');
 
 
-
-
-CREATE TABLE Factura (
-    Codigo VARCHAR(15) NOT NULL,
-	CodigoCotizacion int not null, -- revisado
-    CedulaCliente VARCHAR(9) NOT NULL, -- revisado
-    CedulaEmpleado VARCHAR(9) NOT NULL, -- revisado
-    CedulaJuridica VARCHAR(9) NOT NULL,
-    TelefonoLocal VARCHAR(8) NOT NULL,
-    NombreLocal VARCHAR(20) NOT NULL,
-    FechaFactura DATE not null,
-	PRIMARY KEY (Codigo),
-    FOREIGN KEY (CedulaCliente) REFERENCES Cliente(Cedula),
-    FOREIGN KEY (CedulaEmpleado) REFERENCES Empleado(Cedula),
-	FOREIGN KEY (CodigoCotizacion) REFERENCES Cotizacion(Codigo)
+CREATE TABLE ListaFactura (
+	IDLista varchar(40) not null,
+	CodigoProducto VARCHAR(15) NOT NULL,
+	CantidadProducto INT NOT NULL,
+	PRIMARY KEY (CodigoProducto,IDLista),
+	FOREIGN KEY (CodigoProducto) REFERENCES Articulo(Codigo),
 );
 
 
 
---Revisar de aqui
+drop table Factura
+drop table ListaFactura
+drop table SalidaMovimiento
+CREATE TABLE Factura (
+    Codigo VARCHAR(15) NOT NULL, --
+	CodigoCotizacion int  null,  --
+    CedulaCliente VARCHAR(9) NOT NULL, 
+    CedulaEmpleado VARCHAR(9) NOT NULL, 
+    CedulaJuridica VARCHAR(9) NOT NULL,
+    TelefonoLocal VARCHAR(8) NOT NULL,
+    NombreLocal VARCHAR(40) NOT NULL,
+    FechaFactura DATE not null,
+	NombreCliente varchar(20) not null,
+	listaArticulos varchar(40) not null
+	PRIMARY KEY (Codigo),
+    FOREIGN KEY (CedulaCliente) REFERENCES Cliente(Cedula),
+    FOREIGN KEY (CedulaEmpleado) REFERENCES Empleado(Cedula),
+	FOREIGN KEY (CodigoCotizacion) REFERENCES Cotizacion(Codigo),
+	foreign key (listaArticulos) references ListaFactura(IDLista)
+);
+
+
+--No lo he creado todavia
+create procedure AgregarFactura
+    @Codigo VARCHAR(15),
+	@CodigoCotizacion int,
+    @CedulaCliente VARCHAR(9),
+    @CedulaEmpleado VARCHAR(9), 
+    @CedulaJuridica VARCHAR(9),
+    @TelefonoLocal VARCHAR(8),
+    @NombreLocal VARCHAR(40),
+    @FechaFactura DATE,
+	@NombreCliente varchar(20),
+	@listaArticulos varchar(40)
+	as
+	begin
+	insert into Factura(Codigo,CodigoCotizacion,CedulaCliente,CedulaEmpleado,CedulaJuridica,TelefonoLocal,NombreLocal,FechaFactura,NombreCliente,listaArticulos) values
+	(@Codigo,@CodigoCotizacion,@CedulaCliente,@CedulaEmpleado,@CedulaJuridica,@TelefonoLocal,@NombreLocal,@FechaFactura,@NombreCliente,@listaArticulos)
+
 CREATE TABLE Movimiento(
-	IDMovimiento int not null,
+	IDMovimiento int IDENTITY(1,1) not null,
 	Cedula VARCHAR(9) not null, 
 	BodegaOrigen varchar(15) not null,
-	BodegaDestino varchar(15) not null,
+	BodegaDestino varchar(15) null,
 	fecha date not null,
 	hora time not null,
 	PRIMARY KEY (IDMovimiento),
@@ -825,11 +820,12 @@ CREATE TABLE Movimiento(
     FOREIGN KEY (BodegaDestino) REFERENCES Bodega(Codigo)
 );
 
---Segun el profe esto seria un movimientoInventario
+
+drop table ListaMovimiento
 CREATE TABLE ListaMovimiento (
 	CodigoArticulo VARCHAR(15) NOT NULL,
 	CantidadArticulo int not null,
-	CodigoMovimiento int NOT NULL, --Este no se
+	CodigoMovimiento int NOT NULL,
 	PRIMARY KEY (CodigoArticulo, CodigoMovimiento),
 	FOREIGN KEY (CodigoArticulo) REFERENCES Articulo(Codigo),
 	FOREIGN KEY (CodigoMovimiento) REFERENCES Movimiento(IDMovimiento),
@@ -837,34 +833,29 @@ CREATE TABLE ListaMovimiento (
 -------------
 
 
---O sea los articulos a mover a otra bodega
---Esto seria Articulos por movimiento
 CREATE TABLE IngresoInventario (
-	CodigoArticulo VARCHAR(15) NOT NULL,
-	CedulaEmpleado varchar(9) not null,
-	BodegaDestino varchar(15) not null,
-	Fecha date, 
-	PRIMARY KEY (CodigoArticulo,BodegaDestino), --No se si poner la BodegaDestino
-	FOREIGN KEY (CodigoArticulo) REFERENCES Articulo(Codigo),
-	FOREIGN KEY (CedulaEmpleado) REFERENCES Empleado(Cedula),
-	FOREIGN KEY (BodegaDestino) REFERENCES Bodega(Codigo)
+    IDMovimiento INT NOT NULL,
+    CedulaEmpleado VARCHAR(9) NOT NULL,
+    BodegaDestino VARCHAR(15) NOT NULL,
+    Fecha DATETIME,
+    PRIMARY KEY (IDMovimiento, BodegaDestino), 
+    FOREIGN KEY (IDMovimiento) REFERENCES Movimiento(IDMovimiento),
+    FOREIGN KEY (CedulaEmpleado) REFERENCES Empleado(Cedula),
+    FOREIGN KEY (BodegaDestino) REFERENCES Bodega(Codigo)
 );
 
---Esta es como la que recibe los articulos que fueron enviados Creo que aqui
---Ocupamos la bodega pues para que sepa que le estan enviando y se guarde
+
+drop table ListaIngreso
+
 CREATE TABLE ListaIngreso (
-    CodigoMovimiento INT NOT NULL,
+    IDMovimiento int NOT NULL,
     CodigoArticulo VARCHAR(15) NOT NULL,
-    CantidadIngresada INT not null,
-    PRIMARY KEY (CodigoArticulo, CodigoMovimiento),
-    FOREIGN KEY (CodigoMovimiento) REFERENCES Movimiento(IDMovimiento),
+    CantidadIngresada INT NOT NULL,
+    PRIMARY KEY (CodigoArticulo, IDMovimiento),
     FOREIGN KEY (CodigoArticulo) REFERENCES Articulo(Codigo)
 );
 
 
-
-
---Esta ta buena
 CREATE TABLE SalidaMovimiento(
 	IDFactura VARCHAR(15) not null,
 	CodigoProducto VARCHAR(15) not null,
@@ -876,7 +867,7 @@ CREATE TABLE SalidaMovimiento(
 	FOREIGN KEY (IDFactura) REFERENCES Factura(Codigo)
 );
 
---Esta creo que no
+
 
 CREATE TABLE ListaSalida (
     CodigoMovimiento INT NOT NULL,
@@ -886,26 +877,9 @@ CREATE TABLE ListaSalida (
     FOREIGN KEY (CodigoMovimiento) REFERENCES Movimiento(IDMovimiento),
     FOREIGN KEY (CodigoArticulo) REFERENCES Articulo(Codigo)
 );
---Esta creo que no
 
 
 
---CREO QUE FALTA UNA TABLA
-
---Revisar hasta aquí
-
-
---Revisar esta ya la revise
-
-CREATE TABLE ListaFactura (
-	CodigoProducto VARCHAR(15) NOT NULL,
-	CantidadProducto INT NOT NULL,
-	CodigoFactura VARCHAR(15) NOT NULL,
-	PRIMARY KEY (CodigoProducto,CodigoFactura),
-	FOREIGN KEY (CodigoProducto) REFERENCES Articulo(Codigo),
-	FOREIGN KEY (CodigoFactura) REFERENCES Factura(Codigo)
-);
---Revisar esta ya la revise
 
 
 
@@ -922,9 +896,7 @@ CREATE TABLE ListaCotizacion (
 
 
 
---Esto hay que ejecutarlo ahora
 
---Esto es para el login para que revise si esta el usuario
 
 
 GO
@@ -1425,3 +1397,185 @@ begin
     insert into ListaCotizacion(CodigoProducto, CantidadProducto, CodigoCotizacion) 
     values (@CodigoProducto, @CantidadProducto, @CodigoCotizacion);
 end;
+
+
+
+--Creada ya
+
+go
+create function MostrarTareasCOT()
+returns table
+as
+return (
+	select TipoTarea from TipoTareaCotizacion
+); --Creada ya
+
+
+
+
+create function MostrarEstadosTarea()
+returns table
+as 
+return (
+	select tipoEstado from TipoTareaEstado
+); 
+
+--Hasta aqui
+
+SELECT * FROM TipoTareaCaso;
+
+
+
+
+go
+create procedure InsertarTarea
+@CodigoTarea VARCHAR(15),
+@tipoTareaCotizacion varchar(30),
+@Fecha DATE,
+@Descripcion VARCHAR(200),
+@Estado VARCHAR(30)
+as
+begin
+	insert into Tarea(CodigoTarea,tipoTareaCotizacion,Fecha,Descripcion,Estado) values
+	(@CodigoTarea,@tipoTareaCotizacion,@Fecha,@Descripcion,@Estado)
+end;
+
+
+
+
+go
+create procedure EliminarCotizacion
+	@CodigoCotizacion int
+	as
+	begin
+	delete from ListaCotizacion  where @CodigoCotizacion = CodigoCotizacion;
+
+	 delete from Cotizacion where @CodigoCotizacion = Codigo;
+	end;
+
+
+	
+go
+create function mostrarTareasC()
+returns table
+as return(
+	select * from TareaCotizacion
+);
+
+ go
+ create function mostrarBodegas()
+ returns table
+ as return(
+	select Nombre from Bodega
+ );
+
+ go
+create procedure IngresarMovimiento
+    @Cedula VARCHAR(9),
+    @BodegaOrigen VARCHAR(15),
+    @BodegaDestino VARCHAR(15) = NULL,
+    @fecha DATE,
+    @hora TIME
+as
+begin
+    declare @CodigoBodegaOrigen VARCHAR(15);
+    declare @CodigoBodegaDestino VARCHAR(15) = NULL;
+
+
+    select @CodigoBodegaOrigen = Codigo 
+    from Bodega 
+    where Nombre = @BodegaOrigen;
+
+    if @CodigoBodegaOrigen IS NULL
+    begin  
+        raiserror('La bodega de origen no existe.', 16, 1);
+        return;
+    end
+
+    if @BodegaDestino IS NOT NULL
+    begin
+        select @CodigoBodegaDestino = Codigo 
+        from Bodega 
+        where Nombre = @BodegaDestino;
+
+        if @CodigoBodegaDestino IS NULL
+        begin
+            raiserror('La bodega de destino no existe.', 16, 1);
+            return;
+        end
+    end
+
+    -- Insertar en la tabla Movimiento usando los códigos obtenidos
+    insert into Movimiento (Cedula, BodegaOrigen, BodegaDestino, fecha, hora)
+    values (@Cedula, @CodigoBodegaOrigen, @CodigoBodegaDestino, @fecha, @hora);
+end;
+
+go
+create function mostrarMovimientos()
+returns table
+as 
+return (
+	select IDMovimiento from Movimiento
+);
+
+
+go
+create procedure RegistrarInventario
+	@IDMovimiento int,
+	@CedulaEmpleado varchar(9),
+	@BodegaDestino varchar(15),
+	@Fecha date
+	as
+	begin
+    declare @CodigoBodegaDestino VARCHAR(15);
+
+
+    select @CodigoBodegaDestino = Codigo 
+    from Bodega 
+    where Nombre = @BodegaDestino;
+		insert into IngresoInventario(IDMovimiento, CedulaEmpleado, BodegaDestino, Fecha) values
+		(@IDMovimiento, @CedulaEmpleado, @CodigoBodegaDestino, @Fecha)
+	end;
+
+
+
+
+
+	go
+	CREATE PROCEDURE IngresarInventarioArticulos
+    @IDMovimiento INT,
+    @NombreArticulo VARCHAR(40),
+    @CantidadIngresada INT
+AS
+BEGIN
+    DECLARE @CodigoFinal VARCHAR(15);
+
+    -- Buscar el código del artículo según su nombre
+    SELECT @CodigoFinal = Codigo
+    FROM Articulo
+    WHERE @NombreArticulo = Nombre;
+
+    INSERT INTO ListaIngreso(IDMovimiento, CodigoArticulo, CantidadIngresada)
+    VALUES (@IDMovimiento, @CodigoFinal, @CantidadIngresada);
+END;
+
+drop procedure AgregarArticulosFactura
+
+go
+create procedure AgregarArticulosFactura
+	@IDLista varchar(40),
+	@NombreProducto VARCHAR(40),
+	@CantidadProducto INT
+	as
+	begin
+		DECLARE @CodigoProdu VARCHAR(15);
+
+
+		select @CodigoProdu = Codigo
+		from Articulo
+		where @NombreProducto = Nombre;
+
+		insert into ListaFactura(IDLista,CodigoProducto,CantidadProducto) values
+		(@IDLista,@CodigoProdu,@CantidadProducto)
+	end;
+
