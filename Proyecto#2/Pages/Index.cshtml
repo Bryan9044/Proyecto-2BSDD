@@ -1115,3 +1115,293 @@
     </div>
 </div>
 <br />
+
+
+
+
+
+
+
+<div class="text-center">
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalMovimientos" asp-page-handler="MostrarModal14">
+        Ingresar movimientos
+    </button>
+</div>
+
+
+<div class="modal fade" id="modalMovimientos" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalLabel">Agregar movimientos</h5>
+                <form method="post" asp-page-handler="CerrarModal13">
+                    <button type="submit" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </form>
+            </div>
+            <div class="modal-body">
+                <!-- Esto es para pasar la info a OnPostGuardarUsuario -->
+                <form method="post" asp-page-handler="IngresarMovimiento">
+
+                    <div class="modalEmpleaM">
+                        <label for="projectEmpleadoM" class="form-label">Empleado</label>
+                        <select class="form-control" id="projectEmpleadoM" name="projectEmpleadoM" required>
+                            @foreach (var empleado2 in Model.Empleados)
+                            {
+                                <option value="@empleado2">@empleado2</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="modalNombreBodega">
+                        <label for="projectBodegaN" class="form-label">Bodega origen</label>
+                        <select class="form-control" id="projectBodegaN" name="projectBodegaN" required>
+                            @foreach (var bodega in Model.Bodegas)
+                            {
+                                <option value="@bodega">@bodega</option>
+                            }
+                        </select>
+                    </div>
+
+
+
+                    <div class="modalNombreBodegaS">
+                        <label for="projectBodegaDes" class="form-label">Bodega destino</label>
+                        <select class="form-control" id="projectBodegaDes" name="projectBodegaDes" required>
+                            @foreach (var bodega2 in Model.Bodegas)
+                            {
+                                <option value="@bodega2">@bodega2</option>
+                            }
+                        </select>
+                    </div>
+                    <br />
+                    <div class="modalFechaMov">
+                        <label for="projectFechaMov" class="form-label">Fecha del movimiento</label>
+                        <input type="date" id="projectFechaMov" name="projectFechaMov" required>
+                    </div>
+                    <br />
+                    <div class="modalDuracionMov">
+                        <label for="projectDuracionMov" class="form-label">Tiempo de duracion del movimiento</label>
+                        <input type="time" id="projectDuracionMov" name="projectDuracionMov" required>
+                    </div>
+
+                    <br />
+                    <button type="submit" class="btn btn-primary">Agregar movimiento</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <!-- Esto es para cerrar -->
+                <form method="post" asp-page-handler="CerrarModal14">
+                    <button type="submit" class="btn btn-secondary">Cerrar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<br />
+
+
+
+
+
+<div class="text-center">
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalIngreso" asp-page-handler="MostrarModal15">
+        Ingresar inventario
+    </button>
+</div>
+
+
+
+
+<div class="modal fade" id="modalIngreso" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalLabel">Ingresar inventario</h5>
+                <form method="post" asp-page-handler="CerrarModal15">
+                    <button type="submit" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </form>
+            </div>
+            <div class="modal-body">
+                <!-- Esto es para pasar la info a OnPostGuardarUsuario -->
+                <form method="post" asp-page-handler="IngresarInventarios">
+
+                    <div class="modalMovimientoC">
+                        <label for="projectMovimientoC" class="form-label">ID movimiento</label>
+                        <select class="form-control" id="projectMovimientoC" name="projectMovimientoC" required>
+                            @foreach (var mov in Model.Movimientos)
+                            {
+                                <option value="@mov">@mov</option>
+                            }
+                        </select>
+                    </div>
+                    <br />
+
+
+                    <div class="modalEmpleaM">
+                        <label for="projectEmpleadoM" class="form-label">Empleado</label>
+                        <select class="form-control" id="projectEmpleadoM" name="projectEmpleadoM" required>
+                            @foreach (var empleado3 in Model.Empleados)
+                            {
+                                <option value="@empleado3">@empleado3</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="modalNombreBodega">
+                        <label for="projectBodegaN" class="form-label">Bodega origen</label>
+                        <select class="form-control" id="projectBodegaN" name="projectBodegaN" required>
+                            @foreach (var bodega in Model.Bodegas)
+                            {
+                                <option value="@bodega">@bodega</option>
+                            }
+                        </select>
+                    </div>
+                    <br />
+                    <div class="modalFechaM">
+                        <label for="projectFechaM" class="form-label">Escriba una fecha de ingreso</label>
+                        <input type="date" id="projectFechaM" name="projectFechaM" required>
+                    </div>
+                    <br />
+
+                    <button type="submit" class="btn btn-primary">Agregar movimiento</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <!-- Esto es para cerrar -->
+                <form method="post" asp-page-handler="CerrarModal14">
+                    <button type="submit" class="btn btn-secondary">Cerrar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<br />
+
+
+
+
+
+
+<div class="text-center">
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalIngresoART" asp-page-handler="MostrarModal16">
+        Ingresar articulos a inventario
+    </button>
+</div>
+
+
+
+
+<div class="modal fade" id="modalIngresoART" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalLabel">Ingresar articulos al movimiento de inventario</h5>
+                <form method="post" asp-page-handler="CerrarModal16">
+                    <button type="submit" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </form>
+            </div>
+            <div class="modal-body">
+                <!-- Esto es para pasar la info a OnPostGuardarUsuario -->
+                <form method="post" asp-page-handler="IngresarArticulosMOV">
+
+                    <div class="modalMovimientoC">
+                        <label for="projectMovimientoC2" class="form-label">ID movimiento</label>
+                        <select class="form-control" id="projectMovimientoC2" name="projectMovimientoC2" required>
+                            @foreach (var mov in Model.Movimientos)
+                            {
+                                <option value="@mov">@mov</option>
+                            }
+                        </select>
+                    </div>
+                    <br />
+
+                    <div class="modalInvent">
+                        <label for="projectInventA" class="form-label">Escoja un producto</label>
+                        <select class="form-control" id="projectInventA" name="projectInventA" required>
+                            @foreach (var articulo2 in Model.Articulos)
+                            {
+                                <option value="@articulo2">@articulo2</option>
+                            }
+                        </select>
+                    </div>
+
+                    <br />
+                    <div class="modalCantidadInve">
+                        <label for="projectCantidadInve" class="form-label">Escoja una cantidad de articulos</label>
+                        <input type="number" id="projectCantidadInve" name="projectCantidadInve" required>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Agregar articulos al inventario</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <!-- Esto es para cerrar -->
+                <form method="post" asp-page-handler="CerrarModal15">
+                    <button type="submit" class="btn btn-secondary">Cerrar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<br />
+
+
+
+
+<div class="text-center">
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalListaFactura" asp-page-handler="MostrarModal17">
+        Crear lista de articulos para una factura
+    </button>
+</div>
+
+
+
+
+
+<div class="modal fade" id="modalListaFactura" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalLabel">Agregar una lista de articulos a una factura</h5>
+                <form method="post" asp-page-handler="CerrarModal17">
+                    <button type="submit" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </form>
+            </div>
+            <div class="modal-body">
+                <!-- Esto es para pasar la info a OnPostGuardarUsuario -->
+                <form method="post" asp-page-handler="IngresarListaArt">
+
+
+                    <div class="modalIDListaF">
+                        <label for="projectIDListaF" class="form-label">Escriba un identificador para la factura</label>
+                        <input type="text" id="projectIDListaF" name="projectIDListaF" required>
+                    </div>
+                    <br />
+
+                    <div class="modalArtLista">
+                        <label for="projectArtLista" class="form-label">Escoja un articulo para la lista</label>
+                        <select class="form-control" id="projectArtLista" name="projectArtLista" required>
+                            @foreach (var articulo3 in Model.Articulos)
+                            {
+                                <option value="@articulo3">@articulo3</option>
+                            }
+                        </select>
+                    </div>
+
+                    <br />
+                    <div class="modalCantidadList">
+                        <label for="projectCantidadInveL" class="form-label">Escoja una cantidad del articulo</label>
+                        <input type="number" id="projectCantidadInveL" name="projectCantidadInveL" required>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Agregar articulos al inventario</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <!-- Esto es para cerrar -->
+                <form method="post" asp-page-handler="CerrarModal15">
+                    <button type="submit" class="btn btn-secondary">Cerrar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<br />

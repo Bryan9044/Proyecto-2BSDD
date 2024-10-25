@@ -36,6 +36,8 @@ namespace Proyecto_2.Pages
         public bool ShowModal10 { get; set; }
         public bool ShowModal11 { get; set; }
         public bool ShowModal12 { get; set; }
+        public bool ShowModal13 { get; set; }
+        public bool ShowModal14 { get; set; }
         public List<string> Roles { get; set; } = new List<string>();//ya
 
         public List<string> Acciones { get; set; } = new List<string>(); //ya
@@ -105,6 +107,11 @@ namespace Proyecto_2.Pages
 
         public List<int> CodigoCtarea { get; set; } = new List<int>();
 
+        public List<string> Bodegas { get; set; } = new List<string>();
+
+        public List<int> Movimientos { get; set; } = new List<int>();
+
+
 
 
 
@@ -146,6 +153,8 @@ namespace Proyecto_2.Pages
             Cotizaciones = new List<int>();
             Tareas = new List<string>();
             TipoTareas = new List<string>();
+            Bodegas = new List<string>();
+            Movimientos = new List<int>();
 
             string connectionString = _configuration.GetConnectionString("DefaultConnection");
 
@@ -569,6 +578,44 @@ namespace Proyecto_2.Pages
                 }
             }
             //Hasta aqui tareas
+
+
+
+            //Esta parte es para obtener todos las bodegas que hayan sido registradas en la base de datos
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                string query = "select * from mostrarBodegas()";
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            Bodegas.Add(reader.GetString(0));
+                        }
+                    }
+                }
+            }
+            //Hasta aqui bodegas
+
+            //Esta parte es para obtener todos los movimientos que hayan sido registradas en la base de datos
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                string query = "select * from mostrarMovimientos()";
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            Movimientos.Add(reader.GetInt32(0));
+                        }
+                    }
+                }
+            }
+            //Hasta aqui movimientos
         }
 
 
@@ -725,6 +772,30 @@ namespace Proyecto_2.Pages
         public IActionResult OnPostCerrarModa12()
         {
             ShowModal12 = false;
+            return RedirectToPage();
+        }
+
+        public IActionResult OnGetMostrarModal13()
+        {
+            ShowModal13 = true;
+            return Page();
+        }
+
+        public IActionResult OnPostCerrarModa13()
+        {
+            ShowModal13 = false;
+            return RedirectToPage();
+        }
+
+        public IActionResult OnGetMostrarModal14()
+        {
+            ShowModal14 = true;
+            return Page();
+        }
+
+        public IActionResult OnPostCerrarModa14()
+        {
+            ShowModal14= false;
             return RedirectToPage();
         }
 
@@ -1199,6 +1270,160 @@ namespace Proyecto_2.Pages
             return Page();
         }
 
+
+        public IActionResult OnPostIngresarMovimiento(string projectEmpleadoM, string projectBodegaN, string projectBodegaDes, DateOnly projectFechaMov,
+            TimeOnly projectDuracionMov)
+        {
+            Console.WriteLine(projectEmpleadoM);
+            Console.WriteLine(projectBodegaN);
+            Console.WriteLine(projectDuracionMov);
+
+            string connectionString = _configuration.GetConnectionString("DefaultConnection");
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                try
+                {
+                    connection.Open();
+                    string query = "EXEC IngresarMovimiento @Cedula, @BodegaOrigen, @BodegaDestino, @fecha, @hora";
+
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.Add(new SqlParameter("@Cedula", projectEmpleadoM));
+                        command.Parameters.Add(new SqlParameter("@BodegaOrigen", projectBodegaN));
+                        command.Parameters.Add(new SqlParameter("@BodegaDestino", projectBodegaDes));
+                        command.Parameters.Add(new SqlParameter("@fecha", projectFechaMov));
+                        command.Parameters.Add(new SqlParameter("@hora", projectDuracionMov));
+
+
+
+                        command.ExecuteNonQuery();
+                    }
+                }
+                catch (SqlException ex)
+                {
+                    _logger.LogError(ex, "Error al agregar el artículo a la cotización.");
+                    ModelState.AddModelError(string.Empty, "Error al agregar el artículo a la cotización.");
+                    return Page();
+                }
+            }
+
+            Console.WriteLine("Se insertó el artículo en la cotización correctamente.");
+            return Page();
+        }
+
+
+        public IActionResult OnPostIngresarInventarios(int projectMovimientoC, string projectEmpleadoM, string projectBodegaN,
+            DateOnly projectFechaM)
+        {
+
+            string connectionString = _configuration.GetConnectionString("DefaultConnection");
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                try
+                {
+                    connection.Open();
+                    string query = "EXEC RegistrarInventario @IDMovimiento, @CedulaEmpleado, @BodegaDestino, @Fecha";
+
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.Add(new SqlParameter("@IDMovimiento", projectMovimientoC));
+                        command.Parameters.Add(new SqlParameter("@CedulaEmpleado", projectEmpleadoM));
+                        command.Parameters.Add(new SqlParameter("@BodegaDestino", projectBodegaN));
+                        command.Parameters.Add(new SqlParameter("@Fecha", projectFechaM));
+
+
+
+                        command.ExecuteNonQuery();
+                    }
+                }
+                catch (SqlException ex)
+                {
+                    _logger.LogError(ex, "Error al agregar el artículo a la cotización.");
+                    ModelState.AddModelError(string.Empty, "Error al agregar el artículo a la cotización.");
+                    return Page();
+                }
+            }
+
+            Console.WriteLine("Se insertó el artículo en la cotización correctamente.");
+            return Page();
+        }
+
+
+
+
+
+        public IActionResult OnPostIngresarArticulosMOV(int projectMovimientoC2, string projectInventA, int projectCantidadInve)
+        {
+
+            string connectionString = _configuration.GetConnectionString("DefaultConnection");
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                try
+                {
+                    connection.Open();
+                    string query = "EXEC IngresarInventarioArticulos @IDMovimiento, @CodigoArticulo, @CantidadIngresada";
+
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.Add(new SqlParameter("@IDMovimiento", projectMovimientoC2));
+                        command.Parameters.Add(new SqlParameter("@CodigoArticulo", projectInventA));
+                        command.Parameters.Add(new SqlParameter("@CantidadIngresada", projectCantidadInve));
+
+
+
+                        command.ExecuteNonQuery();
+                    }
+                }
+                catch (SqlException ex)
+                {
+                    _logger.LogError(ex, "Error al agregar el artículo a la cotización.");
+                    ModelState.AddModelError(string.Empty, "Error al agregar el artículo a la cotización.");
+                    return Page();
+                }
+            }
+
+            Console.WriteLine("Se insertó el artículo en la cotización correctamente.");
+            return Page();
+        }
+
+
+
+
+        
+
+        public IActionResult OnPostIngresarListaArt(string projectIDListaF, string projectArtLista, int projectCantidadInveL)
+        {
+
+            string connectionString = _configuration.GetConnectionString("DefaultConnection");
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                try
+                {
+                    connection.Open();
+                    string query = "EXEC AgregarArticulosFactura @IDLista, @NombreProdu, @CantidadProducto";
+
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.Add(new SqlParameter("@IDLista", projectIDListaF));
+                        command.Parameters.Add(new SqlParameter("@NombreProdu", projectArtLista));
+                        command.Parameters.Add(new SqlParameter("@CantidadProducto", projectCantidadInveL));
+
+
+
+                        command.ExecuteNonQuery();
+                    }
+                }
+                catch (SqlException ex)
+                {
+                    _logger.LogError(ex, "Error al agregar el artículo a la cotización.");
+                    ModelState.AddModelError(string.Empty, "Error al agregar el artículo a la cotización.");
+                    return Page();
+                }
+            }
+
+            Console.WriteLine("Se insertó el artículo en la cotización correctamente.");
+            return Page();
+        }
 
     }
 }
