@@ -8,6 +8,24 @@
     <h1 class="intro">Bienvenidos al segundo proyecto de Bases de datos</h1>
 </div>
 
+<!-- Modal para mostrar error -->
+<div id="messagebox" class="modal fade @(Model.ShowModal ? "show" : "")" style="@(Model.ShowModal ? "display:block;" : "display:none;")" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Error</h2>
+            </div>
+            <div id="Alerta" class="modal-body alert alert-danger">
+                @Model.MensajeError
+            </div>
+            <div class="modal-footer">
+                <form method="post" asp-page-handler="CloseModal">
+                    <button type="submit" class="btn btn-info">Cerrar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 <!--Modal para usuarios o empleados-->
@@ -85,7 +103,7 @@
                         <select class="form-control" id="projectDepartamentos" name="projectDepartamentos" required>
                             @foreach (var departamento in Model.Departamentos)
                             {
-                                <option value="@departamento">@departamento</option>
+                            <option value="@departamento">@departamento</option>
                             }
                         </select>
                     </div>
@@ -101,7 +119,7 @@
                         <select class="form-control" id="projectPuestos" name="projectPuestos" required>
                             @foreach (var puesto in Model.Puestos)
                             {
-                                <option value="@puesto">@puesto</option>
+                            <option value="@puesto">@puesto</option>
                             }
                         </select>
                     </div>
@@ -111,7 +129,7 @@
                         <select class="form-control" id="projectRoles" name="projectRoles" required>
                             @foreach (var rol in Model.Roles)
                             {
-                                <option value="@rol">@rol</option>
+                            <option value="@rol">@rol</option>
                             }
                         </select>
                     </div>
@@ -121,7 +139,7 @@
                         <select class="form-control" id="projectUsuarios" name="projectUsuarios" required>
                             @foreach (var usuario in Model.Usuarios)
                             {
-                                <option value="@usuario">@usuario</option>
+                            <option value="@usuario">@usuario</option>
                             }
                         </select>
                     </div>
@@ -244,7 +262,7 @@
                         <select class="form-control" id="projectTipoRolAc" name="projectTipoRolAc" required>
                             @foreach (var rol in Model.Roles)
                             {
-                                <option value="@rol">@rol</option>
+                            <option value="@rol">@rol</option>
                             }
                         </select>
                     </div>
@@ -254,7 +272,7 @@
                         <select class="form-control" id="projectTipoAccion" name="projectTipoAccion" required>
                             @foreach (var accion in Model.Acciones)
                             {
-                                <option value="@accion">@accion</option>
+                            <option value="@accion">@accion</option>
                             }
                         </select>
                     </div>
@@ -303,7 +321,7 @@
                         <select class="form-control" id="projectEmpleadoM" name="projectEmpleadoM" required>
                             @foreach (var empleado in Model.Empleados)
                             {
-                                <option value="@empleado">@empleado</option>
+                            <option value="@empleado">@empleado</option>
                             }
                         </select>
                     </div>
@@ -312,7 +330,7 @@
                         <select class="form-control" id="projectPuestosM" name="projectPuestosM" required>
                             @foreach (var puesto in Model.Puestos)
                             {
-                                <option value="@puesto">@puesto</option>
+                            <option value="@puesto">@puesto</option>
                             }
                         </select>
                     </div>
@@ -352,9 +370,9 @@
 <!-- Botón para abrir el modal -->
 
 <div class="text-center">
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#rolesModal" asp-page-handler="MostrarModal5">
-    ver roles del Usuario
-</button>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#rolesModal" asp-page-handler="MostrarModal5">
+        ver roles del Usuario
+    </button>
 </div>
 
 <!-- Modal para mostrar los roles del usuario y su ID -->
@@ -377,10 +395,10 @@
                     <tbody>
                         @for (int i = 0; i < Model.RolesUsuario.Count; i++)
                         {
-                            <tr>
-                                <td>@Model.IDUsuarios[i]</td>
-                                <td>@Model.RolesUsuario[i]</td>
-                            </tr>
+                        <tr>
+                            <td>@Model.IDUsuarios[i]</td>
+                            <td>@Model.RolesUsuario[i]</td>
+                        </tr>
                         }
                     </tbody>
                 </table>
@@ -400,9 +418,9 @@
 <!--Toda esta parte es para los empleados-->
 <!-- Botón para abrir el modal -->
 <div class="text-center">
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#todosEmpleados" asp-page-handler="MostrarModal6">
-    Ver todos los empleados 
-</button>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#todosEmpleados" asp-page-handler="MostrarModal6">
+        Ver todos los empleados
+    </button>
 </div>
 
 <div class="modal fade" id="todosEmpleados" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
@@ -436,21 +454,21 @@
                     <tbody>
                         @for (int i = 0; i < Model.CedulaEmp.Count; i++)
                         {
-                            <tr>
-                                <td>@Model.CedulaEmp[i]</td>
-                                <td>@Model.NombreEmp[i] @Model.ApellidoEmp1[i] @Model.ApellidoEmp2[i]</td> <!-- Nombre completo -->
-                                <td>@Model.GeneroEmp[i]</td>
-                                <td>@Model.FechaNacimientoEmp[i].ToShortDateString()</td> <!-- Formato de fecha -->
-                                <td>@Model.ProvinciaEmp[i]</td>
-                                <td>@Model.DireccionEmp[i]</td>
-                                <td>@Model.TelefonoEmp[i]</td>
-                                <td>@Model.CodigoEmp[i]</td>
-                                <td>@Model.FechaIngresoEmp[i]</td>
-                                <td>@Model.PuestoEmp[i]</td>
-                                <td>@Model.tipoRolEmp[i]</td>
-                                <td>@Model.IDUsuarioEmp[i]</td>
-                                <th>@Model.SalarioEmp</th>
-                            </tr>
+                        <tr>
+                            <td>@Model.CedulaEmp[i]</td>
+                            <td>@Model.NombreEmp[i] @Model.ApellidoEmp1[i] @Model.ApellidoEmp2[i]</td> <!-- Nombre completo -->
+                            <td>@Model.GeneroEmp[i]</td>
+                            <td>@Model.FechaNacimientoEmp[i].ToShortDateString()</td> <!-- Formato de fecha -->
+                            <td>@Model.ProvinciaEmp[i]</td>
+                            <td>@Model.DireccionEmp[i]</td>
+                            <td>@Model.TelefonoEmp[i]</td>
+                            <td>@Model.CodigoEmp[i]</td>
+                            <td>@Model.FechaIngresoEmp[i]</td>
+                            <td>@Model.PuestoEmp[i]</td>
+                            <td>@Model.tipoRolEmp[i]</td>
+                            <td>@Model.IDUsuarioEmp[i]</td>
+                            <th>@Model.SalarioEmp</th>
+                        </tr>
                         }
                     </tbody>
                 </table>
@@ -467,9 +485,9 @@
 <!--Al de empleado le puedo agregar edad-->
 
 <div class="text-center">
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalCotizacion" asp-page-handler="MostrarModal7">
-    Crear cotizacion
-</button>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalCotizacion" asp-page-handler="MostrarModal7">
+        Crear cotizacion
+    </button>
 </div>
 
 
@@ -490,7 +508,7 @@
                         <select class="form-control" id="projectClienteC" name="projectClienteC" required>
                             @foreach (var cliente in Model.Clientes)
                             {
-                                <option value="@cliente">@cliente</option>
+                            <option value="@cliente">@cliente</option>
                             }
                         </select>
                     </div>
@@ -501,7 +519,7 @@
                         <select class="form-control" id="projectEmpleadoC" name="projectEmpleadoC" required>
                             @foreach (var empleado in Model.Empleados)
                             {
-                                <option value="@empleado">@empleado</option>
+                            <option value="@empleado">@empleado</option>
                             }
                         </select>
                     </div>
@@ -525,7 +543,7 @@
                         <select class="form-control" id="projectTipoC" name="projectTipoC" required>
                             @foreach (var cotizacion in Model.TiposCotizacion)
                             {
-                                <option value="@cotizacion">@cotizacion</option>
+                            <option value="@cotizacion">@cotizacion</option>
                             }
                         </select>
                     </div>
@@ -536,7 +554,7 @@
                         <select class="form-control" id="projectEstadoC" name="projectEstadoC" required>
                             @foreach (var estado in Model.TiposEstadosC)
                             {
-                                <option value="@estado">@estado</option>
+                            <option value="@estado">@estado</option>
                             }
                         </select>
                     </div>
@@ -547,7 +565,7 @@
                         <select class="form-control" id="projectProbabilidadC" name="projectProbabilidadC" required>
                             @foreach (var probabilidad in Model.Probabilidades)
                             {
-                                <option value="@probabilidad">@probabilidad</option>
+                            <option value="@probabilidad">@probabilidad</option>
                             }
                         </select>
                     </div>
@@ -559,7 +577,7 @@
                         <select class="form-control" id="projectZona" name="projectZona" required>
                             @foreach (var zona in Model.Zonas)
                             {
-                                <option value="@zona">@zona</option>
+                            <option value="@zona">@zona</option>
                             }
                         </select>
                     </div>
@@ -570,7 +588,7 @@
                         <select class="form-control" id="projectSector" name="projectSector" required>
                             @foreach (var sector in Model.Sectores)
                             {
-                                <option value="@sector">@sector</option>
+                            <option value="@sector">@sector</option>
                             }
                         </select>
                     </div>
@@ -592,9 +610,9 @@
 
 
 <div class="text-center">
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalPlanilla" asp-page-handler="MostrarModal8">
-    Registrar planilla
-</button>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalPlanilla" asp-page-handler="MostrarModal8">
+        Registrar planilla
+    </button>
 </div>
 
 
@@ -627,7 +645,7 @@
                         <select class="form-control" id="projectEmpleadoP" name="projectEmpleadoP" required>
                             @foreach (var empleado in Model.Empleados)
                             {
-                                <option value="@empleado">@empleado</option>
+                            <option value="@empleado">@empleado</option>
                             }
                         </select>
                     </div>
@@ -655,9 +673,9 @@
 
 
 <div class="text-center">
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalCotizacionM" asp-page-handler="MostrarModal9">
-    Modificar cotizacion
-</button>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalCotizacionM" asp-page-handler="MostrarModal9">
+        Modificar cotizacion
+    </button>
 </div>
 
 
@@ -678,7 +696,7 @@
                         <select class="form-control" id="projectCotizacionC" name="projectCotizacionC" required>
                             @foreach (var cotizacion in Model.Cotizaciones)
                             {
-                                <option value="@cotizacion">@cotizacion</option>
+                            <option value="@cotizacion">@cotizacion</option>
                             }
                         </select>
                     </div>
@@ -688,7 +706,7 @@
                         <select class="form-control" id="projectClienteC" name="projectClienteC" required>
                             @foreach (var cliente in Model.Clientes)
                             {
-                                <option value="@cliente">@cliente</option>
+                            <option value="@cliente">@cliente</option>
                             }
                         </select>
                     </div>
@@ -699,7 +717,7 @@
                         <select class="form-control" id="projectEmpleadoC" name="projectEmpleadoC" required>
                             @foreach (var empleado in Model.Empleados)
                             {
-                                <option value="@empleado">@empleado</option>
+                            <option value="@empleado">@empleado</option>
                             }
                         </select>
                     </div>
@@ -723,7 +741,7 @@
                         <select class="form-control" id="projectTipoC" name="projectTipoC" required>
                             @foreach (var cotizacion in Model.TiposCotizacion)
                             {
-                                <option value="@cotizacion">@cotizacion</option>
+                            <option value="@cotizacion">@cotizacion</option>
                             }
                         </select>
                     </div>
@@ -734,7 +752,7 @@
                         <select class="form-control" id="projectEstadoC" name="projectEstadoC" required>
                             @foreach (var estado in Model.TiposEstadosC)
                             {
-                                <option value="@estado">@estado</option>
+                            <option value="@estado">@estado</option>
                             }
                         </select>
                     </div>
@@ -745,7 +763,7 @@
                         <select class="form-control" id="projectProbabilidadC" name="projectProbabilidadC" required>
                             @foreach (var probabilidad in Model.Probabilidades)
                             {
-                                <option value="@probabilidad">@probabilidad</option>
+                            <option value="@probabilidad">@probabilidad</option>
                             }
                         </select>
                     </div>
@@ -757,7 +775,7 @@
                         <select class="form-control" id="projectZona" name="projectZona" required>
                             @foreach (var zona in Model.Zonas)
                             {
-                                <option value="@zona">@zona</option>
+                            <option value="@zona">@zona</option>
                             }
                         </select>
                     </div>
@@ -768,7 +786,7 @@
                         <select class="form-control" id="projectSector" name="projectSector" required>
                             @foreach (var sector in Model.Sectores)
                             {
-                                <option value="@sector">@sector</option>
+                            <option value="@sector">@sector</option>
                             }
                         </select>
                     </div>
@@ -790,9 +808,9 @@
 
 
 <div class="text-center">
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalCotizacionA" asp-page-handler="MostrarModal10">
-    Agregar articulos a cotizacion
-</button>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalCotizacionA" asp-page-handler="MostrarModal10">
+        Agregar articulos a cotizacion
+    </button>
 </div>
 
 
@@ -813,7 +831,7 @@
                         <select class="form-control" id="projecCotizacionAr" name="projecCotizacionAr" required>
                             @foreach (var articulo in Model.Articulos)
                             {
-                                <option value="@articulo">@articulo</option>
+                            <option value="@articulo">@articulo</option>
                             }
                         </select>
                     </div>
@@ -831,11 +849,11 @@
                         <select class="form-control" id="projectCotizacionC" name="projectCotizacionC" required>
                             @foreach (var cotizacion in Model.Cotizaciones)
                             {
-                                <option value="@cotizacion">@cotizacion</option>
+                            <option value="@cotizacion">@cotizacion</option>
                             }
                         </select>
                     </div>
-           
+
                     <br />
                     <button type="submit" class="btn btn-primary">Guardar cotizacion</button>
                 </form>
@@ -856,9 +874,9 @@
 
 
 <div class="text-center">
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalTareasC" asp-page-handler="MostrarModal11">
-    Agregar tareas para una cotizacion
-</button>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalTareasC" asp-page-handler="MostrarModal11">
+        Agregar tareas para una cotizacion
+    </button>
 </div>
 
 
@@ -887,7 +905,7 @@
                         <select class="form-control" id="projectTipoTarea" name="projectTipoTarea" required>
                             @foreach (var tarea in Model.Tareas)
                             {
-                                <option value="@tarea">@tarea</option>
+                            <option value="@tarea">@tarea</option>
                             }
                         </select>
                     </div>
@@ -913,7 +931,7 @@
                         <select class="form-control" id="projectEstadosT" name="projectEstadosT" required>
                             @foreach (var estado2 in Model.TipoTareas)
                             {
-                                <option value="@estado2">@estado2</option>
+                            <option value="@estado2">@estado2</option>
                             }
                         </select>
                     </div>
@@ -939,9 +957,9 @@
 <!--Toda esta parte es para los empleados-->
 <!-- Botón para abrir el modal -->
 <div class="text-center">
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#TodasCotizaciones" asp-page-handler="MostrarModal12">
-    Ver cotizaciones
-</button>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#TodasCotizaciones" asp-page-handler="MostrarModal12">
+        Ver cotizaciones
+    </button>
 </div>
 
 <div class="modal fade" id="TodasCotizaciones" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
@@ -972,18 +990,18 @@
                     <tbody>
                         @for (int i = 0; i < Model.CodigoC.Count; i++)
                         {
-                            <tr>
-                                <td>@Model.CodigoC[i]</td>
-                                <td>@Model.ClienteC[i] </td> <!-- Nombre completo -->
-                                <td>@Model.EmpleadoC[i]</td>
-                                <td>@Model.FechaC[i].ToShortDateString()</td> <!-- Formato de fecha -->
-                                <td>@Model.MesC[i]</td>
-                                <td>@Model.TiposCotizaciones[i]</td>
-                                <td>@Model.EstadosC[i]</td>
-                                <td>@Model.ProbabilidadesC[i]</td>
-                                <td>@Model.ZonasC[i]</td>
-                                <td>@Model.SectorC[i]</td>
-                            </tr>
+                        <tr>
+                            <td>@Model.CodigoC[i]</td>
+                            <td>@Model.ClienteC[i] </td> <!-- Nombre completo -->
+                            <td>@Model.EmpleadoC[i]</td>
+                            <td>@Model.FechaC[i].ToShortDateString()</td> <!-- Formato de fecha -->
+                            <td>@Model.MesC[i]</td>
+                            <td>@Model.TiposCotizaciones[i]</td>
+                            <td>@Model.EstadosC[i]</td>
+                            <td>@Model.ProbabilidadesC[i]</td>
+                            <td>@Model.ZonasC[i]</td>
+                            <td>@Model.SectorC[i]</td>
+                        </tr>
                         }
                     </tbody>
                 </table>
@@ -1002,15 +1020,13 @@
 
 <br />
 <!--Este todavia no funcioa-->
-
-
 <!--Al de empleado le puedo agregar edad-->
 <!--Toda esta parte es para los empleados-->
 <!-- Botón para abrir el modal -->
 <div class="text-center">
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#TodasTareaACotizaciom" asp-page-handler="MostrarModal12">
-    Ver tareas de una cotizacion
-</button>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#TodasTareaACotizaciom" asp-page-handler="MostrarModal12">
+        Ver tareas de una cotizacion
+    </button>
 </div>
 
 <div class="modal fade" id="TodasTareaACotizaciom" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
@@ -1041,18 +1057,18 @@
                     <tbody>
                         @for (int i = 0; i < Model.CodigoC.Count; i++)
                         {
-                            <tr>
-                                <td>@Model.CodigoC[i]</td>
-                                <td>@Model.ClienteC[i] </td> <!-- Nombre completo -->
-                                <td>@Model.EmpleadoC[i]</td>
-                                <td>@Model.FechaC[i].ToShortDateString()</td> <!-- Formato de fecha -->
-                                <td>@Model.MesC[i]</td>
-                                <td>@Model.TiposCotizaciones[i]</td>
-                                <td>@Model.EstadosC[i]</td>
-                                <td>@Model.ProbabilidadesC[i]</td>
-                                <td>@Model.ZonasC[i]</td>
-                                <td>@Model.SectorC[i]</td>
-                            </tr>
+                        <tr>
+                            <td>@Model.CodigoC[i]</td>
+                            <td>@Model.ClienteC[i] </td> <!-- Nombre completo -->
+                            <td>@Model.EmpleadoC[i]</td>
+                            <td>@Model.FechaC[i].ToShortDateString()</td> <!-- Formato de fecha -->
+                            <td>@Model.MesC[i]</td>
+                            <td>@Model.TiposCotizaciones[i]</td>
+                            <td>@Model.EstadosC[i]</td>
+                            <td>@Model.ProbabilidadesC[i]</td>
+                            <td>@Model.ZonasC[i]</td>
+                            <td>@Model.SectorC[i]</td>
+                        </tr>
                         }
                     </tbody>
                 </table>
@@ -1096,7 +1112,7 @@
                         <select class="form-control" id="projectEliCotizacion" name="projectEliCotizacion" required>
                             @foreach (var cotizacion in Model.Cotizaciones)
                             {
-                                <option value="@cotizacion">@cotizacion</option>
+                            <option value="@cotizacion">@cotizacion</option>
                             }
                         </select>
                     </div>
@@ -1147,7 +1163,7 @@
                         <select class="form-control" id="projectEmpleadoM" name="projectEmpleadoM" required>
                             @foreach (var empleado2 in Model.Empleados)
                             {
-                                <option value="@empleado2">@empleado2</option>
+                            <option value="@empleado2">@empleado2</option>
                             }
                         </select>
                     </div>
@@ -1156,7 +1172,7 @@
                         <select class="form-control" id="projectBodegaN" name="projectBodegaN" required>
                             @foreach (var bodega in Model.Bodegas)
                             {
-                                <option value="@bodega">@bodega</option>
+                            <option value="@bodega">@bodega</option>
                             }
                         </select>
                     </div>
@@ -1168,7 +1184,7 @@
                         <select class="form-control" id="projectBodegaDes" name="projectBodegaDes" required>
                             @foreach (var bodega2 in Model.Bodegas)
                             {
-                                <option value="@bodega2">@bodega2</option>
+                            <option value="@bodega2">@bodega2</option>
                             }
                         </select>
                     </div>
@@ -1229,7 +1245,7 @@
                         <select class="form-control" id="projectMovimientoC" name="projectMovimientoC" required>
                             @foreach (var mov in Model.Movimientos)
                             {
-                                <option value="@mov">@mov</option>
+                            <option value="@mov">@mov</option>
                             }
                         </select>
                     </div>
@@ -1241,7 +1257,7 @@
                         <select class="form-control" id="projectEmpleadoM" name="projectEmpleadoM" required>
                             @foreach (var empleado3 in Model.Empleados)
                             {
-                                <option value="@empleado3">@empleado3</option>
+                            <option value="@empleado3">@empleado3</option>
                             }
                         </select>
                     </div>
@@ -1250,7 +1266,7 @@
                         <select class="form-control" id="projectBodegaN" name="projectBodegaN" required>
                             @foreach (var bodega in Model.Bodegas)
                             {
-                                <option value="@bodega">@bodega</option>
+                            <option value="@bodega">@bodega</option>
                             }
                         </select>
                     </div>
@@ -1307,7 +1323,7 @@
                         <select class="form-control" id="projectMovimientoC2" name="projectMovimientoC2" required>
                             @foreach (var mov in Model.Movimientos)
                             {
-                                <option value="@mov">@mov</option>
+                            <option value="@mov">@mov</option>
                             }
                         </select>
                     </div>
@@ -1318,7 +1334,7 @@
                         <select class="form-control" id="projectInventA" name="projectInventA" required>
                             @foreach (var articulo2 in Model.Articulos)
                             {
-                                <option value="@articulo2">@articulo2</option>
+                            <option value="@articulo2">@articulo2</option>
                             }
                         </select>
                     </div>
@@ -1381,7 +1397,7 @@
                         <select class="form-control" id="projectArtLista" name="projectArtLista" required>
                             @foreach (var articulo3 in Model.Articulos)
                             {
-                                <option value="@articulo3">@articulo3</option>
+                            <option value="@articulo3">@articulo3</option>
                             }
                         </select>
                     </div>

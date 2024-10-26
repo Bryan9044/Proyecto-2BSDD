@@ -292,19 +292,6 @@ CREATE TABLE HistoricoSalario (
     FOREIGN KEY (CedulaEmpleado) REFERENCES Empleado(Cedula)
 );
 
-
-CREATE TABLE Planilla (
-	CodigoPlanilla VARCHAR(15) NOT NULL,
-	FechaPlanilla date not null,   
-	CedulaEmpleado varchar(9) not null,
-	HorasRealizadas int not null,
-	Salario int, --HAY QUE CAMBIARLO URGENTE DEBE SER NULO PORQUE SE CALCULA DESPUES DE LAS HORAS
-	foreign key (CedulaEmpleado) references Empleado(Cedula),
-	Primary key (CodigoPlanilla, CedulaEmpleado)
-
-);
-
-
 CREATE TABLE Familia (
 	CodigoFamilia VARCHAR(15) NOT NULL,
 	Nombre VARCHAR(20) NOT NULL,

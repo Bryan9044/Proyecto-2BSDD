@@ -16,6 +16,9 @@ namespace Proyecto_2.Pages
             _logger = logger;
             _configuration = configuration;
         }
+        public bool ShowModal { get; set; } = false;
+
+        public string MensajeError { get; set; }
 
         public bool ShowModal1 { get; set; }
         public bool ShowModal2 { get; set; }
@@ -115,7 +118,11 @@ namespace Proyecto_2.Pages
 
 
 
-
+        public IActionResult OnPostCloseModal()
+        {
+            ShowModal = false; // Cierra el modal
+            return Page(); // Regresa a la misma página
+        }
 
 
         public void OnGet()
@@ -822,11 +829,11 @@ namespace Proyecto_2.Pages
                 }
                 catch (SqlException ex)
                 {
-
-                    _logger.LogError(ex, "Error al insertar el rol.");
-                    ModelState.AddModelError(string.Empty, "Error al guardar el rol.");
+                    MensajeError = ex.Errors[0].Message;
+                    ShowModal = true;
                     return Page();
                 }
+
             }
 
             Console.WriteLine("Si se inserto el rol");
@@ -855,9 +862,8 @@ namespace Proyecto_2.Pages
                 }
                 catch (SqlException ex)
                 {
-
-                    _logger.LogError(ex, "Error al insertar el rol por accion.");
-                    ModelState.AddModelError(string.Empty, "Error al guardar el rol por accion.");
+                    MensajeError = ex.Errors[0].Message;
+                    ShowModal = true;
                     return Page();
                 }
             }
@@ -910,9 +916,8 @@ namespace Proyecto_2.Pages
                 }
                 catch (SqlException ex)
                 {
-
-                    _logger.LogError(ex, "Error al insertar el rol por accion.");
-                    ModelState.AddModelError(string.Empty, "Error al guardar el rol por accion.");
+                    MensajeError = ex.Errors[0].Message;
+                    ShowModal = true;
                     return Page();
                 }
             }
@@ -958,7 +963,9 @@ namespace Proyecto_2.Pages
                     }
                     catch (SqlException ex)
                     {
-                        Console.WriteLine($"Error al ejecutar el comando: {ex.Message}");
+                        MensajeError = ex.Errors[0].Message;
+                        ShowModal = true;
+                        return Page();
                     }
                 }
             }
@@ -1035,8 +1042,8 @@ namespace Proyecto_2.Pages
                             }
                             else
                             {
-                                // Manejar caso en que no se encuentra el empleado
-                                ModelState.AddModelError(string.Empty, "Empleado no encontrado.");
+                                MensajeError = "Empleado no encontrado.";
+                                ShowModal = true;
                                 return Page();
                             }
                         }
@@ -1044,8 +1051,8 @@ namespace Proyecto_2.Pages
                 }
                 catch (SqlException ex)
                 {
-                    _logger.LogError(ex, "Error al modificar el empleado.");
-                    ModelState.AddModelError(string.Empty, "Error al modificar el empleado.");
+                    MensajeError = ex.Errors[0].Message;
+                    ShowModal = true;
                     return Page();
                 }
             }
@@ -1107,8 +1114,8 @@ namespace Proyecto_2.Pages
                 }
                 catch (SqlException ex)
                 {
-                    _logger.LogError(ex, "Error al guardar la planilla.");
-                    ModelState.AddModelError(string.Empty, "Error al guardar la planilla.");
+                    MensajeError = ex.Errors[0].Message;
+                    ShowModal = true;
                     return Page();
                 }
             }
@@ -1149,9 +1156,8 @@ namespace Proyecto_2.Pages
                 }
                 catch (SqlException ex)
                 {
-
-                    _logger.LogError(ex, "Error al insertar el rol por accion.");
-                    ModelState.AddModelError(string.Empty, "Error al guardar el rol por accion.");
+                    MensajeError = ex.Errors[0].Message;
+                    ShowModal = true;
                     return Page();
                 }
             }
@@ -1188,8 +1194,8 @@ namespace Proyecto_2.Pages
                 }
                 catch (SqlException ex)
                 {
-                    _logger.LogError(ex, "Error al agregar el artículo a la cotización.");
-                    ModelState.AddModelError(string.Empty, "Error al agregar el artículo a la cotización.");
+                    MensajeError = ex.Errors[0].Message;
+                    ShowModal = true;
                     return Page();
                 }
             }
@@ -1228,8 +1234,8 @@ namespace Proyecto_2.Pages
                 }
                 catch (SqlException ex)
                 {
-                    _logger.LogError(ex, "Error al agregar el artículo a la cotización.");
-                    ModelState.AddModelError(string.Empty, "Error al agregar el artículo a la cotización.");
+                    MensajeError = ex.Errors[0].Message;
+                    ShowModal = true;
                     return Page();
                 }
             }
@@ -1260,8 +1266,8 @@ namespace Proyecto_2.Pages
                 }
                 catch (SqlException ex)
                 {
-                    _logger.LogError(ex, "Error al agregar el artículo a la cotización.");
-                    ModelState.AddModelError(string.Empty, "Error al agregar el artículo a la cotización.");
+                    MensajeError = ex.Errors[0].Message;
+                    ShowModal = true;
                     return Page();
                 }
             }
@@ -1301,8 +1307,8 @@ namespace Proyecto_2.Pages
                 }
                 catch (SqlException ex)
                 {
-                    _logger.LogError(ex, "Error al agregar el artículo a la cotización.");
-                    ModelState.AddModelError(string.Empty, "Error al agregar el artículo a la cotización.");
+                    MensajeError = ex.Errors[0].Message;
+                    ShowModal = true;
                     return Page();
                 }
             }
@@ -1338,8 +1344,8 @@ namespace Proyecto_2.Pages
                 }
                 catch (SqlException ex)
                 {
-                    _logger.LogError(ex, "Error al agregar el artículo a la cotización.");
-                    ModelState.AddModelError(string.Empty, "Error al agregar el artículo a la cotización.");
+                    MensajeError = ex.Errors[0].Message;
+                    ShowModal = true;
                     return Page();
                 }
             }
@@ -1376,8 +1382,8 @@ namespace Proyecto_2.Pages
                 }
                 catch (SqlException ex)
                 {
-                    _logger.LogError(ex, "Error al agregar el artículo a la cotización.");
-                    ModelState.AddModelError(string.Empty, "Error al agregar el artículo a la cotización.");
+                    MensajeError = ex.Errors[0].Message;
+                    ShowModal = true;
                     return Page();
                 }
             }
@@ -1415,8 +1421,8 @@ namespace Proyecto_2.Pages
                 }
                 catch (SqlException ex)
                 {
-                    _logger.LogError(ex, "Error al agregar el artículo a la cotización.");
-                    ModelState.AddModelError(string.Empty, "Error al agregar el artículo a la cotización.");
+                    MensajeError = ex.Errors[0].Message;
+                    ShowModal = true;
                     return Page();
                 }
             }
