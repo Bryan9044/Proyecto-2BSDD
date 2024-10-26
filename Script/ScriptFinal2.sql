@@ -70,7 +70,7 @@ CREATE TABLE Estado(
 	PRIMARY KEY (TipoEstado)
 );
 
-insert into Estado(Tipo1,Descripcion) values
+insert into Estado(TipoEstado,Descripcion) values
 ('Abierta', 'Todavia no se da un veredicto final'),
 ('Aprobado', 'Se aprueba la cotizacion yupiiii'),
 ('Rechazado', 'Se rechaza la cotizacion mecagoentodo');
@@ -185,15 +185,17 @@ CREATE TABLE Roles (
 );
 insert into Roles(tipoRol,Descripcion) values
 ('Encargado', 'Se encarga de que todo este bien'),
+('SuperUsuario', 'Se encarga de que todo este bien'),
 ('Vendedor', 'Se encarga de vender productos'),
 ('Bodeguero', 'Se encarga de la bodega'),
 ('Ayudante','Ayuda en todas las tareas al admin');
 
 
 CREATE TABLE AccionesXrol (
+	IDAccionesXRol INT IDENTITY (1,1),
     tipoRol VARCHAR(20),
     tipoAccion VARCHAR(40),
-    PRIMARY KEY (tipoRol, tipoAccion),
+    PRIMARY KEY (IDAccionesXRol),
     FOREIGN KEY (tipoRol) REFERENCES Roles(tipoRol),
     FOREIGN KEY (tipoAccion) REFERENCES Acciones(tipoAccion)
 );
@@ -708,12 +710,12 @@ CREATE TABLE Caso (
 	FOREIGN KEY (Prioridad) references Prioridad(TipoPrioridad)
 );
 insert into Caso(CodigoCaso,PropietarioCaso,OrigenCaso,NombreCuenta,NombreContacto,Asunto, Direccion, Descripcion,EstadoCaso, TipoCaso,Prioridad) values
-('CS1','754323489',3 , 'Personal','Salamar' ,'Necesitamos una ayuda inmediata', 'San jose en el centro de la capital', 'Se tiene que verificar el tipo de ayuda que necesita','Abierta', 'Devolucion','Alta'),
-('CS2','369253247',4 , 'Empresarial','Dospinos' ,'Queremos hablar con un encargado', 'Alajuela a un costado del mercado', 'Se procedera a enviar la queja al encargado','Aprobado', 'Devolucion','Alta'),
-('CS3','432124368',5 , 'Personal','Aurua','Tuvimos problemas', 'En San carlos debajo de una catarata ', 'Se busca el tipo de problemas','Rechazado', 'Garantia','Baja'),
-('CS4','456789123',6 , 'Personal','Dianeys' ,'Hubo un problema', 'En la casa habitacion #58 en limon', 'Se habla para ver el problema','Aprobado', 'Garantia','Baja'),
-('CS5','533467853',7 , 'Empresarial','Nike' ,'Algo fallo en los pedidos', 'San jose a la par de amazon', 'Se indica el fallo que hubo','Abierta', 'Reclamo','Media'),
-('CS6','754323489',8 , 'Empresarial','Adidas' ,'Es un asunto de urgencia', 'San jose por el mall san pedro','se habla con el administrador', 'Rechazado', 'Reclamo','Media');
+('CS1','754323489',1 , 'Personal','Salamar' ,'Necesitamos una ayuda inmediata', 'San jose en el centro de la capital', 'Se tiene que verificar el tipo de ayuda que necesita','Abierta', 'Devolucion','Alta'),
+('CS2','369253247',2 , 'Empresarial','Dospinos' ,'Queremos hablar con un encargado', 'Alajuela a un costado del mercado', 'Se procedera a enviar la queja al encargado','Aprobado', 'Devolucion','Alta'),
+('CS3','432124368',3 , 'Personal','Aurua','Tuvimos problemas', 'En San carlos debajo de una catarata ', 'Se busca el tipo de problemas','Rechazado', 'Garantia','Baja'),
+('CS4','456789123',4 , 'Personal','Dianeys' ,'Hubo un problema', 'En la casa habitacion #58 en limon', 'Se habla para ver el problema','Aprobado', 'Garantia','Baja'),
+('CS5','533467853',5 , 'Empresarial','Nike' ,'Algo fallo en los pedidos', 'San jose a la par de amazon', 'Se indica el fallo que hubo','Abierta', 'Reclamo','Media'),
+('CS6','754323489',6 , 'Empresarial','Adidas' ,'Es un asunto de urgencia', 'San jose por el mall san pedro','se habla con el administrador', 'Rechazado', 'Reclamo','Media');
 
 
 
@@ -759,7 +761,7 @@ insert into estadoFactura(tipoFactura, descripcion) values
 
 
 CREATE TABLE ListaFactura (
-	IDLista varchar(40) not null,
+	IDLista varchar(40) UNIQUE not null,
 	CodigoProducto VARCHAR(15) NOT NULL,
 	CantidadProducto INT NOT NULL,
 	PRIMARY KEY (CodigoProducto,IDLista),
@@ -767,10 +769,6 @@ CREATE TABLE ListaFactura (
 );
 
 
-
-drop table Factura
-drop table ListaFactura
-drop table SalidaMovimiento
 CREATE TABLE Factura (
     Codigo VARCHAR(15) NOT NULL, --
 	CodigoCotizacion int  null,  --
@@ -789,7 +787,7 @@ CREATE TABLE Factura (
 	foreign key (listaArticulos) references ListaFactura(IDLista)
 );
 
-
+go
 --No lo he creado todavia
 create procedure AgregarFactura
     @Codigo VARCHAR(15),
@@ -806,6 +804,8 @@ create procedure AgregarFactura
 	begin
 	insert into Factura(Codigo,CodigoCotizacion,CedulaCliente,CedulaEmpleado,CedulaJuridica,TelefonoLocal,NombreLocal,FechaFactura,NombreCliente,listaArticulos) values
 	(@Codigo,@CodigoCotizacion,@CedulaCliente,@CedulaEmpleado,@CedulaJuridica,@TelefonoLocal,@NombreLocal,@FechaFactura,@NombreCliente,@listaArticulos)
+	end
+go
 
 CREATE TABLE Movimiento(
 	IDMovimiento int IDENTITY(1,1) not null,
@@ -821,7 +821,6 @@ CREATE TABLE Movimiento(
 );
 
 
-drop table ListaMovimiento
 CREATE TABLE ListaMovimiento (
 	CodigoArticulo VARCHAR(15) NOT NULL,
 	CantidadArticulo int not null,
@@ -844,8 +843,6 @@ CREATE TABLE IngresoInventario (
     FOREIGN KEY (BodegaDestino) REFERENCES Bodega(Codigo)
 );
 
-
-drop table ListaIngreso
 
 CREATE TABLE ListaIngreso (
     IDMovimiento int NOT NULL,
@@ -945,7 +942,7 @@ create procedure InsertarUsuarios
 
 
 GO
-	create function ObtenerDepartamentos()
+create function ObtenerDepartamentos()
 returns table
 as
 return(
@@ -1271,7 +1268,7 @@ create procedure actualizarHistoricoSalario2
 
 
 
-	CREATE TABLE Planilla (
+CREATE TABLE Planilla (
 	CodigoPlanilla VARCHAR(15) NOT NULL,
 	FechaPlanilla date not null,   
 	CedulaEmpleado varchar(9) not null,
@@ -1410,7 +1407,7 @@ return (
 	select TipoTarea from TipoTareaCotizacion
 ); --Creada ya
 
-
+go
 
 
 create function MostrarEstadosTarea()
@@ -1420,6 +1417,7 @@ return (
 	select tipoEstado from TipoTareaEstado
 ); 
 
+go
 --Hasta aqui
 
 SELECT * FROM TipoTareaCaso;
