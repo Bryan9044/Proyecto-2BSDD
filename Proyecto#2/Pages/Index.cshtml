@@ -8,24 +8,6 @@
     <h1 class="intro">Bienvenidos al segundo proyecto de Bases de datos</h1>
 </div>
 
-<!-- Modal para mostrar error -->
-<div id="messagebox" class="modal fade @(Model.ShowModal ? "show" : "")" style="@(Model.ShowModal ? "display:block;" : "display:none;")" role="dialog">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>Error</h2>
-            </div>
-            <div id="Alerta" class="modal-body alert alert-danger">
-                @Model.MensajeError
-            </div>
-            <div class="modal-footer">
-                <form method="post" asp-page-handler="CloseModal">
-                    <button type="submit" class="btn btn-info">Cerrar</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
 
 
 <!--Modal para usuarios o empleados-->
@@ -103,7 +85,7 @@
                         <select class="form-control" id="projectDepartamentos" name="projectDepartamentos" required>
                             @foreach (var departamento in Model.Departamentos)
                             {
-                            <option value="@departamento">@departamento</option>
+                                <option value="@departamento">@departamento</option>
                             }
                         </select>
                     </div>
@@ -119,7 +101,7 @@
                         <select class="form-control" id="projectPuestos" name="projectPuestos" required>
                             @foreach (var puesto in Model.Puestos)
                             {
-                            <option value="@puesto">@puesto</option>
+                                <option value="@puesto">@puesto</option>
                             }
                         </select>
                     </div>
@@ -129,7 +111,7 @@
                         <select class="form-control" id="projectRoles" name="projectRoles" required>
                             @foreach (var rol in Model.Roles)
                             {
-                            <option value="@rol">@rol</option>
+                                <option value="@rol">@rol</option>
                             }
                         </select>
                     </div>
@@ -139,7 +121,7 @@
                         <select class="form-control" id="projectUsuarios" name="projectUsuarios" required>
                             @foreach (var usuario in Model.Usuarios)
                             {
-                            <option value="@usuario">@usuario</option>
+                                <option value="@usuario">@usuario</option>
                             }
                         </select>
                     </div>
@@ -193,7 +175,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="modalLabel">Registrar rol</h5>
-                <form method="post" asp-page-handler="CerrarModal">
+                <form method="post" asp-page-handler="CerrarModal2">
                     <button type="submit" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </form>
             </div>
@@ -248,7 +230,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="modalLabel">Registrar acciones por rol</h5>
-                <form method="post" asp-page-handler="CerrarModal">
+                <form method="post" asp-page-handler="CerrarModal3">
                     <button type="submit" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </form>
             </div>
@@ -262,7 +244,7 @@
                         <select class="form-control" id="projectTipoRolAc" name="projectTipoRolAc" required>
                             @foreach (var rol in Model.Roles)
                             {
-                            <option value="@rol">@rol</option>
+                                <option value="@rol">@rol</option>
                             }
                         </select>
                     </div>
@@ -272,7 +254,7 @@
                         <select class="form-control" id="projectTipoAccion" name="projectTipoAccion" required>
                             @foreach (var accion in Model.Acciones)
                             {
-                            <option value="@accion">@accion</option>
+                                <option value="@accion">@accion</option>
                             }
                         </select>
                     </div>
@@ -308,7 +290,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="modalLabel">Modificar empleado</h5>
-                <form method="post" asp-page-handler="CerrarModal">
+                <form method="post" asp-page-handler="CerrarModal4">
                     <button type="submit" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </form>
             </div>
@@ -321,7 +303,7 @@
                         <select class="form-control" id="projectEmpleadoM" name="projectEmpleadoM" required>
                             @foreach (var empleado in Model.Empleados)
                             {
-                            <option value="@empleado">@empleado</option>
+                                <option value="@empleado">@empleado</option>
                             }
                         </select>
                     </div>
@@ -330,7 +312,7 @@
                         <select class="form-control" id="projectPuestosM" name="projectPuestosM" required>
                             @foreach (var puesto in Model.Puestos)
                             {
-                            <option value="@puesto">@puesto</option>
+                                <option value="@puesto">@puesto</option>
                             }
                         </select>
                     </div>
@@ -370,9 +352,9 @@
 <!-- Botón para abrir el modal -->
 
 <div class="text-center">
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#rolesModal" asp-page-handler="MostrarModal5">
-        ver roles del Usuario
-    </button>
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#rolesModal" asp-page-handler="MostrarModal5">
+    ver roles del Usuario
+</button>
 </div>
 
 <!-- Modal para mostrar los roles del usuario y su ID -->
@@ -395,10 +377,10 @@
                     <tbody>
                         @for (int i = 0; i < Model.RolesUsuario.Count; i++)
                         {
-                        <tr>
-                            <td>@Model.IDUsuarios[i]</td>
-                            <td>@Model.RolesUsuario[i]</td>
-                        </tr>
+                            <tr>
+                                <td>@Model.IDUsuarios[i]</td>
+                                <td>@Model.RolesUsuario[i]</td>
+                            </tr>
                         }
                     </tbody>
                 </table>
@@ -418,9 +400,9 @@
 <!--Toda esta parte es para los empleados-->
 <!-- Botón para abrir el modal -->
 <div class="text-center">
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#todosEmpleados" asp-page-handler="MostrarModal6">
-        Ver todos los empleados
-    </button>
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#todosEmpleados" asp-page-handler="MostrarModal6">
+    Ver todos los empleados 
+</button>
 </div>
 
 <div class="modal fade" id="todosEmpleados" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
@@ -454,21 +436,21 @@
                     <tbody>
                         @for (int i = 0; i < Model.CedulaEmp.Count; i++)
                         {
-                        <tr>
-                            <td>@Model.CedulaEmp[i]</td>
-                            <td>@Model.NombreEmp[i] @Model.ApellidoEmp1[i] @Model.ApellidoEmp2[i]</td> <!-- Nombre completo -->
-                            <td>@Model.GeneroEmp[i]</td>
-                            <td>@Model.FechaNacimientoEmp[i].ToShortDateString()</td> <!-- Formato de fecha -->
-                            <td>@Model.ProvinciaEmp[i]</td>
-                            <td>@Model.DireccionEmp[i]</td>
-                            <td>@Model.TelefonoEmp[i]</td>
-                            <td>@Model.CodigoEmp[i]</td>
-                            <td>@Model.FechaIngresoEmp[i]</td>
-                            <td>@Model.PuestoEmp[i]</td>
-                            <td>@Model.tipoRolEmp[i]</td>
-                            <td>@Model.IDUsuarioEmp[i]</td>
-                            <th>@Model.SalarioEmp</th>
-                        </tr>
+                            <tr>
+                                <td>@Model.CedulaEmp[i]</td>
+                                <td>@Model.NombreEmp[i] @Model.ApellidoEmp1[i] @Model.ApellidoEmp2[i]</td> <!-- Nombre completo -->
+                                <td>@Model.GeneroEmp[i]</td>
+                                <td>@Model.FechaNacimientoEmp[i].ToShortDateString()</td> <!-- Formato de fecha -->
+                                <td>@Model.ProvinciaEmp[i]</td>
+                                <td>@Model.DireccionEmp[i]</td>
+                                <td>@Model.TelefonoEmp[i]</td>
+                                <td>@Model.CodigoEmp[i]</td>
+                                <td>@Model.FechaIngresoEmp[i]</td>
+                                <td>@Model.PuestoEmp[i]</td>
+                                <td>@Model.tipoRolEmp[i]</td>
+                                <td>@Model.IDUsuarioEmp[i]</td>
+                                <th>@Model.SalarioEmp</th>
+                            </tr>
                         }
                     </tbody>
                 </table>
@@ -485,9 +467,9 @@
 <!--Al de empleado le puedo agregar edad-->
 
 <div class="text-center">
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalCotizacion" asp-page-handler="MostrarModal7">
-        Crear cotizacion
-    </button>
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalCotizacion" asp-page-handler="MostrarModal7">
+    Crear cotizacion
+</button>
 </div>
 
 
@@ -496,7 +478,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="modalLabel">Registrar cotización</h5>
-                <form method="post" asp-page-handler="CerrarModal">
+                <form method="post" asp-page-handler="CerrarModal7">
                     <button type="submit" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </form>
             </div>
@@ -508,7 +490,7 @@
                         <select class="form-control" id="projectClienteC" name="projectClienteC" required>
                             @foreach (var cliente in Model.Clientes)
                             {
-                            <option value="@cliente">@cliente</option>
+                                <option value="@cliente">@cliente</option>
                             }
                         </select>
                     </div>
@@ -519,7 +501,7 @@
                         <select class="form-control" id="projectEmpleadoC" name="projectEmpleadoC" required>
                             @foreach (var empleado in Model.Empleados)
                             {
-                            <option value="@empleado">@empleado</option>
+                                <option value="@empleado">@empleado</option>
                             }
                         </select>
                     </div>
@@ -543,7 +525,7 @@
                         <select class="form-control" id="projectTipoC" name="projectTipoC" required>
                             @foreach (var cotizacion in Model.TiposCotizacion)
                             {
-                            <option value="@cotizacion">@cotizacion</option>
+                                <option value="@cotizacion">@cotizacion</option>
                             }
                         </select>
                     </div>
@@ -554,7 +536,7 @@
                         <select class="form-control" id="projectEstadoC" name="projectEstadoC" required>
                             @foreach (var estado in Model.TiposEstadosC)
                             {
-                            <option value="@estado">@estado</option>
+                                <option value="@estado">@estado</option>
                             }
                         </select>
                     </div>
@@ -565,7 +547,7 @@
                         <select class="form-control" id="projectProbabilidadC" name="projectProbabilidadC" required>
                             @foreach (var probabilidad in Model.Probabilidades)
                             {
-                            <option value="@probabilidad">@probabilidad</option>
+                                <option value="@probabilidad">@probabilidad</option>
                             }
                         </select>
                     </div>
@@ -577,7 +559,7 @@
                         <select class="form-control" id="projectZona" name="projectZona" required>
                             @foreach (var zona in Model.Zonas)
                             {
-                            <option value="@zona">@zona</option>
+                                <option value="@zona">@zona</option>
                             }
                         </select>
                     </div>
@@ -588,7 +570,7 @@
                         <select class="form-control" id="projectSector" name="projectSector" required>
                             @foreach (var sector in Model.Sectores)
                             {
-                            <option value="@sector">@sector</option>
+                                <option value="@sector">@sector</option>
                             }
                         </select>
                     </div>
@@ -610,19 +592,19 @@
 
 
 <div class="text-center">
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalPlanilla" asp-page-handler="MostrarModal8">
-        Registrar planilla
-    </button>
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalPlanilla" asp-page-handler="MostrarModal8">
+    Registrar planilla
+</button>
 </div>
 
 
 
-<div class="modal fade show" id="modalPlanilla" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true" style="display: @(Model.ShowModal3 ? "block" : "none");">
+<div class="modal fade show" id="modalPlanilla" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="modalLabel">Modificar empleado</h5>
-                <form method="post" asp-page-handler="CerrarModal">
+                <form method="post" asp-page-handler="CerrarModal8">
                     <button type="submit" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </form>
             </div>
@@ -645,7 +627,7 @@
                         <select class="form-control" id="projectEmpleadoP" name="projectEmpleadoP" required>
                             @foreach (var empleado in Model.Empleados)
                             {
-                            <option value="@empleado">@empleado</option>
+                                <option value="@empleado">@empleado</option>
                             }
                         </select>
                     </div>
@@ -673,9 +655,9 @@
 
 
 <div class="text-center">
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalCotizacionM" asp-page-handler="MostrarModal9">
-        Modificar cotizacion
-    </button>
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalCotizacionM" asp-page-handler="MostrarModal9">
+    Modificar cotizacion
+</button>
 </div>
 
 
@@ -696,7 +678,7 @@
                         <select class="form-control" id="projectCotizacionC" name="projectCotizacionC" required>
                             @foreach (var cotizacion in Model.Cotizaciones)
                             {
-                            <option value="@cotizacion">@cotizacion</option>
+                                <option value="@cotizacion">@cotizacion</option>
                             }
                         </select>
                     </div>
@@ -706,7 +688,7 @@
                         <select class="form-control" id="projectClienteC" name="projectClienteC" required>
                             @foreach (var cliente in Model.Clientes)
                             {
-                            <option value="@cliente">@cliente</option>
+                                <option value="@cliente">@cliente</option>
                             }
                         </select>
                     </div>
@@ -717,7 +699,7 @@
                         <select class="form-control" id="projectEmpleadoC" name="projectEmpleadoC" required>
                             @foreach (var empleado in Model.Empleados)
                             {
-                            <option value="@empleado">@empleado</option>
+                                <option value="@empleado">@empleado</option>
                             }
                         </select>
                     </div>
@@ -741,7 +723,7 @@
                         <select class="form-control" id="projectTipoC" name="projectTipoC" required>
                             @foreach (var cotizacion in Model.TiposCotizacion)
                             {
-                            <option value="@cotizacion">@cotizacion</option>
+                                <option value="@cotizacion">@cotizacion</option>
                             }
                         </select>
                     </div>
@@ -752,7 +734,7 @@
                         <select class="form-control" id="projectEstadoC" name="projectEstadoC" required>
                             @foreach (var estado in Model.TiposEstadosC)
                             {
-                            <option value="@estado">@estado</option>
+                                <option value="@estado">@estado</option>
                             }
                         </select>
                     </div>
@@ -763,7 +745,7 @@
                         <select class="form-control" id="projectProbabilidadC" name="projectProbabilidadC" required>
                             @foreach (var probabilidad in Model.Probabilidades)
                             {
-                            <option value="@probabilidad">@probabilidad</option>
+                                <option value="@probabilidad">@probabilidad</option>
                             }
                         </select>
                     </div>
@@ -775,7 +757,7 @@
                         <select class="form-control" id="projectZona" name="projectZona" required>
                             @foreach (var zona in Model.Zonas)
                             {
-                            <option value="@zona">@zona</option>
+                                <option value="@zona">@zona</option>
                             }
                         </select>
                     </div>
@@ -786,7 +768,7 @@
                         <select class="form-control" id="projectSector" name="projectSector" required>
                             @foreach (var sector in Model.Sectores)
                             {
-                            <option value="@sector">@sector</option>
+                                <option value="@sector">@sector</option>
                             }
                         </select>
                     </div>
@@ -808,9 +790,9 @@
 
 
 <div class="text-center">
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalCotizacionA" asp-page-handler="MostrarModal10">
-        Agregar articulos a cotizacion
-    </button>
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalCotizacionA" asp-page-handler="MostrarModal10">
+    Agregar articulos a cotizacion
+</button>
 </div>
 
 
@@ -831,7 +813,7 @@
                         <select class="form-control" id="projecCotizacionAr" name="projecCotizacionAr" required>
                             @foreach (var articulo in Model.Articulos)
                             {
-                            <option value="@articulo">@articulo</option>
+                                <option value="@articulo">@articulo</option>
                             }
                         </select>
                     </div>
@@ -849,18 +831,18 @@
                         <select class="form-control" id="projectCotizacionC" name="projectCotizacionC" required>
                             @foreach (var cotizacion in Model.Cotizaciones)
                             {
-                            <option value="@cotizacion">@cotizacion</option>
+                                <option value="@cotizacion">@cotizacion</option>
                             }
                         </select>
                     </div>
-
+           
                     <br />
                     <button type="submit" class="btn btn-primary">Guardar cotizacion</button>
                 </form>
             </div>
             <div class="modal-footer">
                 <!-- Esto es para cerrar -->
-                <form method="post" asp-page-handler="CerrarModal9">
+                <form method="post" asp-page-handler="CerrarModal10">
                     <button type="submit" class="btn btn-secondary">Cerrar</button>
                 </form>
             </div>
@@ -874,9 +856,9 @@
 
 
 <div class="text-center">
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalTareasC" asp-page-handler="MostrarModal11">
-        Agregar tareas para una cotizacion
-    </button>
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalTareasC" asp-page-handler="MostrarModal11">
+    Agregar tareas para una cotizacion
+</button>
 </div>
 
 
@@ -900,12 +882,22 @@
                     </div>
                     <br />
 
+                    <div class="modalCotizacionEl">
+                        <label for="projectEliCotizacion2" class="form-label">Asocialo a un id de cotizacion</label>
+                        <select class="form-control" id="projectEliCotizacion2" name="projectEliCotizacion2" required>
+                            @foreach (var cotizacion in Model.Cotizaciones)
+                            {
+                                <option value="@cotizacion">@cotizacion</option>
+                            }
+                        </select>
+                    </div>
+
                     <div class="modalTipoTarea">
                         <label for="projectTipoTarea" class="form-label">Tipo de tarea</label>
                         <select class="form-control" id="projectTipoTarea" name="projectTipoTarea" required>
                             @foreach (var tarea in Model.Tareas)
                             {
-                            <option value="@tarea">@tarea</option>
+                                <option value="@tarea">@tarea</option>
                             }
                         </select>
                     </div>
@@ -931,7 +923,7 @@
                         <select class="form-control" id="projectEstadosT" name="projectEstadosT" required>
                             @foreach (var estado2 in Model.TipoTareas)
                             {
-                            <option value="@estado2">@estado2</option>
+                                <option value="@estado2">@estado2</option>
                             }
                         </select>
                     </div>
@@ -957,9 +949,9 @@
 <!--Toda esta parte es para los empleados-->
 <!-- Botón para abrir el modal -->
 <div class="text-center">
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#TodasCotizaciones" asp-page-handler="MostrarModal12">
-        Ver cotizaciones
-    </button>
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#TodasCotizaciones" asp-page-handler="MostrarModal12">
+    Ver cotizaciones
+</button>
 </div>
 
 <div class="modal fade" id="TodasCotizaciones" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
@@ -990,18 +982,18 @@
                     <tbody>
                         @for (int i = 0; i < Model.CodigoC.Count; i++)
                         {
-                        <tr>
-                            <td>@Model.CodigoC[i]</td>
-                            <td>@Model.ClienteC[i] </td> <!-- Nombre completo -->
-                            <td>@Model.EmpleadoC[i]</td>
-                            <td>@Model.FechaC[i].ToShortDateString()</td> <!-- Formato de fecha -->
-                            <td>@Model.MesC[i]</td>
-                            <td>@Model.TiposCotizaciones[i]</td>
-                            <td>@Model.EstadosC[i]</td>
-                            <td>@Model.ProbabilidadesC[i]</td>
-                            <td>@Model.ZonasC[i]</td>
-                            <td>@Model.SectorC[i]</td>
-                        </tr>
+                            <tr>
+                                <td>@Model.CodigoC[i]</td>
+                                <td>@Model.ClienteC[i] </td> <!-- Nombre completo -->
+                                <td>@Model.EmpleadoC[i]</td>
+                                <td>@Model.FechaC[i].ToShortDateString()</td> <!-- Formato de fecha -->
+                                <td>@Model.MesC[i]</td>
+                                <td>@Model.TiposCotizaciones[i]</td>
+                                <td>@Model.EstadosC[i]</td>
+                                <td>@Model.ProbabilidadesC[i]</td>
+                                <td>@Model.ZonasC[i]</td>
+                                <td>@Model.SectorC[i]</td>
+                            </tr>
                         }
                     </tbody>
                 </table>
@@ -1020,13 +1012,15 @@
 
 <br />
 <!--Este todavia no funcioa-->
+
+
 <!--Al de empleado le puedo agregar edad-->
 <!--Toda esta parte es para los empleados-->
 <!-- Botón para abrir el modal -->
 <div class="text-center">
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#TodasTareaACotizaciom" asp-page-handler="MostrarModal12">
-        Ver tareas de una cotizacion
-    </button>
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#TodasTareaACotizaciom" asp-page-handler="MostrarModal13">
+    Ver tareas de una cotizacion
+</button>
 </div>
 
 <div class="modal fade" id="TodasTareaACotizaciom" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
@@ -1042,39 +1036,29 @@
                     <!-- Tabla con estilo -->
                     <thead>
                         <tr>
-                            <th>Codigo de cotización</th>
-                            <th>Cedula del cliente</th>
-                            <th>Cedula del empleado</th>
-                            <th>Fecha de cotizacion</th>
-                            <th>Fecha de cierre</th>
-                            <th>Tipo de cotización</th>
-                            <th>Estado de la cotizacion</th>
-                            <th>Probabilidad</th>
-                            <th>Zona</th>
-                            <th>Sector</th>
+                            <th>Descripcion de la tarea</th>
+                            <th>Tipo tarea</th>
+                            <th>Fecha</th>
+                            <th>Estado de la tarea</th>
+                            <th>Nombre del empleado</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @for (int i = 0; i < Model.CodigoC.Count; i++)
+                        @for (int i = 0; i < Model.DescripcionTC.Count; i++)
                         {
-                        <tr>
-                            <td>@Model.CodigoC[i]</td>
-                            <td>@Model.ClienteC[i] </td> <!-- Nombre completo -->
-                            <td>@Model.EmpleadoC[i]</td>
-                            <td>@Model.FechaC[i].ToShortDateString()</td> <!-- Formato de fecha -->
-                            <td>@Model.MesC[i]</td>
-                            <td>@Model.TiposCotizaciones[i]</td>
-                            <td>@Model.EstadosC[i]</td>
-                            <td>@Model.ProbabilidadesC[i]</td>
-                            <td>@Model.ZonasC[i]</td>
-                            <td>@Model.SectorC[i]</td>
-                        </tr>
+                            <tr>
+                                <td>@Model.DescripcionTC[i]</td>
+                                <td>@Model.tipotareaTC[i] </td> <!-- Nombre completo -->
+                                <td>@Model.FechaTC[i].ToShortDateString()</td> <!-- Formato de fecha -->
+                                <td>@Model.EstadoTC[i]</td>
+                                <td>@Model.NombreTC[i]</td>
+                            </tr>
                         }
                     </tbody>
                 </table>
             </div>
 
-            <form method="post" asp-page-handler="CerrarModal12">
+            <form method="post" asp-page-handler="CerrarModal13">
                 <button type="submit" class="btn btn-secondary">Cerrar</button>
             </form>
 
@@ -1088,9 +1072,12 @@
 
 <br />
 
+
+
+
 <div class="text-center">
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalCotizacionELI" asp-page-handler="MostrarModal13">
-        Eliminar cotizacion
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalCotizacionELI" asp-page-handler="MostrarModal24">
+        Eliminar Tareas cotizacion
     </button>
 </div>
 
@@ -1099,31 +1086,43 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="modalLabel">Agregar aticulos a una cotización</h5>
-                <form method="post" asp-page-handler="CerrarModal13">
+                <h5 class="modal-title" id="modalLabel">Eliminar tareas cotizacion</h5>
+                <form method="post" asp-page-handler="CerrarModal24">
                     <button type="submit" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </form>
             </div>
             <div class="modal-body">
                 <!-- Esto es para pasar la info a OnPostGuardarUsuario -->
-                <form method="post" asp-page-handler="EliminarCotizacion">
+                <form method="post" asp-page-handler="EliminarTareaCotizacion">
+
                     <div class="modalCotizacionEl">
-                        <label for="projectEliCotizacion" class="form-label">Cotizaciones</label>
-                        <select class="form-control" id="projectEliCotizacion" name="projectEliCotizacion" required>
-                            @foreach (var cotizacion in Model.Cotizaciones)
+                        <label for="projectEliCotizacion3" class="form-label">ID de Cotizaciones</label>
+                        <select class="form-control" id="projectEliCotizacion3" name="projectEliCotizacion3" required>
+                            @foreach (var cot4 in Model.Cotizaciones)
                             {
-                            <option value="@cotizacion">@cotizacion</option>
+                                <option value="@cot4">@cot4</option>
+                            }
+                        </select>
+                    </div>
+                    <br />
+ 
+                    <div class="modalTareaTC">
+                        <label for="projectTareaTc" class="form-label">Escoja el id a eliminar</label>
+                        <select class="form-control" id="projectTareaTc" name="projectTareaTc" required>
+                            @foreach (var tc in Model.TareaCreada)
+                            {
+                                <option value="@tc">@tc</option>
                             }
                         </select>
                     </div>
 
                     <br />
-                    <button type="submit" class="btn btn-primary">Eliminar cotizacion</button>
+                    <button type="submit" class="btn btn-primary">Eliminar tarea cotizacion</button>
                 </form>
             </div>
             <div class="modal-footer">
                 <!-- Esto es para cerrar -->
-                <form method="post" asp-page-handler="CerrarModal13">
+                <form method="post" asp-page-handler="CerrarModal24">
                     <button type="submit" class="btn btn-secondary">Cerrar</button>
                 </form>
             </div>
@@ -1136,10 +1135,8 @@
 
 
 
-
-
 <div class="text-center">
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalMovimientos" asp-page-handler="MostrarModal14">
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalMovimientos" asp-page-handler="MostrarModal15">
         Ingresar movimientos
     </button>
 </div>
@@ -1150,7 +1147,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="modalLabel">Agregar movimientos</h5>
-                <form method="post" asp-page-handler="CerrarModal13">
+                <form method="post" asp-page-handler="CerrarModal15">
                     <button type="submit" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </form>
             </div>
@@ -1163,7 +1160,7 @@
                         <select class="form-control" id="projectEmpleadoM" name="projectEmpleadoM" required>
                             @foreach (var empleado2 in Model.Empleados)
                             {
-                            <option value="@empleado2">@empleado2</option>
+                                <option value="@empleado2">@empleado2</option>
                             }
                         </select>
                     </div>
@@ -1172,7 +1169,7 @@
                         <select class="form-control" id="projectBodegaN" name="projectBodegaN" required>
                             @foreach (var bodega in Model.Bodegas)
                             {
-                            <option value="@bodega">@bodega</option>
+                                <option value="@bodega">@bodega</option>
                             }
                         </select>
                     </div>
@@ -1184,7 +1181,7 @@
                         <select class="form-control" id="projectBodegaDes" name="projectBodegaDes" required>
                             @foreach (var bodega2 in Model.Bodegas)
                             {
-                            <option value="@bodega2">@bodega2</option>
+                                <option value="@bodega2">@bodega2</option>
                             }
                         </select>
                     </div>
@@ -1205,7 +1202,7 @@
             </div>
             <div class="modal-footer">
                 <!-- Esto es para cerrar -->
-                <form method="post" asp-page-handler="CerrarModal14">
+                <form method="post" asp-page-handler="CerrarModal15">
                     <button type="submit" class="btn btn-secondary">Cerrar</button>
                 </form>
             </div>
@@ -1219,7 +1216,7 @@
 
 
 <div class="text-center">
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalIngreso" asp-page-handler="MostrarModal15">
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalIngreso" asp-page-handler="MostrarModal16">
         Ingresar inventario
     </button>
 </div>
@@ -1232,7 +1229,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="modalLabel">Ingresar inventario</h5>
-                <form method="post" asp-page-handler="CerrarModal15">
+                <form method="post" asp-page-handler="CerrarModal16">
                     <button type="submit" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </form>
             </div>
@@ -1245,7 +1242,7 @@
                         <select class="form-control" id="projectMovimientoC" name="projectMovimientoC" required>
                             @foreach (var mov in Model.Movimientos)
                             {
-                            <option value="@mov">@mov</option>
+                                <option value="@mov">@mov</option>
                             }
                         </select>
                     </div>
@@ -1257,16 +1254,16 @@
                         <select class="form-control" id="projectEmpleadoM" name="projectEmpleadoM" required>
                             @foreach (var empleado3 in Model.Empleados)
                             {
-                            <option value="@empleado3">@empleado3</option>
+                                <option value="@empleado3">@empleado3</option>
                             }
                         </select>
                     </div>
                     <div class="modalNombreBodega">
-                        <label for="projectBodegaN" class="form-label">Bodega origen</label>
+                        <label for="projectBodegaN" class="form-label">Bodega destino</label>
                         <select class="form-control" id="projectBodegaN" name="projectBodegaN" required>
                             @foreach (var bodega in Model.Bodegas)
                             {
-                            <option value="@bodega">@bodega</option>
+                                <option value="@bodega">@bodega</option>
                             }
                         </select>
                     </div>
@@ -1282,7 +1279,7 @@
             </div>
             <div class="modal-footer">
                 <!-- Esto es para cerrar -->
-                <form method="post" asp-page-handler="CerrarModal14">
+                <form method="post" asp-page-handler="CerrarModal16">
                     <button type="submit" class="btn btn-secondary">Cerrar</button>
                 </form>
             </div>
@@ -1297,7 +1294,7 @@
 
 
 <div class="text-center">
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalIngresoART" asp-page-handler="MostrarModal16">
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalIngresoART" asp-page-handler="MostrarModal17">
         Ingresar articulos a inventario
     </button>
 </div>
@@ -1310,7 +1307,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="modalLabel">Ingresar articulos al movimiento de inventario</h5>
-                <form method="post" asp-page-handler="CerrarModal16">
+                <form method="post" asp-page-handler="CerrarModal17">
                     <button type="submit" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </form>
             </div>
@@ -1323,7 +1320,7 @@
                         <select class="form-control" id="projectMovimientoC2" name="projectMovimientoC2" required>
                             @foreach (var mov in Model.Movimientos)
                             {
-                            <option value="@mov">@mov</option>
+                                <option value="@mov">@mov</option>
                             }
                         </select>
                     </div>
@@ -1334,7 +1331,7 @@
                         <select class="form-control" id="projectInventA" name="projectInventA" required>
                             @foreach (var articulo2 in Model.Articulos)
                             {
-                            <option value="@articulo2">@articulo2</option>
+                                <option value="@articulo2">@articulo2</option>
                             }
                         </select>
                     </div>
@@ -1350,7 +1347,7 @@
             </div>
             <div class="modal-footer">
                 <!-- Esto es para cerrar -->
-                <form method="post" asp-page-handler="CerrarModal15">
+                <form method="post" asp-page-handler="CerrarModal17">
                     <button type="submit" class="btn btn-secondary">Cerrar</button>
                 </form>
             </div>
@@ -1362,8 +1359,124 @@
 
 
 
+
+
 <div class="text-center">
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalListaFactura" asp-page-handler="MostrarModal17">
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalFacturaF" asp-page-handler="MostrarModal18">
+        Crear una factura
+    </button>
+</div>
+
+
+
+
+
+<div class="modal fade" id="modalFacturaF" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalLabel">Crear una factura</h5>
+                <form method="post" asp-page-handler="CerrarModal18">
+                    <button type="submit" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </form>
+            </div>
+            <div class="modal-body">
+                <!-- Esto es para pasar la info a OnPostGuardarUsuario -->
+                <form method="post" asp-page-handler="IngresarFactura">
+
+
+                    <div class="modalIDListaF">
+                        <label for="projectFacturaIDF" class="form-label">Escriba un identificador para la factura</label>
+                        <input type="text" id="projectFacturaIDF" name="projectFacturaIDF" required>
+                    </div>
+                    <br />
+
+                    <div class="modalCF">
+                        <label for="projectCF" class="form-label">Escoja un id de cotización</label>
+                        <select class="form-control" id="projectCF" name="projectCF">
+                            <option value="">-- Seleccione una opción --</option> 
+                            @foreach (var cot in Model.Cotizaciones)
+                            {
+                                <option value="@cot">@cot</option>
+                            }
+                        </select>
+                    </div>
+
+
+                    <div class="modalClienteF">
+                        <label for="projectClienteF" class="form-label">Escoja un cliente</label>
+                        <select class="form-control" id="projectClienteF" name="projectClienteF" required>
+                            @foreach (var cli in Model.ClientesNom)
+                            {
+                                <option value="@cli">@cli</option>
+                            }
+                        </select>
+                    </div>
+
+                    <br />
+
+                    <div class="modalEmpleadoF">
+                        <label for="projectEmpleadoF" class="form-label">Escoja un empleado</label>
+                        <select class="form-control" id="projectEmpleadoF" name="projectEmpleadoF" required>
+                            @foreach (var emp in Model.NombreEmpleados)
+                            {
+                                <option value="@emp">@emp</option>
+                            }
+                        </select>
+                    </div>
+
+                    <br />
+
+
+                    <div class="modalJuridico">
+                        <label for="projectJuridico" class="form-label">Escriba una cedula juridica</label>
+                        <input type="text" id="projectJuridico" name="projectJuridico" required>
+                    </div>
+                    <br />
+
+
+                    <div class="modalCelLocal">
+                        <label for="projectCelLocal" class="form-label">Escriba un telefono local</label>
+                        <input type="text" id="projectCelLocal" name="projectCelLocal" required>
+                    </div>
+
+                    <div class="modalNombreLocal">
+                        <label for="projectNombreLocal" class="form-label">Escriba un nombre del local</label>
+                        <input type="text" id="projectNombreLocal" name="projectNombreLocal" required>
+                    </div>
+                    <br />
+
+                    <br />
+
+                    <div class="modal2Feccha">
+                        <label for="projectFecha" class="form-label">Escriba una fecha</label>
+                        <input type="date" id="projectFecha" name="projectFecha" required>
+                    </div>
+                    <br />
+
+                    <button type="submit" class="btn btn-primary">Agregar factura</button>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <!-- Esto es para cerrar -->
+                <form method="post" asp-page-handler="CerrarModal18">
+                    <button type="submit" class="btn btn-secondary">Cerrar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<br />
+
+
+
+
+
+
+
+<div class="text-center">
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalListaFactura" asp-page-handler="MostrarModal19">
         Crear lista de articulos para una factura
     </button>
 </div>
@@ -1377,7 +1490,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="modalLabel">Agregar una lista de articulos a una factura</h5>
-                <form method="post" asp-page-handler="CerrarModal17">
+                <form method="post" asp-page-handler="CerrarModal19">
                     <button type="submit" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </form>
             </div>
@@ -1387,17 +1500,29 @@
 
 
                     <div class="modalIDListaF">
-                        <label for="projectIDListaF" class="form-label">Escriba un identificador para la factura</label>
+                        <label for="projectIDListaF" class="form-label">Escriba un identificador para la lista de la factura</label>
                         <input type="text" id="projectIDListaF" name="projectIDListaF" required>
                     </div>
                     <br />
+
+
+                    <div class="modalListaF">
+                        <label for="projectCF2" class="form-label">Escoja un id de factura</label>
+                        <select class="form-control" id="projectCF2" name="projectCF2" required>
+                            @foreach (var fac in Model.CodigoFactu)
+                            {
+                                <option value="@fac">@fac</option>
+                            }
+                        </select>
+                    </div>
+
 
                     <div class="modalArtLista">
                         <label for="projectArtLista" class="form-label">Escoja un articulo para la lista</label>
                         <select class="form-control" id="projectArtLista" name="projectArtLista" required>
                             @foreach (var articulo3 in Model.Articulos)
                             {
-                            <option value="@articulo3">@articulo3</option>
+                                <option value="@articulo3">@articulo3</option>
                             }
                         </select>
                     </div>
@@ -1413,7 +1538,7 @@
             </div>
             <div class="modal-footer">
                 <!-- Esto es para cerrar -->
-                <form method="post" asp-page-handler="CerrarModal15">
+                <form method="post" asp-page-handler="CerrarModal19">
                     <button type="submit" class="btn btn-secondary">Cerrar</button>
                 </form>
             </div>
@@ -1421,3 +1546,306 @@
     </div>
 </div>
 <br />
+
+
+
+
+
+
+<!-- Botón para abrir el modal -->
+
+<div class="text-center">
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalMostrarINT" asp-page-handler="MostrarModal20">
+        ver inventario de bodegas
+    </button>
+</div>
+
+<!-- Modal para mostrar los roles del usuario y su ID -->
+
+<div class="modal fade" id="modalMostrarINT" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalLabel">Ver Inventario de Bodegas</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Código de Bodega</th>
+                            <th>Nombre del Artículo</th>
+                            <th>Total de Artículos</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (int i = 0; i < Model.BodegaCodigo.Count; i++)
+                        {
+                            <tr>
+                                <td>@Model.BodegaCodigo[i]</td>
+                                <td>@Model.BodegaArt[i]</td>
+                                <td>@Model.CantidadArt[i]</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <form method="post" asp-page-handler="CerrarModal20">
+                <button type="submit" class="btn btn-secondary">Cerrar</button>
+            </form>
+        </div>
+    </div>
+</div>
+<br />
+
+
+
+
+
+<!-- Botón y Modal para el primer formulario -->
+<div class="text-center">
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalSalidaMOV1" asp-page-handler="MostrarModal21">
+        Crear salida de movimiento - Modal 1
+    </button>
+</div>
+
+<div class="modal fade" id="modalSalidaMOV1" tabindex="-1" aria-labelledby="modalLabel1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalLabel1">Crear salida de movimiento</h5>
+                <form method="post" asp-page-handler="CerrarModal21">
+                    <button type="submit" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </form>
+            </div>
+            <div class="modal-body">
+                <form method="post" asp-page-handler="RegistrarSalida1">
+                    <div class="modalListaS">
+                        <label for="projectCFS" class="form-label">Escoja un id de factura</label>
+                        <select class="form-control" id="projectCFS" name="projectCFS" required>
+                            @foreach (var fac in Model.CodigoFactu)
+                            {
+                                <option value="@fac">@fac</option>
+                            }
+                        </select>
+                    </div>
+                    <br />
+
+
+                    <div class="modalArtLista">
+                        <label for="projectArtLista" class="form-label">Escoja un articulo para la lista</label>
+                        <select class="form-control" id="projectArtLista" name="projectArtLista" required>
+                            @foreach (var articulo3 in Model.Articulos)
+                            {
+                                <option value="@articulo3">@articulo3</option>
+                            }
+                        </select>
+                    </div>
+
+
+                    <div class="modalCantidadList">
+                        <label for="projectCantidadInveL" class="form-label">Escoja una cantidad del articulo</label>
+                        <input type="number" id="projectCantidadInveL" name="projectCantidadInveL" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Agregar salida</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <form method="post" asp-page-handler="CerrarModal21">
+                    <button type="submit" class="btn btn-secondary">Cerrar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<br />
+
+<!-- Modal para el segundo formulario -->
+<div class="modal fade @(ViewData["MostrarModalSalidaMOV2"] != null && (bool)ViewData["MostrarModalSalidaMOV2"] ? "show" : "")"
+     id="modalSalidaMOV2" tabindex="-1" aria-labelledby="modalLabel2" aria-hidden="true"
+     style="display: @(ViewData["MostrarModalSalidaMOV2"] != null && (bool)ViewData["MostrarModalSalidaMOV2"] ? "block" : "none")">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalLabel2">Crear salida de movimiento</h5>
+                <form method="post" asp-page-handler="CerrarModal22">
+                    <button type="submit" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </form>
+            </div>
+            <div class="modal-body">
+                <form method="post" asp-page-handler="RegistrarSalida2">
+                    <br />
+                    <div class="modalBodegasLista">
+                        <label for="bodegasSelect" class="form-label">Bodegas con el artículo disponible</label>
+                        <select class="form-control" id="bodegasSelect" name="bodegasSelect" required>
+                            @foreach (var bodega in Model.BodegaDispo)
+                            {
+                                <option value="@bodega">@bodega</option>
+                            }
+                        </select>
+                    </div>
+
+                    <input type="hidden" name="projectCFS" value="@ViewData["projectCFS"]" />
+                    <input type="hidden" name="projectArtLista" value="@ViewData["projectArtLista"]" />
+                    <input type="hidden" name="projectCantidadInveL" value="@ViewData["projectCantidadInveL"]" />
+
+                    <button type="submit" class="btn btn-primary">Confirmar salida</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <form method="post" asp-page-handler="CerrarModal22">
+                    <button type="submit" class="btn btn-secondary">Cerrar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+        @if (Model.MostrarSegundoModal)
+        {
+            <text>
+                                var myModal = new bootstrap.Modal(document.getElementById('modalSalidaMOV2'));
+                myModal.show();
+            </text>
+        }
+                });
+    </script>
+}
+
+
+
+
+<!-- Botón para abrir el modal -->
+
+<div class="text-center">
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalCancelo" asp-page-handler="MostrarModal23">
+        Cancelar factura
+    </button>
+</div>
+
+<!-- Modal para mostrar los roles del usuario y su ID -->
+
+
+
+<div class="modal fade" id="modalCancelo" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalLabel">Cancelar factura</h5>
+                <form method="post" asp-page-handler="CerrarModal23">
+                    <button type="submit" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </form>
+            </div>
+            <div class="modal-body">
+                <!-- Esto es para pasar la info a OnPostGuardarUsuario -->
+                <form method="post" asp-page-handler="CancelFac">
+
+
+
+                    <div class="modalListaF">
+                        <label for="projectCF3" class="form-label">Escoja un id de factura</label>
+                        <select class="form-control" id="projectCF3" name="projectCF3" required>
+                            @foreach (var fac in Model.CodigoFactu)
+                            {
+                                <option value="@fac">@fac</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="modalEmpleadoF">
+                        <label for="projecEmpleadoFC" class="form-label">Escoja un empleado</label>
+                        <select class="form-control" id="projecEmpleadoFC" name="projecEmpleadoFC" required>
+                            @foreach (var emp in Model.NombreEmpleados)
+                            {
+                                <option value="@emp">@emp</option>
+                            }
+                        </select>
+                    </div>
+
+
+                    <div class="modalFechaTarea">
+                        <label for="projectFecha2" class="form-label">Fecha</label>
+                        <input type="datetime-local" class="form-control" id="projectFecha2" name="projectFecha2" required>
+                    </div>
+                    <br />
+
+
+
+                    <br />
+                    <div class="modalMotivoCanc">
+                        <label for="projectCancel" class="form-label">Motivo para cancelar factura</label>
+                        <textarea class="form-control" id="projectCancel" name="projectCancel" required></textarea>
+                    </div>
+
+                    <br />
+                    <button type="submit" class="btn btn-primary">Cancelar factura</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <!-- Esto es para cerrar -->
+                <form method="post" asp-page-handler="CerrarModal23">
+                    <button type="submit" class="btn btn-secondary">Cerrar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<br />
+
+
+<div class="text-center">
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#DetalleFactura" asp-page-handler="MostrarModal25">
+        Ver detalle de facturas
+    </button>
+</div>
+
+<div class="modal fade" id="DetalleFactura" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalLabel">Ver detalle de facturas</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>ID factura</th>
+                            <th>Nombre cliente</th>
+                            <th>Fecha</th>
+                            <th>Articulo</th>
+                            <th>Cantidad</th>
+                            <th>Empleado</th>
+                            <th>Precio articulos</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (int i = 0; i < Model.IDDetalle.Count; i++)
+                        {
+                            <tr>
+                                <td>@Model.IDDetalle[i]</td>
+                                <td>@Model.NombreCliente[i]</td>
+                                <td>@Model.FechaFacturacion[i].ToShortDateString()</td>
+                                <td>@Model.ArticuloFactura[i]</td>
+                                <td>@Model.CantidadFactura[i]</td>
+                                <td>@Model.EmpleadoFactura[i]</td>
+                                <td>@Model.PrecioFactura[i]</td>
+                                <td>@Model.PrecioFinal[i]</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <form method="post" asp-page-handler="CerrarModal25">
+                <button type="submit" class="btn btn-secondary">Cerrar</button>
+            </form>
+
+        </div>
+    </div>
+</div>

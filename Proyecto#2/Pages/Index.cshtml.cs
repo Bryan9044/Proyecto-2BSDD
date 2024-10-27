@@ -16,31 +16,33 @@ namespace Proyecto_2.Pages
             _logger = logger;
             _configuration = configuration;
         }
-        public bool ShowModal { get; set; } = false;
-
-        public string MensajeError { get; set; }
 
         public bool ShowModal1 { get; set; }
         public bool ShowModal2 { get; set; }
-
         public bool ShowModal3 { get; set; }
-
         public bool ShowModal4 { get; set; }
-
         public bool ShowModal5 { get; set; }
-
         public bool ShowModal6 { get; set; }
-
         public bool ShowModal7 { get; set; }
-
         public bool ShowModal8 { get; set; }
-
         public bool ShowModal9 { get; set; }
         public bool ShowModal10 { get; set; }
         public bool ShowModal11 { get; set; }
         public bool ShowModal12 { get; set; }
         public bool ShowModal13 { get; set; }
         public bool ShowModal14 { get; set; }
+        public bool ShowModal15 { get; set; }
+        public bool ShowModal16 { get; set; }
+        public bool ShowModal17 { get; set; }
+        public bool ShowModal18 { get; set; }
+        public bool ShowModal19 { get; set; }
+        public bool ShowModal20 { get; set; }
+        public bool ShowModal21 { get; set; }
+        public bool ShowModal22 { get; set; }
+        public bool ShowModal23 { get; set; }
+        public bool ShowModal24 { get; set; }
+        public bool ShowModal25 { get; set; }
+
         public List<string> Roles { get; set; } = new List<string>();//ya
 
         public List<string> Acciones { get; set; } = new List<string>(); //ya
@@ -114,15 +116,48 @@ namespace Proyecto_2.Pages
 
         public List<int> Movimientos { get; set; } = new List<int>();
 
+        public List<string> ClientesNom { get; set; } = new List<string>();
+        public List<string> ListaF { get; set; } = new List<string>();
+
+        public List<string> NombreEmpleados { get; set; } = new List<string>();
+
+        public List<string> CodigoFactu { get; set; } = new List<string>();
+
+        public List<string> BodegaCodigo { get; set; } = new List<string>();
+
+        public List<string> BodegaArt { get; set; } = new List<string>();
+
+        public List<int> CantidadArt { get; set; } = new List<int>();
+
+        public List<string> DescripcionTC { get; set; } = new List<string>();
+        public List<string> tipotareaTC { get; set; } = new List<string>();
+
+        public List<DateOnly> FechaTC { get; set; } = new List<DateOnly>();
+        public List<string> EstadoTC { get; set; } = new List<string>();
+
+        public List<string> NombreTC { get; set; } = new List<string>();
+
+        public List<string> BodegaDispo { get; set; } = new List<string>();
+
+        public List<string> TareaCreada { get; set; } = new List<string>();
+
+
+
+        public List<string> IDDetalle { get; set; } = new List<string>();
+        public List<string> NombreCliente { get; set; } = new List<string>();
+        public List<DateOnly> FechaFacturacion { get; set; } = new List<DateOnly>();
+        public List<string> ArticuloFactura { get; set; } = new List<string>();
+        public List<int> CantidadFactura { get; set; } = new List<int>();
+
+        public List<string> EmpleadoFactura { get; set; } = new List<string>();
+        public List<decimal> PrecioFactura { get; set; } = new List<decimal>();
+        public List<decimal> PrecioFinal { get; set; } = new List<decimal>();
 
 
 
 
-        public IActionResult OnPostCloseModal()
-        {
-            ShowModal = false; // Cierra el modal
-            return Page(); // Regresa a la misma página
-        }
+
+        public bool MostrarSegundoModal { get; set; }
 
 
         public void OnGet()
@@ -162,6 +197,28 @@ namespace Proyecto_2.Pages
             TipoTareas = new List<string>();
             Bodegas = new List<string>();
             Movimientos = new List<int>();
+            ClientesNom = new List<string>();
+            ListaF = new List<string>();
+            NombreEmpleados = new List<string>();
+            CodigoFactu = new List<string>();
+            BodegaArt = new List<string>();
+            BodegaCodigo = new List<string>();
+            CantidadArt = new List<int>();
+            BodegaDispo = new List<string>();
+            DescripcionTC = new List<string>();
+            tipotareaTC = new List<string>();
+            FechaTC = new List<DateOnly>();
+            EstadoTC = new List<string>();
+            NombreTC = new List<string>();
+            TareaCreada = new List<string>();
+            IDDetalle = new List<string>();
+            NombreCliente = new List<string>();
+            FechaFacturacion = new List<DateOnly>();
+            ArticuloFactura = new List<string>();
+            CantidadFactura = new List<int>();
+            EmpleadoFactura = new List<string>();
+            PrecioFactura = new List<decimal>();
+            PrecioFinal = new List<decimal>();
 
             string connectionString = _configuration.GetConnectionString("DefaultConnection");
 
@@ -284,6 +341,29 @@ namespace Proyecto_2.Pages
             //Hasta aqui roles por usuarios
 
 
+            //Esta parte es para obtener todos los articulos por bodega que hayan sido registradas en la base de datos
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                string query = "select * from verInventarioBodega()";
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            BodegaCodigo.Add(reader.GetString(0));
+                            BodegaArt.Add(reader.GetString(1));
+                            CantidadArt.Add(reader.GetInt32(2));
+
+                        }
+                    }
+                }
+
+            }
+            //Hasta aqui todos los articulos por bodega
+
+
 
             //Esta parte es para obtener todos los empleados que hayan sido registradas en la base de datos
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -314,8 +394,6 @@ namespace Proyecto_2.Pages
                             var valorSalario = reader.GetValue(14);
                             var tipoSalario = reader.GetFieldType(14);
 
-                            // Imprimir tipo y valor para depuración
-                            Console.WriteLine($"Tipo de Salario: {tipoSalario}, Valor de Salario: {valorSalario}");
 
 
 
@@ -347,6 +425,39 @@ namespace Proyecto_2.Pages
                             ProbabilidadesC.Add((float)reader.GetDouble(7));
                             ZonasC.Add(reader.GetString(8));
                             SectorC.Add(reader.GetString(9));
+
+
+
+
+
+                        }
+                    }
+                }
+            }
+            //Hasta aqui empleados 
+
+
+
+
+            //Esta parte es para obtener el detalle de la factura que hayan sido registradas en la base de datos
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                string query = "select * from detalleFactura()";
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            IDDetalle.Add(reader.GetString(0));
+                            NombreCliente.Add(reader.GetString(1));
+                            FechaFacturacion.Add(DateOnly.FromDateTime(reader.GetDateTime(2)));
+                            ArticuloFactura.Add(reader.GetString(3));
+                            CantidadFactura.Add(reader.GetInt32(4));
+                            EmpleadoFactura.Add(reader.GetString(5));
+                            PrecioFactura.Add(reader.GetDecimal(6));
+                            PrecioFinal.Add(reader.GetDecimal(7));
 
 
 
@@ -622,7 +733,124 @@ namespace Proyecto_2.Pages
                     }
                 }
             }
-            //Hasta aqui movimientos
+
+            //Esta parte es para obtener todos las Nombres de clientes que hayan sido registradas en la base de datos
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                string query = "select * from mostrarNombreC()";
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            ClientesNom.Add(reader.GetString(0));
+                        }
+                    }
+                }
+            }
+            //Hasta aqui Nombres de clientes
+
+            //Esta parte es para obtener todos las Nombres de clientes que hayan sido registradas en la base de datos
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                string query = "select * from verListaF()";
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            ListaF.Add(reader.GetString(0));
+                        }
+                    }
+                }
+            }
+            //Hasta aqui Nombres de clientes
+
+            //Esta parte es para obtener todos las Nombres de los empleados completos que hayan sido registradas en la base de datos
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                string query = "select * from EmpleadosNombre()";
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            NombreEmpleados.Add(reader.GetString(0));
+                        }
+                    }
+                }
+            }
+            //Hasta aqui Nombres de clientes
+
+
+            //Esta parte es para obtener todos los codigos de factura que hayan sido registradas en la base de datos
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                string query = "select * from MostrarCodigoFac()";
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            CodigoFactu.Add(reader.GetString(0));
+                        }
+                    }
+                }
+            }
+            //Hasta aqui codigos de factura
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                string query = "select * from VerTareasCotizacion()";
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            DescripcionTC.Add(reader.GetString(0));
+                            tipotareaTC.Add(reader.GetString(1));
+                            FechaTC.Add(DateOnly.FromDateTime(reader.GetDateTime(2)));
+                            EstadoTC.Add(reader.GetString(3));
+                            NombreTC.Add(reader.GetString(4));
+
+
+                        }
+                    }
+                }
+
+            }
+            //Esta parte es para obtener todas los departamentos que hayan sido registradas en la base de datos
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                string query = "select * from VerTareaCot()";
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            TareaCreada.Add(reader.GetString(0));
+                        }
+                    }
+                }
+            }
+            //Hasta aqui Departamentos
+
+
+
+
+
+            //Hasta aqui codigos de factura
         }
 
 
@@ -634,149 +862,149 @@ namespace Proyecto_2.Pages
         public IActionResult OnGetMostrarModal()
         {
             ShowModal1 = true;
-            return Page();
+            return RedirectToPage();
         }
 
         public IActionResult OnPostCerrarModal()
         {
             ShowModal1 = false;
-            return Page();
+            return RedirectToPage();
         }
 
         public IActionResult OnGetMostrarModal2()
         {
             ShowModal2 = true;
-            return Page();
+            return RedirectToPage();
         }
 
         public IActionResult OnPostCerrarModal2()
         {
             ShowModal2 = false;
-            return Page();
+            return RedirectToPage();
         }
 
 
         public IActionResult OnGetMostrarModal3()
         {
             ShowModal3 = true;
-            return Page();
+            return RedirectToPage();
         }
 
         public IActionResult OnPostCerrarModal3()
         {
             ShowModal3 = false;
-            return Page();
+            return RedirectToPage();
         }
 
 
         public IActionResult OnGetMostrarModal4()
         {
             ShowModal4 = true;
-            return Page();
+            return RedirectToPage();
         }
 
         public IActionResult OnPostCerrarModal4()
         {
             ShowModal4 = false;
-            return Page();
+            return RedirectToPage();
         }
 
         public IActionResult OnGetMostrarModal5()
         {
             ShowModal5 = true;
-            return Page();
+            return RedirectToPage();
         }
 
         public IActionResult OnPostCerrarModal5()
         {
             ShowModal5 = false;
-            return Page();
+            return RedirectToPage();
         }
         public IActionResult OnGetMostrarModal6()
         {
             ShowModal6 = true;
-            return Page();
+            return RedirectToPage();
         }
 
         public IActionResult OnPostCerrarModal6()
         {
             ShowModal6 = false;
-            return Page();
+            return RedirectToPage();
         }
 
 
         public IActionResult OnGetMostrarModal7()
         {
             ShowModal7 = true;
-            return Page();
+            return RedirectToPage();
         }
 
         public IActionResult OnPostCerrarModal7()
         {
             ShowModal7 = false;
-            return Page();
+            return RedirectToPage();
         }
 
 
         public IActionResult OnGetMostrarModal8()
         {
             ShowModal8 = true;
-            return Page();
+            return RedirectToPage();
         }
 
         public IActionResult OnPostCerrarModal8()
         {
             ShowModal8 = false;
-            return Page();
+            return RedirectToPage();
         }
 
 
         public IActionResult OnGetMostrarModal9()
         {
             ShowModal9 = true;
-            return Page();
+            return RedirectToPage();
         }
 
         public IActionResult OnPostCerrarModal9()
         {
             ShowModal9 = false;
-            return Page();
+            return RedirectToPage();
         }
 
 
         public IActionResult OnGetMostrarModal10()
         {
             ShowModal10 = true;
-            return Page();
+            return RedirectToPage();
         }
 
-        public IActionResult OnPostCerrarModa10()
+        public IActionResult OnPostCerrarModal10()
         {
             ShowModal10 = false;
-            return Page();
+            return RedirectToPage();
         }
 
 
         public IActionResult OnGetMostrarModal11()
         {
             ShowModal11 = true;
-            return Page();
+            return RedirectToPage();
         }
 
-        public IActionResult OnPostCerrarModa11()
+        public IActionResult OnPostCerrarModal11()
         {
             ShowModal11 = false;
-            return Page();
+            return RedirectToPage();
         }
 
 
         public IActionResult OnGetMostrarModal12()
         {
             ShowModal12 = true;
-            return Page();
+            return RedirectToPage();
         }
 
-        public IActionResult OnPostCerrarModa12()
+        public IActionResult OnPostCerrarModal12()
         {
             ShowModal12 = false;
             return RedirectToPage();
@@ -785,10 +1013,10 @@ namespace Proyecto_2.Pages
         public IActionResult OnGetMostrarModal13()
         {
             ShowModal13 = true;
-            return Page();
+            return RedirectToPage();
         }
 
-        public IActionResult OnPostCerrarModa13()
+        public IActionResult OnPostCerrarModal13()
         {
             ShowModal13 = false;
             return RedirectToPage();
@@ -797,12 +1025,135 @@ namespace Proyecto_2.Pages
         public IActionResult OnGetMostrarModal14()
         {
             ShowModal14 = true;
-            return Page();
+            return RedirectToPage();
         }
 
-        public IActionResult OnPostCerrarModa14()
+        public IActionResult OnPostCerrarModal14()
         {
-            ShowModal14= false;
+            ShowModal14 = false;
+            return RedirectToPage();
+        }
+        public IActionResult OnGetMostrarModal15()
+        {
+            ShowModal15 = true;
+            return RedirectToPage();
+        }
+
+        public IActionResult OnPostCerrarModal15()
+        {
+            ShowModal15 = false;
+            return RedirectToPage();
+        }
+        public IActionResult OnGetMostrarModal16()
+        {
+            ShowModal16 = true;
+            return RedirectToPage();
+        }
+
+        public IActionResult OnPostCerrarModal16()
+        {
+            ShowModal16 = false;
+            return RedirectToPage();
+        }
+        public IActionResult OnGetMostrarModal17()
+        {
+            ShowModal17 = true;
+            return RedirectToPage();
+        }
+
+        public IActionResult OnPostCerrarModal17()
+        {
+            ShowModal17 = false;
+            return RedirectToPage();
+        }
+        public IActionResult OnGetMostrarModal18()
+        {
+            ShowModal18 = true;
+            return RedirectToPage();
+        }
+
+        public IActionResult OnPostCerrarModal18()
+        {
+            ShowModal18 = false;
+            return RedirectToPage();
+        }
+
+        public IActionResult OnGetMostrarModal19()
+        {
+            ShowModal19 = true;
+            return RedirectToPage();
+        }
+
+        public IActionResult OnPostCerrarModal19()
+        {
+            ShowModal19 = false;
+            return RedirectToPage();
+        }
+        public IActionResult OnGetMostrarModal20()
+        {
+            ShowModal20 = true;
+            return RedirectToPage();
+        }
+
+        public IActionResult OnPostCerrarModal20()
+        {
+            ShowModal20 = false;
+            return RedirectToPage();
+        }
+        public IActionResult OnGetMostrarModal21()
+        {
+            ShowModal21 = true;
+            return RedirectToPage();
+        }
+
+        public IActionResult OnPostCerrarModal21()
+        {
+            ShowModal21 = false;
+            return RedirectToPage();
+        }
+        public IActionResult OnGetMostrarModal22()
+        {
+            ShowModal22 = true;
+            return RedirectToPage();
+        }
+
+        public IActionResult OnPostCerrarModal22()
+        {
+            ShowModal22 = false;
+            return RedirectToPage();
+        }
+        public IActionResult OnGetMostrarModal23()
+        {
+            ShowModal23 = true;
+            return RedirectToPage();
+        }
+
+        public IActionResult OnPostCerrarModal23()
+        {
+            ShowModal23 = false;
+            return RedirectToPage();
+        }
+        public IActionResult OnGetMostrarModal24()
+        {
+            ShowModal24 = true;
+            return RedirectToPage();
+        }
+
+        public IActionResult OnPostCerrarModal24()
+        {
+            ShowModal24 = false;
+            return RedirectToPage();
+        }
+
+        public IActionResult OnGetMostrarModal25()
+        {
+            ShowModal25 = true;
+            return RedirectToPage();
+        }
+
+        public IActionResult OnPostCerrarModal25()
+        {
+            ShowModal25 = false;
             return RedirectToPage();
         }
 
@@ -829,15 +1180,15 @@ namespace Proyecto_2.Pages
                 }
                 catch (SqlException ex)
                 {
-                    MensajeError = ex.Errors[0].Message;
-                    ShowModal = true;
+
+                    _logger.LogError(ex, "Error al insertar el rol.");
+                    ModelState.AddModelError(string.Empty, "Error al guardar el rol.");
                     return Page();
                 }
-
             }
 
             Console.WriteLine("Si se inserto el rol");
-            return Page();
+            return RedirectToPage();
         }
 
         public IActionResult OnPostGuardarAccionesRol(string projectTipoRolAc, string projectTipoAccion)
@@ -862,14 +1213,15 @@ namespace Proyecto_2.Pages
                 }
                 catch (SqlException ex)
                 {
-                    MensajeError = ex.Errors[0].Message;
-                    ShowModal = true;
-                    return Page();
+
+                    _logger.LogError(ex, "Error al insertar el rol por accion.");
+                    ModelState.AddModelError(string.Empty, "Error al guardar el rol por accion.");
+                    return RedirectToPage();
                 }
             }
 
             Console.WriteLine("Si se inserto la acción por rol");
-            return Page();
+            return RedirectToPage();
 
 
 
@@ -916,14 +1268,15 @@ namespace Proyecto_2.Pages
                 }
                 catch (SqlException ex)
                 {
-                    MensajeError = ex.Errors[0].Message;
-                    ShowModal = true;
-                    return Page();
+
+                    _logger.LogError(ex, "Error al insertar el rol por accion.");
+                    ModelState.AddModelError(string.Empty, "Error al guardar el rol por accion.");
+                    return RedirectToPage();
                 }
             }
 
             Console.WriteLine("Si se inserto la acción por rol");
-            return Page();
+            return RedirectToPage();
 
 
 
@@ -963,14 +1316,12 @@ namespace Proyecto_2.Pages
                     }
                     catch (SqlException ex)
                     {
-                        MensajeError = ex.Errors[0].Message;
-                        ShowModal = true;
-                        return Page();
+                        Console.WriteLine($"Error al ejecutar el comando: {ex.Message}");
                     }
                 }
             }
 
-            return RedirectToPage("Index");
+            return RedirectToPage();
         }
 
 
@@ -1042,18 +1393,18 @@ namespace Proyecto_2.Pages
                             }
                             else
                             {
-                                MensajeError = "Empleado no encontrado.";
-                                ShowModal = true;
-                                return Page();
+                                // Manejar caso en que no se encuentra el empleado
+                                ModelState.AddModelError(string.Empty, "Empleado no encontrado.");
+                                return RedirectToPage();
                             }
                         }
                     }
                 }
                 catch (SqlException ex)
                 {
-                    MensajeError = ex.Errors[0].Message;
-                    ShowModal = true;
-                    return Page();
+                    _logger.LogError(ex, "Error al modificar el empleado.");
+                    ModelState.AddModelError(string.Empty, "Error al modificar el empleado.");
+                    return RedirectToPage();
                 }
             }
 
@@ -1072,7 +1423,7 @@ namespace Proyecto_2.Pages
                 }
             }
 
-            return Page();
+            return RedirectToPage();
         }
 
 
@@ -1110,13 +1461,13 @@ namespace Proyecto_2.Pages
                         commandUpdateSalario.ExecuteNonQuery();
                     }
 
-                    return RedirectToPage(); // Redirigir después de guardar
+                    return RedirectToPage(); 
                 }
                 catch (SqlException ex)
                 {
-                    MensajeError = ex.Errors[0].Message;
-                    ShowModal = true;
-                    return Page();
+                    _logger.LogError(ex, "Error al guardar la planilla.");
+                    ModelState.AddModelError(string.Empty, "Error al guardar la planilla.");
+                    return RedirectToPage();
                 }
             }
         }
@@ -1156,14 +1507,15 @@ namespace Proyecto_2.Pages
                 }
                 catch (SqlException ex)
                 {
-                    MensajeError = ex.Errors[0].Message;
-                    ShowModal = true;
-                    return Page();
+
+                    _logger.LogError(ex, "Error al insertar el rol por accion.");
+                    ModelState.AddModelError(string.Empty, "Error al guardar el rol por accion.");
+                    return RedirectToPage();
                 }
             }
 
             Console.WriteLine("Si se inserto la acción por rol");
-            return Page();
+            return RedirectToPage();
 
 
 
@@ -1194,14 +1546,14 @@ namespace Proyecto_2.Pages
                 }
                 catch (SqlException ex)
                 {
-                    MensajeError = ex.Errors[0].Message;
-                    ShowModal = true;
-                    return Page();
+                    _logger.LogError(ex, "Error al agregar el artículo a la cotización.");
+                    ModelState.AddModelError(string.Empty, "Error al agregar el artículo a la cotización.");
+                    return RedirectToPage();
                 }
             }
 
             Console.WriteLine("Se insertó el artículo en la cotización correctamente.");
-            return Page();
+            return RedirectToPage();
         }
 
 
@@ -1211,7 +1563,7 @@ namespace Proyecto_2.Pages
 
 
         public IActionResult OnPostAgregarTareaCOT(string projectCodigoTarea, string projectTipoTarea, DateOnly projectCodigoFecha, string projectDescripcionCOT,
-            string projectEstadosT)
+                string projectEstadosT, string projectEliCotizacion2)
         {
             string connectionString = _configuration.GetConnectionString("DefaultConnection");
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -1219,9 +1571,10 @@ namespace Proyecto_2.Pages
                 try
                 {
                     connection.Open();
-                    string query = "EXEC InsertarTarea @CodigoTarea,@tipoTareaCotizacion,@Fecha,@Descripcion,@Estado";
 
-                    using (SqlCommand command = new SqlCommand(query, connection))
+                    // Primero insertamos la tarea
+                    string queryInsertarTarea = "EXEC InsertarTarea @CodigoTarea,@tipoTareaCotizacion,@Fecha,@Descripcion,@Estado";
+                    using (SqlCommand command = new SqlCommand(queryInsertarTarea, connection))
                     {
                         command.Parameters.Add(new SqlParameter("@CodigoTarea", projectCodigoTarea));
                         command.Parameters.Add(new SqlParameter("@tipoTareaCotizacion", projectTipoTarea));
@@ -1231,18 +1584,29 @@ namespace Proyecto_2.Pages
 
                         command.ExecuteNonQuery();
                     }
+
+                    // Ahora insertamos en TareaCotizacion
+                    string queryInsertarTareaCotizacion = "exec IngresarTareaCot @CodigoTarea, @CodigoCotizacion";
+                    using (SqlCommand command = new SqlCommand(queryInsertarTareaCotizacion, connection))
+                    {
+                        command.Parameters.Add(new SqlParameter("@CodigoTarea", projectCodigoTarea));
+                        command.Parameters.Add(new SqlParameter("@CodigoCotizacion", projectEliCotizacion2)); 
+
+                        command.ExecuteNonQuery();
+                    }
                 }
                 catch (SqlException ex)
                 {
-                    MensajeError = ex.Errors[0].Message;
-                    ShowModal = true;
-                    return Page();
+                    _logger.LogError(ex, "Error al agregar la tarea y asociarla a la cotización.");
+                    ModelState.AddModelError(string.Empty, "Error al agregar la tarea y asociarla a la cotización.");
+                    return RedirectToPage();
                 }
             }
 
-            Console.WriteLine("Se insertó el artículo en la cotización correctamente.");
-            return Page();
+            Console.WriteLine("Se insertó la tarea y se asoció a la cotización correctamente.");
+            return RedirectToPage();
         }
+
 
 
 
@@ -1266,14 +1630,14 @@ namespace Proyecto_2.Pages
                 }
                 catch (SqlException ex)
                 {
-                    MensajeError = ex.Errors[0].Message;
-                    ShowModal = true;
-                    return Page();
+                    _logger.LogError(ex, "Error al agregar el artículo a la cotización.");
+                    ModelState.AddModelError(string.Empty, "Error al agregar el artículo a la cotización.");
+                    return RedirectToPage();
                 }
             }
 
             Console.WriteLine("Se insertó el artículo en la cotización correctamente.");
-            return Page();
+            return RedirectToPage();
         }
 
 
@@ -1307,14 +1671,14 @@ namespace Proyecto_2.Pages
                 }
                 catch (SqlException ex)
                 {
-                    MensajeError = ex.Errors[0].Message;
-                    ShowModal = true;
-                    return Page();
+                    _logger.LogError(ex, "Error al agregar el artículo a la cotización.");
+                    ModelState.AddModelError(string.Empty, "Error al agregar el artículo a la cotización.");
+                    return RedirectToPage();
                 }
             }
 
             Console.WriteLine("Se insertó el artículo en la cotización correctamente.");
-            return Page();
+            return RedirectToPage();
         }
 
 
@@ -1344,14 +1708,14 @@ namespace Proyecto_2.Pages
                 }
                 catch (SqlException ex)
                 {
-                    MensajeError = ex.Errors[0].Message;
-                    ShowModal = true;
-                    return Page();
+                    _logger.LogError(ex, "Error al agregar el artículo a la cotización.");
+                    ModelState.AddModelError(string.Empty, "Error al agregar el artículo a la cotización.");
+                    return RedirectToPage();
                 }
             }
 
             Console.WriteLine("Se insertó el artículo en la cotización correctamente.");
-            return Page();
+            return RedirectToPage();
         }
 
 
@@ -1360,19 +1724,19 @@ namespace Proyecto_2.Pages
 
         public IActionResult OnPostIngresarArticulosMOV(int projectMovimientoC2, string projectInventA, int projectCantidadInve)
         {
-
+            Console.WriteLine(projectInventA);
             string connectionString = _configuration.GetConnectionString("DefaultConnection");
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 try
                 {
                     connection.Open();
-                    string query = "EXEC IngresarInventarioArticulos @IDMovimiento, @CodigoArticulo, @CantidadIngresada";
+                    string query = "EXEC IngresarInventarioArticulos @IDMovimiento, @NombreArticulo, @CantidadIngresada";
 
                     using (SqlCommand command = new SqlCommand(query, connection))
                     {
                         command.Parameters.Add(new SqlParameter("@IDMovimiento", projectMovimientoC2));
-                        command.Parameters.Add(new SqlParameter("@CodigoArticulo", projectInventA));
+                        command.Parameters.Add(new SqlParameter("@NombreArticulo", projectInventA));
                         command.Parameters.Add(new SqlParameter("@CantidadIngresada", projectCantidadInve));
 
 
@@ -1382,22 +1746,22 @@ namespace Proyecto_2.Pages
                 }
                 catch (SqlException ex)
                 {
-                    MensajeError = ex.Errors[0].Message;
-                    ShowModal = true;
-                    return Page();
+                    _logger.LogError(ex, "Error al agregar el artículo a la cotización.");
+                    ModelState.AddModelError(string.Empty, "Error al agregar el artículo a la cotización.");
+                    return RedirectToPage();
                 }
             }
 
             Console.WriteLine("Se insertó el artículo en la cotización correctamente.");
-            return Page();
+            return RedirectToPage();
         }
 
 
 
 
-        
 
-        public IActionResult OnPostIngresarListaArt(string projectIDListaF, string projectArtLista, int projectCantidadInveL)
+
+        public IActionResult OnPostIngresarListaArt(string projectIDListaF, string projectCF2, string projectArtLista, int projectCantidadInveL)
         {
 
             string connectionString = _configuration.GetConnectionString("DefaultConnection");
@@ -1406,13 +1770,15 @@ namespace Proyecto_2.Pages
                 try
                 {
                     connection.Open();
-                    string query = "EXEC AgregarArticulosFactura @IDLista, @NombreProdu, @CantidadProducto";
+                    string query = "EXEC agregarFacturaLista @IDLista, @CantidadProducto, @Codigo,@CodigoF";
 
                     using (SqlCommand command = new SqlCommand(query, connection))
                     {
                         command.Parameters.Add(new SqlParameter("@IDLista", projectIDListaF));
-                        command.Parameters.Add(new SqlParameter("@NombreProdu", projectArtLista));
                         command.Parameters.Add(new SqlParameter("@CantidadProducto", projectCantidadInveL));
+                        command.Parameters.Add(new SqlParameter("@Codigo", projectArtLista));
+                        command.Parameters.Add(new SqlParameter("@CodigoF", projectCF2));
+
 
 
 
@@ -1421,15 +1787,223 @@ namespace Proyecto_2.Pages
                 }
                 catch (SqlException ex)
                 {
-                    MensajeError = ex.Errors[0].Message;
-                    ShowModal = true;
-                    return Page();
+                    _logger.LogError(ex, "Error al agregar el artículo a la cotización.");
+                    ModelState.AddModelError(string.Empty, "Error al agregar el artículo a la cotización.");
+                    return RedirectToPage();
                 }
             }
 
             Console.WriteLine("Se insertó el artículo en la cotización correctamente.");
-            return Page();
+            return RedirectToPage();
         }
+
+
+
+        public IActionResult OnPostIngresarFactura(string projectFacturaIDF, int projectCF, string projectClienteF, string projectEmpleadoF,
+            string projectJuridico, string projectCelLocal, string projectNombreLocal, DateOnly projectFecha)
+        {
+            Console.WriteLine(projectCF);
+            string connectionString = _configuration.GetConnectionString("DefaultConnection");
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                try
+                {
+                    connection.Open();
+                    string query = "EXEC AgregarFactura @Codigo, @CodigoCotizacion, @NombreEmpleado, @CedulaJuridica,@TelefonoLocal,@NombreLocal,@FechaFactura,@NombreCliente";
+
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.Add(new SqlParameter("@Codigo", projectFacturaIDF));
+                        if (projectCF == 0)
+                        {
+                            command.Parameters.Add(new SqlParameter("@CodigoCotizacion", DBNull.Value));
+                        }
+                        else
+                        {
+                            command.Parameters.Add(new SqlParameter("@CodigoCotizacion", projectCF));
+                        }
+                        command.Parameters.Add(new SqlParameter("@NombreEmpleado", projectEmpleadoF));
+                        command.Parameters.Add(new SqlParameter("@CedulaJuridica", projectJuridico));
+                        command.Parameters.Add(new SqlParameter("@TelefonoLocal", projectCelLocal));
+                        command.Parameters.Add(new SqlParameter("@NombreLocal", projectNombreLocal));
+                        command.Parameters.Add(new SqlParameter("@FechaFactura", projectFecha));
+                        command.Parameters.Add(new SqlParameter("@NombreCliente", projectClienteF));
+
+
+                        command.ExecuteNonQuery();
+                    }
+                }
+                catch (SqlException ex)
+                {
+                    _logger.LogError(ex, "Error al agregar la factura.");
+                    ModelState.AddModelError(string.Empty, "Error al agregar la factura");
+                    return RedirectToPage();
+                }
+            }
+
+            Console.WriteLine("Se insertó la factura correctamente.");
+            return RedirectToPage();
+        }
+
+
+
+
+        public IActionResult OnPostRegistrarSalida1(string projectCFS, string projectArtLista, int projectCantidadInveL)
+        {
+            // Configurar variable para mostrar el segundo modal
+            ViewData["MostrarModalSalidaMOV2"] = true;
+
+            // Simular el nombre de artículo seleccionado
+            string articuloSeleccionado = projectArtLista;
+
+            // Inicializar la lista de bodegas
+            BodegaDispo = new List<string>();
+
+            string connectionString = _configuration.GetConnectionString("DefaultConnection");
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                string query = "SELECT NombreBodega FROM verBodegasArticuloActivo(@NombreArticulo)";
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@NombreArticulo", articuloSeleccionado);
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            BodegaDispo.Add(reader.GetString(0));
+                        }
+                    }
+                }
+            }
+            ViewData["projectCFS"] = projectCFS;
+            ViewData["projectArtLista"] = projectArtLista;
+            ViewData["projectCantidadInveL"] = projectCantidadInveL;
+            return RedirectToPage();
+        }
+
+        public IActionResult OnPostRegistrarSalida2(string projectCFS, string projectArtLista, int projectCantidadInveL, string bodegasSelect)
+        {
+            Console.WriteLine(projectCFS);
+            Console.WriteLine(projectArtLista);
+            Console.WriteLine(projectCantidadInveL);
+            Console.WriteLine(bodegasSelect);
+            string connectionString = _configuration.GetConnectionString("DefaultConnection");
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                try
+                {
+                    connection.Open();
+                    string query = "EXEC IngresarSalidaMov @IDFactura, @NombreArt, @NombreBodega, @Cantidad";
+
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.Add(new SqlParameter("@IDFactura", projectCFS));
+                        command.Parameters.Add(new SqlParameter("@NombreArt", projectArtLista));
+                        command.Parameters.Add(new SqlParameter("@NombreBodega", bodegasSelect));
+                        command.Parameters.Add(new SqlParameter("@Cantidad", projectCantidadInveL));
+
+
+
+                        command.ExecuteNonQuery();
+                    }
+                }
+                catch (SqlException ex)
+                {
+                    _logger.LogError(ex, "Error al agregar la factura.");
+                    ModelState.AddModelError(string.Empty, "Error al agregar la factura");
+                    return RedirectToPage();
+                }
+            }
+
+            Console.WriteLine("Se insertó la factura correctamente.");
+            return RedirectToPage();
+
+
+
+
+
+
+
+        }
+        public IActionResult OnPostCancelFac(string projectCF3, string projecEmpleadoFC, DateTime projectFecha2,string projectCancel)
+        {
+            Console.WriteLine(projectCF3);
+
+            string connectionString = _configuration.GetConnectionString("DefaultConnection");
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                try
+                {
+                    connection.Open();
+                    string query = "exec DevolverProductos @IDFactura,@NombreEmpleado,@Motivo,@fecha";
+
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.Add(new SqlParameter("@IDFactura", projectCF3));
+                        command.Parameters.Add(new SqlParameter("@NombreEmpleado", projecEmpleadoFC));
+                        command.Parameters.Add(new SqlParameter("@Motivo", projectCancel));
+                        command.Parameters.Add(new SqlParameter("@fecha", projectFecha2));
+
+
+
+                        command.ExecuteNonQuery();
+                    }
+                }
+                catch (SqlException ex)
+                {
+                    _logger.LogError(ex, "Error al agregar la factura.");
+                    ModelState.AddModelError(string.Empty, "Error al agregar la factura");
+                    return RedirectToPage();
+                }
+            }
+
+            Console.WriteLine("Se insertó la factura correctamente.");
+            return RedirectToPage();
+
+
+        }
+
+        public IActionResult OnPostEliminarTareaCotizacion(int projectEliCotizacion3, string projectTareaTc)
+        {
+            Console.WriteLine(projectEliCotizacion3);
+            Console.WriteLine(projectTareaTc);
+
+            string connectionString = _configuration.GetConnectionString("DefaultConnection");
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                try
+                {
+                    connection.Open();
+                    string query = "exec EliminarTareaCOT @CodigoTarea,@CodigoC";
+
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.Add(new SqlParameter("@CodigoTarea", projectTareaTc));
+                        command.Parameters.Add(new SqlParameter("@CodigoC", projectEliCotizacion3));
+
+
+
+
+                        command.ExecuteNonQuery();
+                    }
+                }
+                catch (SqlException ex)
+                {
+                    _logger.LogError(ex, "Error al agregar la factura.");
+                    ModelState.AddModelError(string.Empty, "Error al agregar la factura");
+                    return RedirectToPage();
+                }
+            }
+
+            Console.WriteLine("Se insertó la factura correctamente.");
+            return RedirectToPage();
+
+
+        }
+
 
     }
 }

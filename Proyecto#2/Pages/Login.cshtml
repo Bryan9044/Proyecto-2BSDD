@@ -24,22 +24,3 @@
     <p>¿No tienes una cuenta? <a asp-page="/Register">Regístrate aquí</a></p>
 </div>
 
-<!-- Modal para mostrar error -->
-<div id="messagebox" class="modal fade @(Model.ShowModal ? "show" : "")" style="@(Model.ShowModal ? "display:block;" : "display:none;")" role="dialog">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>Error</h2>
-            </div>
-            <div id="Alerta" class="modal-body alert alert-danger">
-                @Model.MensajeError
-            </div>
-            <div class="modal-footer">
-                <form method="post" asp-page-handler="CloseModal">
-                    <button type="submit" class="btn btn-info">Cerrar</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
