@@ -70,7 +70,7 @@ CREATE TABLE Estado(
 	PRIMARY KEY (TipoEstado)
 );
 
-insert into Estado(TipoEstado,Descripcion) values
+insert into Estado(Tipo1,Descripcion) values
 ('Abierta', 'Todavia no se da un veredicto final'),
 ('Aprobado', 'Se aprueba la cotizacion yupiiii'),
 ('Rechazado', 'Se rechaza la cotizacion mecagoentodo');
@@ -185,17 +185,15 @@ CREATE TABLE Roles (
 );
 insert into Roles(tipoRol,Descripcion) values
 ('Encargado', 'Se encarga de que todo este bien'),
-('SuperUsuario', 'Se encarga de que todo este bien'),
 ('Vendedor', 'Se encarga de vender productos'),
 ('Bodeguero', 'Se encarga de la bodega'),
 ('Ayudante','Ayuda en todas las tareas al admin');
 
 
 CREATE TABLE AccionesXrol (
-	IDAccionesXRol INT IDENTITY (1,1),
     tipoRol VARCHAR(20),
     tipoAccion VARCHAR(40),
-    PRIMARY KEY (IDAccionesXRol),
+    PRIMARY KEY (tipoRol, tipoAccion),
     FOREIGN KEY (tipoRol) REFERENCES Roles(tipoRol),
     FOREIGN KEY (tipoAccion) REFERENCES Acciones(tipoAccion)
 );
@@ -291,6 +289,19 @@ CREATE TABLE HistoricoSalario (
     Departamento VARCHAR(50) not null,
     FOREIGN KEY (CedulaEmpleado) REFERENCES Empleado(Cedula)
 );
+
+
+CREATE TABLE Planilla (
+	CodigoPlanilla VARCHAR(15) NOT NULL,
+	FechaPlanilla date not null,   
+	CedulaEmpleado varchar(9) not null,
+	HorasRealizadas int not null,
+	Salario int, --HAY QUE CAMBIARLO URGENTE DEBE SER NULO PORQUE SE CALCULA DESPUES DE LAS HORAS
+	foreign key (CedulaEmpleado) references Empleado(Cedula),
+	Primary key (CodigoPlanilla, CedulaEmpleado)
+
+);
+
 
 CREATE TABLE Familia (
 	CodigoFamilia VARCHAR(15) NOT NULL,
@@ -453,15 +464,8 @@ INSERT INTO Articulo (CodigoFamilia, Codigo, Nombre,Activo, Peso, Costo,PrecioEs
 
 
 
+|
 
-CREATE TABLE Bodega (
-	Codigo VARCHAR(15) NOT NULL,
-	Nombre VARCHAR(20) NOT NULL,
-	Ubicacion VARCHAR(20) NOT NULL,
-	EspacioCubico int NOT NULL,
-	CapacidadTon int NOT NULL,
-	PRIMARY KEY (Codigo)
-);
 
 INSERT INTO Bodega(Codigo, Nombre,Ubicacion,EspacioCubico,CapacidadTon) values
 ('BO1','Castle Rock','Limon', 50,3 ),
@@ -530,6 +534,13 @@ CREATE TABLE Cliente (
 	PRIMARY KEY (Cedula)
 );
 
+go
+create function mostrarNombreC()
+returns table
+as return(
+	select Nombre from Cliente
+)
+
 INSERT INTO Cliente (Cedula, Telefono, Genero, Nombre, CorreoElectronico, Fax, Sector, Zona, Celular) VALUES
 ('123456789', '22223334', 'M', 'Juan Pérez', 'juaperezZeledon@mail.com', '22224444', 'Económico', 'Zona norte', '80839796'),
 ('325543227', '33334444', 'F', 'María López', 'marilopez@mail.com', '33335555', 'Tecnológico', 'Pacifico central', '70755432'),
@@ -543,7 +554,7 @@ INSERT INTO Cliente (Cedula, Telefono, Genero, Nombre, CorreoElectronico, Fax, S
 ('369253247', '22223334', 'F', 'Isabel Torres', 'isabel20torres@mail.com', '22224444', 'Cultural', 'Valle central', '23456843');
 
 
---Esto es para los articulos de la bodega
+--Esto es el inventario
 CREATE TABLE ListaArticulos (
     CodigoBodega VARCHAR(15) NOT NULL,
     CodigoProducto VARCHAR(15) NOT NULL,
@@ -642,6 +653,7 @@ INSERT INTO TipoCotizacion(Tipocotizacion,Descripcion) values
 
 
 
+
 CREATE TABLE Cotizacion (
 	Codigo int identity(1,1) NOT NULL,
 	CedulaCliente VARCHAR(9)  NOT NULL, --Les quite el unique
@@ -697,12 +709,12 @@ CREATE TABLE Caso (
 	FOREIGN KEY (Prioridad) references Prioridad(TipoPrioridad)
 );
 insert into Caso(CodigoCaso,PropietarioCaso,OrigenCaso,NombreCuenta,NombreContacto,Asunto, Direccion, Descripcion,EstadoCaso, TipoCaso,Prioridad) values
-('CS1','754323489',1 , 'Personal','Salamar' ,'Necesitamos una ayuda inmediata', 'San jose en el centro de la capital', 'Se tiene que verificar el tipo de ayuda que necesita','Abierta', 'Devolucion','Alta'),
-('CS2','369253247',2 , 'Empresarial','Dospinos' ,'Queremos hablar con un encargado', 'Alajuela a un costado del mercado', 'Se procedera a enviar la queja al encargado','Aprobado', 'Devolucion','Alta'),
-('CS3','432124368',3 , 'Personal','Aurua','Tuvimos problemas', 'En San carlos debajo de una catarata ', 'Se busca el tipo de problemas','Rechazado', 'Garantia','Baja'),
-('CS4','456789123',4 , 'Personal','Dianeys' ,'Hubo un problema', 'En la casa habitacion #58 en limon', 'Se habla para ver el problema','Aprobado', 'Garantia','Baja'),
-('CS5','533467853',5 , 'Empresarial','Nike' ,'Algo fallo en los pedidos', 'San jose a la par de amazon', 'Se indica el fallo que hubo','Abierta', 'Reclamo','Media'),
-('CS6','754323489',6 , 'Empresarial','Adidas' ,'Es un asunto de urgencia', 'San jose por el mall san pedro','se habla con el administrador', 'Rechazado', 'Reclamo','Media');
+('CS1','754323489',3 , 'Personal','Salamar' ,'Necesitamos una ayuda inmediata', 'San jose en el centro de la capital', 'Se tiene que verificar el tipo de ayuda que necesita','Abierta', 'Devolucion','Alta'),
+('CS2','369253247',4 , 'Empresarial','Dospinos' ,'Queremos hablar con un encargado', 'Alajuela a un costado del mercado', 'Se procedera a enviar la queja al encargado','Aprobado', 'Devolucion','Alta'),
+('CS3','432124368',5 , 'Personal','Aurua','Tuvimos problemas', 'En San carlos debajo de una catarata ', 'Se busca el tipo de problemas','Rechazado', 'Garantia','Baja'),
+('CS4','456789123',6 , 'Personal','Dianeys' ,'Hubo un problema', 'En la casa habitacion #58 en limon', 'Se habla para ver el problema','Aprobado', 'Garantia','Baja'),
+('CS5','533467853',7 , 'Empresarial','Nike' ,'Algo fallo en los pedidos', 'San jose a la par de amazon', 'Se indica el fallo que hubo','Abierta', 'Reclamo','Media'),
+('CS6','754323489',8 , 'Empresarial','Adidas' ,'Es un asunto de urgencia', 'San jose por el mall san pedro','se habla con el administrador', 'Rechazado', 'Reclamo','Media');
 
 
 
@@ -747,56 +759,91 @@ insert into estadoFactura(tipoFactura, descripcion) values
 ('Cancelada','El cliente cancela la factura');
 
 
-CREATE TABLE ListaFactura (
-	IDLista varchar(40) UNIQUE not null,
-	CodigoProducto VARCHAR(15) NOT NULL,
-	CantidadProducto INT NOT NULL,
-	PRIMARY KEY (CodigoProducto,IDLista),
-	FOREIGN KEY (CodigoProducto) REFERENCES Articulo(Codigo),
-);
+drop table Factura
+ALTER TABLE Factura 
+ADD estado VARCHAR(30)  NULL;
 
+
+UPDATE Factura
+SET estado = 'Emitida';  
+
+ALTER TABLE Factura 
+ALTER COLUMN estado VARCHAR(30) NOT NULL;
+
+ALTER TABLE Factura 
+ADD CONSTRAINT FK_Estado 
+FOREIGN KEY (estado) REFERENCES estadoFactura(tipoFactura);
 
 CREATE TABLE Factura (
     Codigo VARCHAR(15) NOT NULL, --
 	CodigoCotizacion int  null,  --
-    CedulaCliente VARCHAR(9) NOT NULL, 
+	CedulaCliente varchar(9),
     CedulaEmpleado VARCHAR(9) NOT NULL, 
     CedulaJuridica VARCHAR(9) NOT NULL,
     TelefonoLocal VARCHAR(8) NOT NULL,
     NombreLocal VARCHAR(40) NOT NULL,
     FechaFactura DATE not null,
 	NombreCliente varchar(20) not null,
-	listaArticulos varchar(40) not null
+	estado varchar(30) not null
 	PRIMARY KEY (Codigo),
-    FOREIGN KEY (CedulaCliente) REFERENCES Cliente(Cedula),
     FOREIGN KEY (CedulaEmpleado) REFERENCES Empleado(Cedula),
 	FOREIGN KEY (CodigoCotizacion) REFERENCES Cotizacion(Codigo),
-	foreign key (listaArticulos) references ListaFactura(IDLista)
+	foreign key (estado) references estadoFactura(tipoFactura)
 );
 
-GO
-CREATE PROCEDURE AgregarFactura
-    @Codigo VARCHAR(15),
-    @CodigoCotizacion int,
-    @CedulaCliente VARCHAR(9),
-    @CedulaEmpleado VARCHAR(9), 
-    @CedulaJuridica VARCHAR(9),
-    @TelefonoLocal VARCHAR(8),
-    @NombreLocal VARCHAR(40),
-    @FechaFactura DATE,
-    @NombreCliente varchar(20),
-    @listaArticulos varchar(40)
-AS
-BEGIN
-    BEGIN TRY
-        INSERT INTO Factura(Codigo, CodigoCotizacion, CedulaCliente, CedulaEmpleado, CedulaJuridica, TelefonoLocal, NombreLocal, FechaFactura, NombreCliente, listaArticulos)
-        VALUES (@Codigo, @CodigoCotizacion, @CedulaCliente, @CedulaEmpleado, @CedulaJuridica, @TelefonoLocal, @NombreLocal, @FechaFactura, @NombreCliente, @listaArticulos);
-    END TRY
-    BEGIN CATCH
-        RAISERROR ('Error al intentar agregar la factura', 16, 1);
-    END CATCH;
-END;
-GO
+go
+create function MostrarCodigoFac()
+returns table
+as
+return (
+	select Codigo from Factura
+);
+
+
+
+
+
+CREATE TABLE ListaFactura (
+    IDLista varchar(40) NOT NULL,
+    CantidadProducto int NOT NULL,
+    Codigo varchar(15) not null,
+	CodigoF varchar(15) not null
+    primary key (IDLista, CodigoF),
+    foreign key (Codigo) references Articulo (Codigo), 
+	foreign key (CodigoF) references Factura(Codigo), 
+);
+
+
+go
+create procedure agregarFacturaLista
+	@IDLista varchar(40),
+	@CantidadProducto int,
+	@Nombrepro varchar(40),
+	@CodigoF varchar(15)
+	as
+	begin
+		declare CodigoProducto varchar(15);
+		select CodigoProducto = Codigo
+		from Articulo
+		where @Nombrepro = Nombre
+
+		insert into ListaFactura(IDLista,CantidadProducto,Codigo,CodigoF) values (@IDLista, @CantidadProducto, @Codigo,@CodigoF)
+	end;
+
+
+
+go
+create function verListaF()
+returns table
+as return (
+select IDLista from ListaFactura
+);
+
+
+
+
+
+
 
 CREATE TABLE Movimiento(
 	IDMovimiento int IDENTITY(1,1) not null,
@@ -812,6 +859,7 @@ CREATE TABLE Movimiento(
 );
 
 
+drop table ListaMovimiento
 CREATE TABLE ListaMovimiento (
 	CodigoArticulo VARCHAR(15) NOT NULL,
 	CantidadArticulo int not null,
@@ -835,6 +883,7 @@ CREATE TABLE IngresoInventario (
 );
 
 
+
 CREATE TABLE ListaIngreso (
     IDMovimiento int NOT NULL,
     CodigoArticulo VARCHAR(15) NOT NULL,
@@ -844,6 +893,10 @@ CREATE TABLE ListaIngreso (
 );
 
 
+
+
+
+--Esto iria despues de la creacion de la factura
 CREATE TABLE SalidaMovimiento(
 	IDFactura VARCHAR(15) not null,
 	CodigoProducto VARCHAR(15) not null,
@@ -855,6 +908,108 @@ CREATE TABLE SalidaMovimiento(
 	FOREIGN KEY (IDFactura) REFERENCES Factura(Codigo)
 );
 
+
+
+drop procedure IngresarSalidaMov
+GO
+CREATE PROCEDURE IngresarSalidaMov
+    @IDFactura VARCHAR(15),
+    @NombreArt VARCHAR(40),
+    @NombreBodega VARCHAR(20),
+    @Cantidad INT
+AS
+BEGIN
+    DECLARE @CodigoBodega VARCHAR(15);
+    DECLARE @CodigoProducto VARCHAR(15);
+    DECLARE @CantidadRestante INT = @Cantidad;
+    DECLARE @CantidadEnInventario INT;
+
+    -- Obtener el código de la bodega
+    SELECT @CodigoBodega = Codigo
+    FROM Bodega
+    WHERE @NombreBodega = Nombre;
+
+    -- Obtener el código del producto
+    SELECT @CodigoProducto = Codigo
+    FROM Articulo
+    WHERE @NombreArt = Nombre;
+
+    -- Intentar restar de la bodega principal
+    SELECT @CantidadEnInventario = CantidadProducto 
+    FROM ListaArticulos 
+    WHERE CodigoBodega = @CodigoBodega AND CodigoProducto = @CodigoProducto;
+
+    IF @CantidadEnInventario IS NOT NULL AND @CantidadEnInventario >= @CantidadRestante
+    BEGIN
+        -- Hay suficiente cantidad en la bodega principal
+        INSERT INTO SalidaMovimiento(IDFactura, CodigoProducto, CodigoBodega, Cantidad) 
+        VALUES (@IDFactura, @CodigoProducto, @CodigoBodega, @CantidadRestante);
+
+        UPDATE ListaArticulos
+        SET CantidadProducto = CantidadProducto - @CantidadRestante
+        WHERE CodigoBodega = @CodigoBodega AND CodigoProducto = @CodigoProducto;
+    END
+    ELSE
+    BEGIN
+        -- No hay suficiente cantidad en la bodega principal, buscar en otras bodegas
+        DECLARE @CodigoOtrasBodegas VARCHAR(15);
+
+        -- Intentar buscar en otras bodegas
+        DECLARE cur CURSOR FOR 
+        SELECT Codigo
+        FROM Bodega
+        WHERE Codigo <> @CodigoBodega;
+
+        OPEN cur;
+
+        FETCH NEXT FROM cur INTO @CodigoOtrasBodegas;
+
+        WHILE @@FETCH_STATUS = 0 AND @CantidadRestante > 0
+        BEGIN
+            SELECT @CantidadEnInventario = CantidadProducto 
+            FROM ListaArticulos 
+            WHERE CodigoBodega = @CodigoOtrasBodegas AND CodigoProducto = @CodigoProducto;
+
+            IF @CantidadEnInventario IS NOT NULL AND @CantidadEnInventario > 0
+            BEGIN
+                IF @CantidadEnInventario >= @CantidadRestante
+                BEGIN
+                    -- Restar toda la cantidad restante de esta bodega
+                    INSERT INTO SalidaMovimiento(IDFactura, CodigoProducto, CodigoBodega, Cantidad) 
+                    VALUES (@IDFactura, @CodigoProducto, @CodigoOtrasBodegas, @CantidadRestante);
+
+                    UPDATE ListaArticulos
+                    SET CantidadProducto = CantidadProducto - @CantidadRestante
+                    WHERE CodigoBodega = @CodigoOtrasBodegas AND CodigoProducto = @CodigoProducto;
+
+                    SET @CantidadRestante = 0; -- Se ha cumplido la cantidad solicitada
+                END
+                ELSE
+                BEGIN
+                    -- Restar solo la cantidad disponible en esta bodega
+                    INSERT INTO SalidaMovimiento(IDFactura, CodigoProducto, CodigoBodega, Cantidad) 
+                    VALUES (@IDFactura, @CodigoProducto, @CodigoOtrasBodegas, @CantidadEnInventario);
+
+                    UPDATE ListaArticulos
+                    SET CantidadProducto = 0
+                    WHERE CodigoBodega = @CodigoOtrasBodegas AND CodigoProducto = @CodigoProducto;
+
+                    SET @CantidadRestante = @CantidadRestante - @CantidadEnInventario; -- Reducir la cantidad restante
+                END
+            END
+
+            FETCH NEXT FROM cur INTO @CodigoOtrasBodegas;
+        END
+
+        CLOSE cur;
+        DEALLOCATE cur;
+
+        IF @CantidadRestante > 0
+        BEGIN
+            RAISERROR('No hay suficiente cantidad en inventario para realizar la salida.', 16, 1);
+        END
+    END
+END;
 
 
 CREATE TABLE ListaSalida (
@@ -911,28 +1066,29 @@ GO
 
 --Esto es para el registro
 
-CREATE PROCEDURE InsertarUsuarios
+create procedure InsertarUsuarios
     @NombreUS VARCHAR(50),
     @ContrasenaUS VARCHAR(255)
-AS
-BEGIN
-    BEGIN TRY
-        IF NOT EXISTS (SELECT 1 FROM Usuarios WHERE NombreUS = @NombreUS AND ContrasenaUS = @ContrasenaUS)
-        BEGIN
-            INSERT INTO Usuarios(NombreUS, ContrasenaUS) VALUES (@NombreUS, @ContrasenaUS);
-        END
-        ELSE
-        BEGIN
-            RAISERROR ('Error: ya existe un usuario con el mismo nombre y contraseña.', 16, 1);
-        END
-    END TRY
-    BEGIN CATCH
-        RAISERROR ('Error al insertar un usuario',16,1);
-    END CATCH;
-END;
-GO
+	as
+	begin
+		if not exists( select 1 from Usuarios where NombreUS = @NombreUS and ContrasenaUS = @ContrasenaUS)
+		begin
+			insert into Usuarios(NombreUS,ContrasenaUS) values
+			(@NombreUS,@ContrasenaUS)
+		end
+		else
+		begin
+			print('Error no pueden existir usuarios con el mismo nombre y contraseña');
+		end
+	end;
 
-create function ObtenerDepartamentos()
+	--Para mostrar los departamentos
+
+
+
+
+GO
+	create function ObtenerDepartamentos()
 returns table
 as
 return(
@@ -989,41 +1145,39 @@ select tipoAccion from Acciones
 
 GO
 --Para guardar un empleado
-CREATE PROCEDURE insertarEmpleado 
-    @Cedula VARCHAR(9),
-    @Nombre VARCHAR(30),
-    @apellido1 VARCHAR(30),
-    @apellido2 VARCHAR(30),
-    @genero CHAR(1),
-    @FechaNacimiento DATE,
-    @provincia VARCHAR(30),
-    @Direccion VARCHAR(30),
-    @Telefono VARCHAR(9),
-    @CodigoDepartamento VARCHAR(15),
-    @FechaIngreso DATE,
-    @Puesto VARCHAR(35),
-    @tipoRol VARCHAR(20),
-    @IDUsuario INT,
-    @SalarioActual INT
-AS
-BEGIN
-    BEGIN TRY
-        IF NOT EXISTS (SELECT 1 FROM Empleado WHERE Cedula = @Cedula)
-        BEGIN
-            INSERT INTO Empleado(Cedula, Nombre, apellido1, apellido2, genero, FechaNacimiento, provincia, Direccion, Telefono, CodigoDepartamento,
-            FechaIngreso, Puesto, tipoRol, IDUsuario, SalarioActual)
-            VALUES (@Cedula, @Nombre, @apellido1, @apellido2, @genero, @FechaNacimiento, @provincia, @Direccion, @Telefono, @CodigoDepartamento,
-            @FechaIngreso, @Puesto, @tipoRol, @IDUsuario, @SalarioActual);
-        END
-        ELSE
-        BEGIN
-            RAISERROR ('Error: la cédula ya existe en la tabla Empleado.', 16, 1);
-        END
-    END TRY
-    BEGIN CATCH
-        RAISERROR ('Error al insertar empleado', 16, 1);
-    END CATCH;
-END;
+create procedure insertarEmpleado 
+	@Cedula varchar(9),
+	@Nombre varchar(30),
+	@apellido1 varchar(30),
+	@apellido2 varchar(30),
+	@genero char(1),
+	@FechaNacimiento date,
+	@provincia varchar(30),
+	@Direccion varchar(30),
+	@Telefono varchar(9),
+	@CodigoDepartamento VARCHAR(15),
+	@FechaIngreso DATE,
+	@Puesto VARCHAR(35),
+	@tipoRol varchar(20),
+	@IDUsuario INT,
+	@SalarioActual int 	
+as
+begin
+	if not exists (select 1 from Empleado where Cedula = @Cedula)
+	begin
+		insert into Empleado(Cedula,Nombre,apellido1,apellido2,genero,FechaNacimiento,provincia,Direccion,Telefono,CodigoDepartamento,
+		FechaIngreso,Puesto,tipoRol,IDUsuario,SalarioActual) values
+		(@Cedula,@Nombre,@apellido1,@apellido2,@genero,@FechaNacimiento,@provincia,@Direccion,@Telefono,@CodigoDepartamento,
+		@FechaIngreso,@Puesto,@tipoRol,@IDUsuario,@SalarioActual)
+	end
+	else 
+	begin
+		print('No se puede repetir la cedula')
+	end
+end;
+
+
+
 GO
 
 --Para ver los empleados
@@ -1048,47 +1202,45 @@ return(
 GO
 --Para guardar los roles
 
-CREATE PROCEDURE insercionRoles
-    @tipoRol VARCHAR(20),
-    @Descripcion VARCHAR(200)
-AS
-BEGIN
-    BEGIN TRY
-        IF NOT EXISTS (SELECT 1 FROM Roles WHERE tipoRol = @tipoRol)
-        BEGIN
-            INSERT INTO Roles(tipoRol, Descripcion) VALUES (@tipoRol, @Descripcion);
-        END
-        ELSE
-        BEGIN
-            RAISERROR ('Error: el rol ya existe.', 16, 1);
-        END
-    END TRY
-    BEGIN CATCH
-        RAISERROR ('Error al insertar el rol',16,1);
-    END CATCH;
-END;
-GO
+create procedure insercionRoles
+	@tipoRol varchar(20),
+	@Descripcion varchar(200)
+as
+begin
+	IF NOT EXISTS (SELECT 1 FROM Roles WHERE tipoRol = @tipoRol)
+	begin
+		insert into Roles(tipoRol, Descripcion) values
+		(@tipoRol, @Descripcion);
+	end
+	else
+	begin
+		print('Ya existe ese nombre de rol')
+	end
+end;
 
+
+GO
 --Para guardar las acciones de los roles
-CREATE PROCEDURE insertarAccionesXRol
-    @tipoRol VARCHAR(20),
-    @tipoAccion VARCHAR(40)
-AS
-BEGIN
-    BEGIN TRY
-        IF NOT EXISTS (SELECT 1 FROM AccionesXrol WHERE tipoRol = @tipoRol AND tipoAccion = @tipoAccion)
-        BEGIN
-            INSERT INTO AccionesXrol(tipoRol, tipoAccion) VALUES (@tipoRol, @tipoAccion);
-        END
-        ELSE
-        BEGIN
-            RAISERROR ('Error: la combinación de rol y acción ya existe.', 16, 1);
-        END
-    END TRY
-    BEGIN CATCH
-        RAISERROR ('Error al insertar la accion por rol', 16, 1);
-    END CATCH;
-END;
+create procedure insertarAccionesXRol
+	@tipoRol VARCHAR(20),
+	@tipoAccion VARCHAR(40)
+	as
+	begin
+		IF NOT EXISTS(select 1 from AccionesXrol where tipoRol = @tipoRol and tipoAccion = @tipoAccion)
+		begin
+			insert into AccionesXrol(tipoRol,tipoAccion) values
+			(@tipoRol,@tipoAccion)
+		end
+		else 
+		begin
+			PRINT ('Ya existe un rolXAccion');
+		end
+	end;
+
+
+
+
+
 GO
 create function MostrarZonas()
 returns table
@@ -1160,26 +1312,25 @@ return (
 
 
 GO
-CREATE PROCEDURE GuardarCotizacion
-    @CedulaCliente VARCHAR(9),
-    @CedulaEmpleado VARCHAR(9),
-    @FechaCotizacion DATE,
-    @MesProyectadoCierre DATE,
-    @TipoCotizacion VARCHAR(50),
-    @Estado VARCHAR(20),
-    @Probabilidad FLOAT,
-    @Zona VARCHAR(20),
-    @Sector VARCHAR(20)
-AS
-BEGIN
-    BEGIN TRY
-        INSERT INTO Cotizacion(CedulaCliente, CedulaEmpleado, FechaCotizacion, MesProyectadoCierre, TipoCotizacion, Estado, Probabilidad, Zona, Sector)
-        VALUES (@CedulaCliente, @CedulaEmpleado, @FechaCotizacion, @MesProyectadoCierre, @TipoCotizacion, @Estado, @Probabilidad, @Zona, @Sector);
-    END TRY
-    BEGIN CATCH
-        RAISERROR ('Error en al guardar cotizacion', 16, 1)
-    END CATCH;
-END;
+create procedure GuardarCotizacion
+	@CedulaCliente VARCHAR(9), --Les quite el unique
+	@CedulaEmpleado VARCHAR(9), -- Les quite el unique
+	@FechaCotizacion DATE,
+	@MesProyectadoCierre DATE,
+	@TipoCotizacion VARCHAR(50),
+	@Estado VARCHAR(20) ,
+	@Probabilidad FLOAT,
+	@Zona VARCHAR(20),
+	@Sector VARCHAR(20)
+	as
+	begin
+	insert into Cotizacion(CedulaCliente,CedulaEmpleado,FechaCotizacion,MesProyectadoCierre,TipoCotizacion,Estado,Probabilidad,
+	Zona,Sector) values (@CedulaCliente,@CedulaEmpleado,@FechaCotizacion,@MesProyectadoCierre,@TipoCotizacion,@Estado,@Probabilidad,@Zona,@Sector)
+	end;
+
+
+
+
 GO
 	--Para mostrar los roles y los usuarios por rol
 create function RolesXusuario()
@@ -1191,21 +1342,22 @@ return(
 
 
 GO
-CREATE PROCEDURE ModificarEmpleado
-    @Cedula VARCHAR(9),
-    @Puesto VARCHAR(35),
-    @SalarioActual INT
-AS
-BEGIN
-    BEGIN TRY
-        UPDATE Empleado
-        SET Puesto = @Puesto, SalarioActual = @SalarioActual
-        WHERE Cedula = @Cedula;
-    END TRY
-    BEGIN CATCH
-        RAISERROR ('Error al modificar empleado', 16, 1);
-    END CATCH;
-END;
+create procedure ModificarEmpleado
+	@Cedula varchar(9),
+	@Puesto VARCHAR(35),
+	@SalarioActual int
+	as
+	begin
+		update Empleado
+		set Puesto = @Puesto,
+		SalarioActual = @SalarioActual
+		where Cedula = @Cedula
+	end;
+
+
+
+	--TODO ESTO ES PARA MODIFICAR EMPLEADO
+
 GO
 create function actualizarHistoricoPuesto(@Cedula varchar(9))
 returns table
@@ -1227,41 +1379,32 @@ select FechaIngreso, CodigoDepartamento, Puesto,SalarioActual from Empleado wher
 
 
 GO
-CREATE PROCEDURE actualizarHistoricoPuesto2
-    @CedulaEmpleado VARCHAR(9),
+create procedure actualizarHistoricoPuesto2
+	@CedulaEmpleado VARCHAR(9), -- Agregado
     @FechaInicio DATE, 
     @FechaFin DATE, 
     @Departamento VARCHAR(50),
-    @NombrePuesto VARCHAR(50)
-AS
-BEGIN
-    BEGIN TRY
-        INSERT INTO HistoricoPuesto(CedulaEmpleado, FechaInicio, FechaFin, NombrePuesto, Departamento)
-        VALUES (@CedulaEmpleado, @FechaInicio, @FechaFin, @NombrePuesto, @Departamento);
-    END TRY
-    BEGIN CATCH
-        RAISERROR ('Error al actulizar el historico puesto', 16, 1);
-    END CATCH;
-END;
+	@NombrePuesto VARCHAR(50)
+	as
+	begin
+	insert into HistoricoPuesto(CedulaEmpleado,FechaInicio,FechaFin,NombrePuesto,Departamento) values
+	(@CedulaEmpleado,@FechaInicio,@FechaFin ,@NombrePuesto,@Departamento)
+	end;
+
+
 GO
-CREATE PROCEDURE actualizarHistoricoSalario2
-    @CedulaEmpleado VARCHAR(9),
+create procedure actualizarHistoricoSalario2
+	@CedulaEmpleado VARCHAR(9), -- Agregado
     @FechaInicio DATE, 
     @FechaFin DATE,
-    @Monto DECIMAL,
+	@Monto decimal,
     @Departamento VARCHAR(50),
-    @NombrePuesto VARCHAR(50)
-AS
-BEGIN
-    BEGIN TRY
-        INSERT INTO HistoricoSalario(CedulaEmpleado, FechaInicio, FechaFin, Monto, NombrePuesto, Departamento)
-        VALUES (@CedulaEmpleado, @FechaInicio, @FechaFin, @Monto, @NombrePuesto, @Departamento);
-    END TRY
-    BEGIN CATCH
-        RAISERROR ('Error al actulizar el historico salario', 16, 1);
-    END CATCH;
-END;
-GO
+	@NombrePuesto VARCHAR(50)
+	as
+	begin
+	insert into HistoricoSalario(CedulaEmpleado,FechaInicio,FechaFin,Monto ,NombrePuesto,Departamento) values
+	(@CedulaEmpleado,@FechaInicio,@FechaFin,@Monto,@NombrePuesto,@Departamento)
+	end;
 
 
 
@@ -1271,7 +1414,7 @@ GO
 
 
 
-CREATE TABLE Planilla (
+	CREATE TABLE Planilla (
 	CodigoPlanilla VARCHAR(15) NOT NULL,
 	FechaPlanilla date not null,   
 	CedulaEmpleado varchar(9) not null,
@@ -1282,66 +1425,65 @@ CREATE TABLE Planilla (
 
 );
 
-GO
-CREATE PROCEDURE AgregarPlanilla
-    @CodigoPlanilla VARCHAR(15),
-    @FechaPlanilla DATE,   
-    @CedulaEmpleado VARCHAR(9),
-    @HorasRealizadas INT
-AS
-BEGIN
-    BEGIN TRY
-        INSERT INTO Planilla(CodigoPlanilla, FechaPlanilla, CedulaEmpleado, HorasRealizadas)
-        VALUES (@CodigoPlanilla, @FechaPlanilla, @CedulaEmpleado, @HorasRealizadas);
-    END TRY
-    BEGIN CATCH
-        RAISERROR ('Error al agregar planilla', 16, 1);
-    END CATCH;
-END;
-GO
 
-CREATE PROCEDURE CalcularPago
+
+go
+	create procedure AgregarPlanilla
+	@CodigoPlanilla VARCHAR(15),
+	@FechaPlanilla date,   
+	@CedulaEmpleado varchar(9),
+	@HorasRealizadas int
+	as
+	begin
+		insert into Planilla(CodigoPlanilla,FechaPlanilla,CedulaEmpleado,HorasRealizadas) values
+		(@CodigoPlanilla,@FechaPlanilla,@CedulaEmpleado,@HorasRealizadas)
+	end;
+
+
+	go
+	--Para calcular el pago de una planilla
+	CREATE PROCEDURE CalcularPago
     @CodigoPlanilla VARCHAR(15) 
 AS 
 BEGIN
     DECLARE @HorasRealizadas INT;
     DECLARE @Cedula VARCHAR(9);
-    DECLARE @SalarioActual INT;
-    DECLARE @NuevoSalario INT;
+    DECLARE @SalarioActual int;
+    DECLARE @NuevoSalario int;
     DECLARE @Excedente INT; 
 
-    BEGIN TRY
-        SELECT @HorasRealizadas = HorasRealizadas, 
-               @Cedula = CedulaEmpleado
-        FROM Planilla
-        WHERE CodigoPlanilla = @CodigoPlanilla;
+    SELECT @HorasRealizadas = HorasRealizadas, 
+           @Cedula = CedulaEmpleado
+    FROM Planilla
+    WHERE CodigoPlanilla = @CodigoPlanilla;
 
-        SELECT @SalarioActual = SalarioActual
-        FROM Empleado
-        WHERE Cedula = @Cedula;
+    SELECT @SalarioActual = SalarioActual
+    FROM Empleado
+    WHERE Cedula = @Cedula;
+	    -- Calcular el nuevo salario
+    IF @HorasRealizadas > 200
+    BEGIN 
+        SET @Excedente = @HorasRealizadas - 200;  --Estas vienen a ser las horas extras
+        SET @NuevoSalario = (@SalarioActual / 200) * @Excedente * 1.5 + @SalarioActual ;
+    END
+    ELSE
+    BEGIN
+        SET @NuevoSalario = @SalarioActual 
+    END
 
-        IF @HorasRealizadas > 200
-        BEGIN 
-            SET @Excedente = @HorasRealizadas - 200;
-            SET @NuevoSalario = (@SalarioActual / 200) * @Excedente * 1.5 + @SalarioActual;
-        END
-        ELSE
-        BEGIN
-            SET @NuevoSalario = @SalarioActual;
-        END
-
-        UPDATE Planilla
-        SET Salario = @NuevoSalario
-        WHERE CodigoPlanilla = @CodigoPlanilla;
-    END TRY
-    BEGIN CATCH
-        RAISERROR ('Error al calcular el pago de la planilla', 16, 1);
-    END CATCH;
+    -- Actualizar el salario en la tabla Planilla
+    UPDATE Planilla
+    SET Salario = @NuevoSalario
+    WHERE CodigoPlanilla = @CodigoPlanilla;
 END;
-GO
 
+
+
+
+
+GO
 CREATE PROCEDURE actualizarCotizacion
-    @Codigo INT,
+    @Codigo INT, -- Agregado
     @CedulaCliente VARCHAR(9), 
     @CedulaEmpleado VARCHAR(9),
     @FechaCotizacion DATE,
@@ -1353,23 +1495,14 @@ CREATE PROCEDURE actualizarCotizacion
     @Sector VARCHAR(20)
 AS
 BEGIN
-    BEGIN TRY
-        UPDATE Cotizacion
-        SET CedulaCliente = @CedulaCliente,
-            CedulaEmpleado = @CedulaEmpleado,
-            FechaCotizacion = @FechaCotizacion,
-            MesProyectadoCierre = @MesProyectadoCierre,
-            TipoCotizacion = @TipoCotizacion,
-            Estado = @Estado,
-            Probabilidad = @Probabilidad,
-            Zona = @Zona,
-            Sector = @Sector
-        WHERE Codigo = @Codigo;
-    END TRY
-    BEGIN CATCH
-        RAISERROR ('Error al actualizar cotizacion', 16, 1);
-    END CATCH;
+    UPDATE Cotizacion
+    SET 
+        CedulaCliente = @CedulaCliente,CedulaEmpleado = @CedulaEmpleado, FechaCotizacion = @FechaCotizacion, MesProyectadoCierre = @MesProyectadoCierre,
+        TipoCotizacion = @TipoCotizacion, Estado = @Estado, Probabilidad = @Probabilidad, Zona = @Zona, Sector = @Sector
+    WHERE Codigo = @Codigo;
 END;
+
+
 GO
 create function MostrarCodigoCotizacion()
 returns table
@@ -1392,33 +1525,21 @@ return(
 
 
 go
-CREATE PROCEDURE AgregarListaCotizacion
+create procedure AgregarListaCotizacion
     @CantidadProducto INT,
     @CodigoCotizacion INT,
     @Nombre VARCHAR(40)
-AS
-BEGIN
-    DECLARE @CodigoProducto VARCHAR(15);
+as
+begin
+    declare @CodigoProducto VARCHAR(15);
 
-    BEGIN TRY
-        SELECT @CodigoProducto = Codigo 
-        FROM Articulo  
-        WHERE Nombre = @Nombre;
+    select @CodigoProducto = Codigo 
+    from Articulo  
+    where Nombre = @Nombre;
 
-        IF @CodigoProducto IS NULL
-        BEGIN
-            RAISERROR('Error: El artículo no existe.', 16, 1);
-            RETURN;
-        END
-
-        INSERT INTO ListaCotizacion(CodigoProducto, CantidadProducto, CodigoCotizacion) 
-        VALUES (@CodigoProducto, @CantidadProducto, @CodigoCotizacion);
-    END TRY
-    BEGIN CATCH
-        RAISERROR ('Error al agregar lista cotizacion', 16, 1);
-    END CATCH;
-END;
-GO
+    insert into ListaCotizacion(CodigoProducto, CantidadProducto, CodigoCotizacion) 
+    values (@CodigoProducto, @CantidadProducto, @CodigoCotizacion);
+end;
 
 
 
@@ -1432,7 +1553,7 @@ return (
 	select TipoTarea from TipoTareaCotizacion
 ); --Creada ya
 
-go
+
 
 
 create function MostrarEstadosTarea()
@@ -1442,7 +1563,6 @@ return (
 	select tipoEstado from TipoTareaEstado
 ); 
 
-go
 --Hasta aqui
 
 SELECT * FROM TipoTareaCaso;
@@ -1451,41 +1571,34 @@ SELECT * FROM TipoTareaCaso;
 
 
 go
-CREATE PROCEDURE InsertarTarea
-    @CodigoTarea VARCHAR(15),
-    @tipoTareaCotizacion VARCHAR(30),
-    @Fecha DATE,
-    @Descripcion VARCHAR(200),
-    @Estado VARCHAR(30)
-AS
-BEGIN
-    BEGIN TRY
-        INSERT INTO Tarea (CodigoTarea, tipoTareaCotizacion, Fecha, Descripcion, Estado)
-        VALUES (@CodigoTarea, @tipoTareaCotizacion, @Fecha, @Descripcion, @Estado);
-    END TRY
-    BEGIN CATCH
-        RAISERROR('Error al insertar tarea', 16, 1);
-    END CATCH;
-END;
-GO
+create procedure InsertarTarea
+@CodigoTarea VARCHAR(15),
+@tipoTareaCotizacion varchar(30),
+@Fecha DATE,
+@Descripcion VARCHAR(200),
+@Estado VARCHAR(30)
+as
+begin
+	insert into Tarea(CodigoTarea,tipoTareaCotizacion,Fecha,Descripcion,Estado) values
+	(@CodigoTarea,@tipoTareaCotizacion,@Fecha,@Descripcion,@Estado)
+end;
 
 
 
 
-GO
-CREATE PROCEDURE EliminarCotizacion
-    @CodigoCotizacion INT
-AS
-BEGIN
-    BEGIN TRY
-        DELETE FROM ListaCotizacion WHERE CodigoCotizacion = @CodigoCotizacion;
-        DELETE FROM Cotizacion WHERE Codigo = @CodigoCotizacion;
-    END TRY
-    BEGIN CATCH
-        RAISERROR ('Error al eliminar cotizacion', 16, 1);
-    END CATCH;
-END;
-GO
+go
+create procedure EliminarCotizacion
+	@CodigoCotizacion int
+	as
+	begin
+	delete from ListaCotizacion  where @CodigoCotizacion = CodigoCotizacion;
+
+	 delete from Cotizacion where @CodigoCotizacion = Codigo;
+	end;
+
+
+	
+go
 create function mostrarTareasC()
 returns table
 as return(
@@ -1535,7 +1648,6 @@ begin
         end
     end
 
-    -- Insertar en la tabla Movimiento usando los códigos obtenidos
     insert into Movimiento (Cedula, BodegaOrigen, BodegaDestino, fecha, hora)
     values (@Cedula, @CodigoBodegaOrigen, @CodigoBodegaDestino, @fecha, @hora);
 end;
@@ -1550,34 +1662,26 @@ return (
 
 
 go
-CREATE PROCEDURE RegistrarInventario
-    @IDMovimiento INT,
-    @CedulaEmpleado VARCHAR(9),
-    @BodegaDestino VARCHAR(15),
-    @Fecha DATE
-AS
-BEGIN
-    DECLARE @CodigoBodegaDestino VARCHAR(15);
+create procedure RegistrarInventario
+	@IDMovimiento int,
+	@CedulaEmpleado varchar(9),
+	@BodegaDestino varchar(15),
+	@Fecha date
+	as
+	begin
+    declare @CodigoBodegaDestino VARCHAR(15);
 
-    BEGIN TRY
-        SELECT @CodigoBodegaDestino = Codigo 
-        FROM Bodega 
-        WHERE Nombre = @BodegaDestino;
 
-        IF @CodigoBodegaDestino IS NULL
-        BEGIN
-            RAISERROR('Error: La bodega de destino no existe.', 16, 1);
-            RETURN;
-        END
+    select @CodigoBodegaDestino = Codigo 
+    from Bodega 
+    where Nombre = @BodegaDestino;
+		insert into IngresoInventario(IDMovimiento, CedulaEmpleado, BodegaDestino, Fecha) values
+		(@IDMovimiento, @CedulaEmpleado, @CodigoBodegaDestino, @Fecha)
+	end;
 
-        INSERT INTO IngresoInventario(IDMovimiento, CedulaEmpleado, BodegaDestino, Fecha)
-        VALUES (@IDMovimiento, @CedulaEmpleado, @CodigoBodegaDestino, @Fecha);
-    END TRY
-    BEGIN CATCH
-        RAISERROR ('Error al ingresar', 16, 1);
-    END CATCH;
-END;
-GO
+
+drop procedure IngresarInventarioArticulos
+go
 CREATE PROCEDURE IngresarInventarioArticulos
     @IDMovimiento INT,
     @NombreArticulo VARCHAR(40),
@@ -1585,51 +1689,313 @@ CREATE PROCEDURE IngresarInventarioArticulos
 AS
 BEGIN
     DECLARE @CodigoFinal VARCHAR(15);
+    DECLARE @CodigoBodegaDestino VARCHAR(15);
+    DECLARE @CantidadActual INT;
 
-    BEGIN TRY
-        -- Buscar el código del artículo según su nombre
-        SELECT @CodigoFinal = Codigo
-        FROM Articulo
-        WHERE Nombre = @NombreArticulo;
+    SELECT @CodigoFinal = Codigo
+    FROM Articulo
+    WHERE Nombre = @NombreArticulo;
 
-        IF @CodigoFinal IS NULL
-        BEGIN
-            RAISERROR('Error: El artículo no existe.', 16, 1);
-            RETURN;
-        END
+    SELECT @CodigoBodegaDestino = BodegaDestino
+    FROM Movimiento
+    WHERE IDMovimiento = @IDMovimiento;
 
-        INSERT INTO ListaIngreso(IDMovimiento, CodigoArticulo, CantidadIngresada)
-        VALUES (@IDMovimiento, @CodigoFinal, @CantidadIngresada);
-    END TRY
-    BEGIN CATCH
-        RAISERROR ('Error al ingresar articulos', 16, 1);
-    END CATCH;
+    SELECT @CantidadActual = CantidadProducto
+    FROM ListaArticulos
+    WHERE CodigoBodega = @CodigoBodegaDestino AND CodigoProducto = @CodigoFinal;
+
+    IF @CantidadActual IS NOT NULL
+    BEGIN
+        UPDATE ListaArticulos
+        SET CantidadProducto = CantidadProducto + @CantidadIngresada
+        WHERE CodigoBodega = @CodigoBodegaDestino AND CodigoProducto = @CodigoFinal;
+    END
+    ELSE
+    BEGIN
+        INSERT INTO ListaArticulos (CodigoBodega, CodigoProducto, CantidadProducto)
+        VALUES (@CodigoBodegaDestino, @CodigoFinal, @CantidadIngresada);
+    END;
+
+    INSERT INTO ListaIngreso (IDMovimiento, CodigoArticulo, CantidadIngresada)
+    VALUES (@IDMovimiento, @CodigoFinal, @CantidadIngresada);
 END;
+
+
+
+	go
+
+
+
+
+    DROP FUNCTION verInventarioBodega;
+CREATE FUNCTION verInventarioBodega()
+RETURNS TABLE
+AS
+RETURN
+(
+    SELECT 
+        b.Nombre AS NombreBodega, 
+        a.Nombre AS NombreArticulo, 
+        SUM(la.CantidadProducto) AS TotalArticulos
+    FROM 
+        Bodega AS b
+    LEFT JOIN 
+        ListaArticulos AS la ON b.Codigo = la.CodigoBodega
+    JOIN 
+        Articulo AS a ON la.CodigoProducto = a.Codigo 
+    GROUP BY 
+        b.Nombre, a.Nombre  
+);
+
+
+
+
+
+
+
+
+
+
+go
+create procedure AgregarArticulosFactura
+	@IDLista varchar(40),
+	@NombreProducto VARCHAR(40),
+	@CantidadProducto INT
+	as
+	begin
+		DECLARE @CodigoProdu VARCHAR(15);
+
+
+		select @CodigoProdu = Codigo
+		from Articulo
+		where @NombreProducto = Nombre;
+
+		insert into ListaFactura(IDLista,CodigoProducto,CantidadProducto) values
+		(@IDLista,@CodigoProdu,@CantidadProducto)
+	end;
+
+
+
+go 
+create function EmpleadosNombre()
+returns table
+as
+return (
+	select concat(Nombre, ' ', apellido1, ' ', apellido2) as NombreCompleto
+	from Empleado 
+);
+
+drop procedure AgregarFactura
+
+go
+create procedure AgregarFactura
+    @Codigo VARCHAR(15),
+	@CodigoCotizacion int = null,
+    @NombreEmpleado VARCHAR(60), 
+    @CedulaJuridica VARCHAR(9),
+    @TelefonoLocal VARCHAR(8),
+    @NombreLocal VARCHAR(40),
+    @FechaFactura DATE,
+	@NombreCliente varchar(20)
+	as
+	begin
+		declare @CedulaCliente varchar(9);
+		declare @CedulaEmpleado varchar(9);
+
+		select @CedulaCliente = Cedula
+		from Cliente
+		where @NombreCliente = Nombre;
+
+		select @CedulaEmpleado = Cedula
+		from Empleado
+		where @NombreEmpleado = concat(Nombre, ' ', apellido1, ' ', apellido2)
+
+
+		insert into Factura(Codigo,CodigoCotizacion,CedulaCliente,CedulaEmpleado,CedulaJuridica,TelefonoLocal,NombreLocal,FechaFactura,NombreCliente,estado) values
+		(@Codigo,@CodigoCotizacion,@CedulaCliente,@CedulaEmpleado,@CedulaJuridica,@TelefonoLocal,@NombreLocal,@FechaFactura,@NombreCliente,'Emitida')
+	end;
+
+
+
+DROP FUNCTION verBodegasArticuloActivo;
 GO
-CREATE PROCEDURE AgregarArticulosFactura
-    @IDLista VARCHAR(40),
-    @NombreProducto VARCHAR(40),
-    @CantidadProducto INT
+create function verBodegasArticuloActivo(@NombreArticulo varchar(40))
+returns table
+as
+return
+(
+    select 
+        b.Codigo as CodigoBodega,
+        b.Nombre as NombreBodega,
+        li.CodigoArticulo,
+        a.Nombre as NombreArticulo,
+        sum(li.CantidadIngresada) as TotalArticulos
+    from Bodega as b
+    join IngresoInventario as iv on b.Codigo = iv.BodegaDestino
+    join ListaIngreso as li on iv.IDMovimiento = li.IDMovimiento
+    join Articulo as a on li.CodigoArticulo = a.Codigo
+    join Familia as f on a.CodigoFamilia = f.CodigoFamilia
+    where a.Nombre = @NombreArticulo
+      and a.Activo = 'Si'          
+      and f.Activo = 'Si'          -
+    group by b.Codigo, b.Nombre, li.CodigoArticulo, a.Nombre
+);
+
+
+
+GO
+create function DevolverFactura(@IDfactura varchar(30))
+returns table
+as
+return (
+    select 
+        f.Codigo as IDFactura,
+        sm.CodigoBodega as BodegaCodigo,
+        sm.CodigoProducto as Producto,
+        SUM(sm.Cantidad) as TotalProductos
+    from Factura as f
+    join SalidaMovimiento as sm on f.Codigo = sm.IDFactura
+    where f.Codigo = @IDfactura
+    group by f.Codigo, sm.CodigoBodega, sm.CodigoProducto
+);
+
+
+go
+create procedure DevolverProductos
+    @IDFactura varchar(30),
+    @NombreEmpleado varchar(60),
+    @Motivo varchar(255),
+    @fecha datetime
+as
+begin
+    declare @CedulaEMP varchar(9);
+    declare @CodigoBodega varchar(30);
+    declare @CodigoProducto varchar(30);
+    declare @CantidadDevuelta int;
+
+    select @CedulaEMP = Cedula
+    from Empleado
+    where @NombreEmpleado = concat(Nombre, ' ', apellido1, ' ', apellido2)
+
+    declare ProductoCursor cursor for
+    select 
+        sm.CodigoBodega,
+        sm.CodigoProducto,
+        sm.Cantidad
+    from 
+        SalidaMovimiento as sm
+    INNER JOIN 
+        Factura as f on f.Codigo = sm.IDFactura
+    where 
+        f.Codigo = @IDFactura;
+
+    open ProductoCursor;
+	fetch next from ProductoCursor into @CodigoBodega, @CodigoProducto, @CantidadDevuelta;
+
+    while @@fetch_status = 0
+    begin
+        update ListaArticulos
+        set CantidadProducto = CantidadProducto + @CantidadDevuelta
+        where CodigoBodega = @CodigoBodega AND CodigoProducto = @CodigoProducto;
+
+        insert into Movimiento (Cedula, BodegaOrigen, BodegaDestino, fecha, hora)
+        values (@CedulaEMP, @CodigoBodega, null, cast(@fecha as date), cast(@fecha as time)); 
+
+        fetch next from ProductoCursor into @CodigoBodega, @CodigoProducto, @CantidadDevuelta;
+    end
+
+    close ProductoCursor;
+    deallocate ProductoCursor;
+
+    update Factura
+    set estado = 'Cancelada'
+    where Codigo = @IDFactura;
+
+end;
+
+go
+create procedure IngresarTareaCot
+	@CodigoTarea varchar(15),
+	@CodigoCotizacion int
+	as
+	begin
+		insert into TareaCotizacion(CodigoTarea,Codigo) values
+		(@CodigoTarea,@CodigoCotizacion)
+	end;
+
+
+GO
+create function VerTareasCotizacion()
+returns table
+as
+return
+(
+    select 
+        t.Descripcion,
+        t.tipoTareaCotizacion,
+        t.Fecha,
+        t.Estado,
+        CONCAT(e.Nombre, ' ', e.apellido1, ' ', e.apellido2) as NombreCompleto
+    from 
+        Tarea as t
+    join 
+        TareaCotizacion as tc on t.CodigoTarea = tc.CodigoTarea 
+    join 
+        Cotizacion as c on tc.Codigo = c.Codigo
+    join 
+        Empleado as e on c.CedulaEmpleado = e.Cedula
+    where 
+        t.tipoTareaCotizacion IS NOT NULL  
+);
+
+
+
+go
+create function VerTareaCot()
+returns table
+as
+return (
+	select CodigoTarea from TareaCotizacion
+); 
+
+GO
+CREATE PROCEDURE EliminarTareaCOT
+    @CodigoTarea VARCHAR(15),
+    @CodigoC INT
 AS
 BEGIN
-    DECLARE @CodigoProdu VARCHAR(15);
-
-    BEGIN TRY
-        SELECT @CodigoProdu = Codigo
-        FROM Articulo
-        WHERE Nombre = @NombreProducto;
-
-        IF @CodigoProdu IS NULL
-        BEGIN
-            RAISERROR('Error: El producto no existe.', 16, 1);
-            RETURN;
-        END
-
-        INSERT INTO ListaFactura(IDLista, CodigoProducto, CantidadProducto)
-        VALUES (@IDLista, @CodigoProdu, @CantidadProducto);
-    END TRY
-    BEGIN CATCH
-        RAISERROR ('Error al agregar articulos', 16, 1);
-    END CATCH;
+    DELETE FROM TareaCotizacion
+    WHERE CodigoTarea = @CodigoTarea AND Codigo = @CodigoC;
 END;
-GO
+
+ 
+drop function  detalleFactura
+create function detalleFactura()
+returns table
+as
+return
+(
+	select 
+		sm.IDFactura, 
+		f.NombreCliente, 
+		f.FechaFactura,
+		a.Nombre,  
+		sm.Cantidad,  
+		CONCAT(e.Nombre, ' ', e.apellido1, ' ', e.apellido2) as NombreEmpleado,  
+		(sm.Cantidad * a.PrecioEstandar) as PrecioArticulos,
+		(select sum(sm2.Cantidad * a2.PrecioEstandar) 
+		 from SalidaMovimiento sm2 
+		 join Articulo a2 on sm2.CodigoProducto = a2.Codigo 
+		 where sm2.IDFactura = sm.IDFactura) as TotalFactura  
+	from 
+		Factura as f
+	join 
+		SalidaMovimiento as sm on f.Codigo = sm.IDFactura
+	join 
+		Articulo as a on sm.CodigoProducto = a.Codigo
+	join 
+		Empleado as e on f.CedulaEmpleado = e.Cedula  
+)
+
+
+select * from detalleFactura()
