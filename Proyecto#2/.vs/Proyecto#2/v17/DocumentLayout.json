@@ -44,7 +44,7 @@
               "RelativeDocumentMoniker": "Pages\\Index.cshtml.cs",
               "ToolTip": "C:\\Users\\bryan\\source\\repos\\Proyecto#2\\Pages\\Index.cshtml.cs",
               "RelativeToolTip": "Pages\\Index.cshtml.cs",
-              "ViewState": "AQIAALEGAAAAAAAAAAAYwNEHAAAhAAAA",
+              "ViewState": "AQIAAPgGAAAAAAAAAAAvwBUHAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-10-21T19:48:02.509Z",
               "IsPinned": true,
@@ -58,7 +58,7 @@
               "RelativeDocumentMoniker": "Pages\\Index.cshtml",
               "ToolTip": "C:\\Users\\bryan\\source\\repos\\Proyecto#2\\Pages\\Index.cshtml",
               "RelativeToolTip": "Pages\\Index.cshtml",
-              "ViewState": "AQIAAIUGAAAAAAAAAAAwwJcGAAAAAAAA",
+              "ViewState": "AQIAALsFAAAAAAAAAAAvwNEFAABIAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2024-10-19T04:17:29.939Z",
               "EditorCaption": ""
@@ -73,8 +73,7 @@
               "RelativeToolTip": "appsettings.json",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAIAAAAoAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2024-10-21T19:25:39.673Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-10-21T19:25:39.673Z"
             },
             {
               "$type": "Document",
@@ -86,8 +85,7 @@
               "RelativeToolTip": "wwwroot\\css\\site.css",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
-              "WhenOpened": "2024-10-19T20:22:40.345Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-10-19T20:22:40.345Z"
             },
             {
               "$type": "Document",
@@ -99,8 +97,7 @@
               "RelativeToolTip": "Pages\\Login.cshtml",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAABEAAAAKAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-10-18T15:06:09.783Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-10-18T15:06:09.783Z"
             },
             {
               "$type": "Document",
@@ -112,8 +109,7 @@
               "RelativeToolTip": "Pages\\Login.cshtml.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAABkAAAAIAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-18T15:02:30.661Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-10-18T15:02:30.661Z"
             }
           ]
         }

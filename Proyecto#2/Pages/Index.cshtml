@@ -1237,27 +1237,17 @@
                 <!-- Esto es para pasar la info a OnPostGuardarUsuario -->
                 <form method="post" asp-page-handler="IngresarInventarios">
 
-                    <div class="modalMovimientoC">
-                        <label for="projectMovimientoC" class="form-label">ID movimiento</label>
-                        <select class="form-control" id="projectMovimientoC" name="projectMovimientoC" required>
-                            @foreach (var mov in Model.Movimientos)
-                            {
-                                <option value="@mov">@mov</option>
-                            }
-                        </select>
-                    </div>
-                    <br />
-
 
                     <div class="modalEmpleaM">
                         <label for="projectEmpleadoM" class="form-label">Empleado</label>
                         <select class="form-control" id="projectEmpleadoM" name="projectEmpleadoM" required>
-                            @foreach (var empleado3 in Model.Empleados)
+                            @foreach (var empleado3 in Model.NombreEmpleados)
                             {
                                 <option value="@empleado3">@empleado3</option>
                             }
                         </select>
                     </div>
+                    <br />
                     <div class="modalNombreBodega">
                         <label for="projectBodegaN" class="form-label">Bodega destino</label>
                         <select class="form-control" id="projectBodegaN" name="projectBodegaN" required>
@@ -1274,7 +1264,7 @@
                     </div>
                     <br />
 
-                    <button type="submit" class="btn btn-primary">Agregar movimiento</button>
+                    <button type="submit" class="btn btn-primary">Agregar inventario</button>
                 </form>
             </div>
             <div class="modal-footer">
@@ -1316,9 +1306,9 @@
                 <form method="post" asp-page-handler="IngresarArticulosMOV">
 
                     <div class="modalMovimientoC">
-                        <label for="projectMovimientoC2" class="form-label">ID movimiento</label>
-                        <select class="form-control" id="projectMovimientoC2" name="projectMovimientoC2" required>
-                            @foreach (var mov in Model.Movimientos)
+                        <label for="projectIngreso" class="form-label">ID inventario</label>
+                        <select class="form-control" id="projectIngreso" name="projectIngreso" required>
+                            @foreach (var mov in Model.IDIngreso)
                             {
                                 <option value="@mov">@mov</option>
                             }
@@ -1335,6 +1325,7 @@
                             }
                         </select>
                     </div>
+
 
                     <br />
                     <div class="modalCantidadInve">
@@ -1605,7 +1596,7 @@
 <!-- Botón y Modal para el primer formulario -->
 <div class="text-center">
     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalSalidaMOV1" asp-page-handler="MostrarModal21">
-        Crear salida de movimiento - Modal 1
+        salida de movimiento
     </button>
 </div>
 
@@ -1849,3 +1840,68 @@
         </div>
     </div>
 </div>
+
+
+<div class="text-center">
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalArtMov" asp-page-handler="MostrarModal26">
+        Agregar articulos a Movimientos
+    </button>
+</div>
+
+
+<div class="modal fade" id="modalArtMov" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalLabel">Agregar articulos a Movimientos</h5>
+                <form method="post" asp-page-handler="CerrarModal26">
+                    <button type="submit" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </form>
+            </div>
+            <div class="modal-body">
+                <!-- Esto es para pasar la info a OnPostGuardarUsuario -->
+                <form method="post" asp-page-handler="AgregarARTMOV">
+
+
+                    <div class="modalArtLista">
+                        <label for="projectArtLista5" class="form-label">Escoja un articulo para la lista</label>
+                        <select class="form-control" id="projectArtLista5" name="projectArtLista5" required>
+                            @foreach (var articulo5 in Model.Articulos)
+                            {
+                                <option value="@articulo5">@articulo5</option>
+                            }
+                        </select>
+                    </div>
+                    <br />
+
+                    <div class="modalCant">
+                        <label for="projectARTMOV" class="form-label">Escoja una cantidad del articulo</label>
+                        <input type="number" id="projectARTMOV" name="projectARTMOV" required>
+                    </div>
+
+                    <br />
+
+                    <div class="modalMovimientoC">
+                        <label for="projectMovimientoC23" class="form-label">ID movimiento</label>
+                        <select class="form-control" id="projectMovimientoC23" name="projectMovimientoC23" required>
+                            @foreach (var mov23 in Model.Movimientos)
+                            {
+                                <option value="@mov23">@mov23</option>
+                            }
+                        </select>
+                    </div>
+                    <br />
+
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <!-- Esto es para cerrar -->
+                <form method="post" asp-page-handler="CerrarModal11">
+                    <button type="submit" class="btn btn-secondary">Cerrar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<br />

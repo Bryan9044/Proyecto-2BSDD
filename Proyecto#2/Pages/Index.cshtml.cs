@@ -42,7 +42,7 @@ namespace Proyecto_2.Pages
         public bool ShowModal23 { get; set; }
         public bool ShowModal24 { get; set; }
         public bool ShowModal25 { get; set; }
-
+        public bool ShowModal26 { get; set; }
         public List<string> Roles { get; set; } = new List<string>();//ya
 
         public List<string> Acciones { get; set; } = new List<string>(); //ya
@@ -152,7 +152,7 @@ namespace Proyecto_2.Pages
         public List<string> EmpleadoFactura { get; set; } = new List<string>();
         public List<decimal> PrecioFactura { get; set; } = new List<decimal>();
         public List<decimal> PrecioFinal { get; set; } = new List<decimal>();
-
+        public List<int> IDIngreso { get; set; } = new List<int>();
 
 
 
@@ -219,7 +219,7 @@ namespace Proyecto_2.Pages
             EmpleadoFactura = new List<string>();
             PrecioFactura = new List<decimal>();
             PrecioFinal = new List<decimal>();
-
+            IDIngreso = new List<int>();
             string connectionString = _configuration.GetConnectionString("DefaultConnection");
 
 
@@ -845,8 +845,22 @@ namespace Proyecto_2.Pages
                 }
             }
             //Hasta aqui Departamentos
-
-
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                string query = "select * from mostrarIDInventario()";
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            IDIngreso.Add(reader.GetInt32(0));
+                        }
+                    }
+                }
+            }
+            
 
 
 
@@ -1154,6 +1168,18 @@ namespace Proyecto_2.Pages
         public IActionResult OnPostCerrarModal25()
         {
             ShowModal25 = false;
+            return RedirectToPage();
+        }
+
+        public IActionResult OnGetMostrarModal26()
+        {
+            ShowModal26 = true;
+            return RedirectToPage();
+        }
+
+        public IActionResult OnPostCerrarModal26()
+        {
+            ShowModal26 = false;
             return RedirectToPage();
         }
 
@@ -1682,28 +1708,33 @@ namespace Proyecto_2.Pages
         }
 
 
-        public IActionResult OnPostIngresarInventarios(int projectMovimientoC, string projectEmpleadoM, string projectBodegaN,
-            DateOnly projectFechaM)
+        public IActionResult OnPostIngresarInventarios(string projectEmpleadoM, string projectBodegaN, DateOnly projectFechaM)
         {
-
             string connectionString = _configuration.GetConnectionString("DefaultConnection");
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 try
                 {
                     connection.Open();
-                    string query = "EXEC RegistrarInventario @IDMovimiento, @CedulaEmpleado, @BodegaDestino, @Fecha";
 
-                    using (SqlCommand command = new SqlCommand(query, connection))
+                    string queryRegistrar = "EXEC RegistrarInventario @NombreEmpleado, @NombreBodega, @Fecha";
+                    using (SqlCommand commandRegistrar = new SqlCommand(queryRegistrar, connection))
                     {
-                        command.Parameters.Add(new SqlParameter("@IDMovimiento", projectMovimientoC));
-                        command.Parameters.Add(new SqlParameter("@CedulaEmpleado", projectEmpleadoM));
-                        command.Parameters.Add(new SqlParameter("@BodegaDestino", projectBodegaN));
-                        command.Parameters.Add(new SqlParameter("@Fecha", projectFechaM));
+                        commandRegistrar.Parameters.Add(new SqlParameter("@NombreEmpleado", projectEmpleadoM));
+                        commandRegistrar.Parameters.Add(new SqlParameter("@NombreBodega", projectBodegaN));
+                        commandRegistrar.Parameters.Add(new SqlParameter("@Fecha", projectFechaM));
 
+                        commandRegistrar.ExecuteNonQuery();
+                    }
 
+                   
+                    string queryBodega = "SELECT dbo.DevolverBodega(@NombreBodega)"; 
+                    using (SqlCommand commandBodega = new SqlCommand(queryBodega, connection))
+                    {
+                        commandBodega.Parameters.Add(new SqlParameter("@NombreBodega", projectBodegaN));
 
-                        command.ExecuteNonQuery();
+                        var codigoBodegaDestino = (string)commandBodega.ExecuteScalar();
+                        TempData["CodigoBodegaDestino"] = codigoBodegaDestino; 
                     }
                 }
                 catch (SqlException ex)
@@ -1722,20 +1753,22 @@ namespace Proyecto_2.Pages
 
 
 
-        public IActionResult OnPostIngresarArticulosMOV(int projectMovimientoC2, string projectInventA, int projectCantidadInve)
+
+
+        public IActionResult OnPostIngresarArticulosMOV(int projectIngreso, string projectInventA , int projectCantidadInve)
         {
-            Console.WriteLine(projectInventA);
+
             string connectionString = _configuration.GetConnectionString("DefaultConnection");
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 try
                 {
                     connection.Open();
-                    string query = "EXEC IngresarInventarioArticulos @IDMovimiento, @NombreArticulo, @CantidadIngresada";
+                    string query = "EXEC IngresarInventarioArticulos @IDIngreso, @NombreArticulo, @CantidadIngresada";
 
                     using (SqlCommand command = new SqlCommand(query, connection))
                     {
-                        command.Parameters.Add(new SqlParameter("@IDMovimiento", projectMovimientoC2));
+                        command.Parameters.Add(new SqlParameter("@IDIngreso", projectIngreso));
                         command.Parameters.Add(new SqlParameter("@NombreArticulo", projectInventA));
                         command.Parameters.Add(new SqlParameter("@CantidadIngresada", projectCantidadInve));
 
@@ -1985,6 +2018,44 @@ namespace Proyecto_2.Pages
                         command.Parameters.Add(new SqlParameter("@CodigoC", projectEliCotizacion3));
 
 
+
+
+                        command.ExecuteNonQuery();
+                    }
+                }
+                catch (SqlException ex)
+                {
+                    _logger.LogError(ex, "Error al agregar la factura.");
+                    ModelState.AddModelError(string.Empty, "Error al agregar la factura");
+                    return RedirectToPage();
+                }
+            }
+
+            Console.WriteLine("Se insertó la factura correctamente.");
+            return RedirectToPage();
+
+
+        }
+
+
+        public IActionResult OnPostAgregarARTMOV(string projectArtLista5, int projectARTMOV, int projectMovimientoC23)
+        {
+            Console.WriteLine(projectARTMOV);
+            Console.WriteLine(projectMovimientoC23);
+
+            string connectionString = _configuration.GetConnectionString("DefaultConnection");
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                try
+                {
+                    connection.Open();
+                    string query = "exec listamovimientoFinal @nombreart,@cantidadarticulo,@codigomovimiento";
+
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.Add(new SqlParameter("@nombreart", projectArtLista5));
+                        command.Parameters.Add(new SqlParameter("@cantidadarticulo", projectARTMOV));
+                        command.Parameters.Add(new SqlParameter("@codigomovimiento", projectMovimientoC23));
 
 
                         command.ExecuteNonQuery();
