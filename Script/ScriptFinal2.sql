@@ -859,7 +859,6 @@ CREATE TABLE Movimiento(
 );
 
 
-drop table ListaMovimiento
 CREATE TABLE ListaMovimiento (
 	CodigoArticulo VARCHAR(15) NOT NULL,
 	CantidadArticulo int not null,
@@ -868,30 +867,58 @@ CREATE TABLE ListaMovimiento (
 	FOREIGN KEY (CodigoArticulo) REFERENCES Articulo(Codigo),
 	FOREIGN KEY (CodigoMovimiento) REFERENCES Movimiento(IDMovimiento),
 );
+
+
+
+
+
+
+
 -------------
 
 
+
 CREATE TABLE IngresoInventario (
-    IDMovimiento INT NOT NULL,
+    IDIngreso INT IDENTITY(1,1) NOT NULL,
     CedulaEmpleado VARCHAR(9) NOT NULL,
     BodegaDestino VARCHAR(15) NOT NULL,
     Fecha DATETIME,
-    PRIMARY KEY (IDMovimiento, BodegaDestino), 
-    FOREIGN KEY (IDMovimiento) REFERENCES Movimiento(IDMovimiento),
+    PRIMARY KEY (IDIngreso, BodegaDestino),  
     FOREIGN KEY (CedulaEmpleado) REFERENCES Empleado(Cedula),
     FOREIGN KEY (BodegaDestino) REFERENCES Bodega(Codigo)
 );
 
-
-
 CREATE TABLE ListaIngreso (
-    IDMovimiento int NOT NULL,
+    IDIngreso INT NOT NULL,
     CodigoArticulo VARCHAR(15) NOT NULL,
     CantidadIngresada INT NOT NULL,
-    PRIMARY KEY (CodigoArticulo, IDMovimiento),
-    FOREIGN KEY (CodigoArticulo) REFERENCES Articulo(Codigo)
+    PRIMARY KEY (CodigoArticulo, IDIngreso),
+    FOREIGN KEY (CodigoArticulo) REFERENCES Articulo(Codigo),
+    FOREIGN KEY (IDIngreso) REFERENCES IngresoInventario(IDIngreso) 
 );
 
+drop table IngresoInventario
+drop table ListaIngreso
+
+CREATE TABLE IngresoInventario (
+    IDIngreso INT IDENTITY(1,1) NOT NULL,
+    CedulaEmpleado VARCHAR(9) NOT NULL,
+    BodegaDestino VARCHAR(15) NOT NULL,
+    Fecha DATETIME,
+    PRIMARY KEY (IDIngreso, BodegaDestino),  
+    FOREIGN KEY (CedulaEmpleado) REFERENCES Empleado(Cedula),
+    FOREIGN KEY (BodegaDestino) REFERENCES Bodega(Codigo)
+);
+
+CREATE TABLE ListaIngreso (
+    IDIngreso INT NOT NULL,
+    BodegaDestino VARCHAR(15) NOT NULL, 
+    CodigoArticulo VARCHAR(15) NOT NULL,
+    CantidadIngresada INT NOT NULL,
+    PRIMARY KEY (CodigoArticulo, IDIngreso, BodegaDestino),
+    FOREIGN KEY (CodigoArticulo) REFERENCES Articulo(Codigo),
+    FOREIGN KEY (IDIngreso, BodegaDestino) REFERENCES IngresoInventario(IDIngreso, BodegaDestino)
+);
 
 
 
@@ -974,7 +1001,6 @@ BEGIN
             BEGIN
                 IF @CantidadEnInventario >= @CantidadRestante
                 BEGIN
-                    -- Restar toda la cantidad restante de esta bodega
                     INSERT INTO SalidaMovimiento(IDFactura, CodigoProducto, CodigoBodega, Cantidad) 
                     VALUES (@IDFactura, @CodigoProducto, @CodigoOtrasBodegas, @CantidadRestante);
 
@@ -982,11 +1008,10 @@ BEGIN
                     SET CantidadProducto = CantidadProducto - @CantidadRestante
                     WHERE CodigoBodega = @CodigoOtrasBodegas AND CodigoProducto = @CodigoProducto;
 
-                    SET @CantidadRestante = 0; -- Se ha cumplido la cantidad solicitada
+                    SET @CantidadRestante = 0; 
                 END
                 ELSE
                 BEGIN
-                    -- Restar solo la cantidad disponible en esta bodega
                     INSERT INTO SalidaMovimiento(IDFactura, CodigoProducto, CodigoBodega, Cantidad) 
                     VALUES (@IDFactura, @CodigoProducto, @CodigoOtrasBodegas, @CantidadEnInventario);
 
@@ -994,7 +1019,7 @@ BEGIN
                     SET CantidadProducto = 0
                     WHERE CodigoBodega = @CodigoOtrasBodegas AND CodigoProducto = @CodigoProducto;
 
-                    SET @CantidadRestante = @CantidadRestante - @CantidadEnInventario; -- Reducir la cantidad restante
+                    SET @CantidadRestante = @CantidadRestante - @CantidadEnInventario; 
                 END
             END
 
@@ -1332,7 +1357,6 @@ create procedure GuardarCotizacion
 
 
 GO
-	--Para mostrar los roles y los usuarios por rol
 create function RolesXusuario()
 returns table
 as
@@ -1419,7 +1443,7 @@ create procedure actualizarHistoricoSalario2
 	FechaPlanilla date not null,   
 	CedulaEmpleado varchar(9) not null,
 	HorasRealizadas int not null,
-	Salario int NULL, --HAY QUE CAMBIARLO URGENTE DEBE SER NULO PORQUE SE CALCULA DESPUES DE LAS HORAS
+	Salario int NULL, 
 	foreign key (CedulaEmpleado) references Empleado(Cedula),
 	Primary key (CodigoPlanilla, CedulaEmpleado)
 
@@ -1441,7 +1465,7 @@ go
 
 
 	go
-	--Para calcular el pago de una planilla
+
 	CREATE PROCEDURE CalcularPago
     @CodigoPlanilla VARCHAR(15) 
 AS 
@@ -1660,30 +1684,57 @@ return (
 	select IDMovimiento from Movimiento
 );
 
-
+drop procedure RegistrarInventario
 go
 create procedure RegistrarInventario
-	@IDMovimiento int,
-	@CedulaEmpleado varchar(9),
-	@BodegaDestino varchar(15),
-	@Fecha date
-	as
-	begin
+    @NombreEmpleado VARCHAR(60),
+    @NombreBodega VARCHAR(55),
+    @Fecha DATE
+as
+begin
     declare @CodigoBodegaDestino VARCHAR(15);
+    declare @CedulaEmpleado VARCHAR(9);
 
+    select @CodigoBodegaDestino = Codigo
+    from Bodega
+    where Nombre = @NombreBodega;
 
-    select @CodigoBodegaDestino = Codigo 
-    from Bodega 
-    where Nombre = @BodegaDestino;
-		insert into IngresoInventario(IDMovimiento, CedulaEmpleado, BodegaDestino, Fecha) values
-		(@IDMovimiento, @CedulaEmpleado, @CodigoBodegaDestino, @Fecha)
-	end;
+    select @CedulaEmpleado = Cedula
+    from Empleado
+    where CONCAT(Nombre, ' ', Apellido1, ' ', Apellido2) = @NombreEmpleado;
 
+    -- Insertar en la tabla IngresoInventario
+    INSERT INTO IngresoInventario (CedulaEmpleado, BodegaDestino, Fecha)
+    VALUES (@CedulaEmpleado, @CodigoBodegaDestino, @Fecha);
+END;
 
-drop procedure IngresarInventarioArticulos
 go
+create function mostrarIDInventario()
+returns table
+as
+return (
+	select IDIngreso from IngresoInventario
+);
+select * from mostrarIDInventario()
+
+go
+create function DevolverBodega(@NombreBodega VARCHAR(55))
+returns VARCHAR(15)
+as
+begin
+    return (
+        select Codigo 
+        from Bodega 
+        where Nombre = @NombreBodega
+    );
+end;
+
+
+ drop procedure IngresarInventarioArticulos
+GO
+GO
 CREATE PROCEDURE IngresarInventarioArticulos
-    @IDMovimiento INT,
+    @IDIngreso INT,
     @NombreArticulo VARCHAR(40),
     @CantidadIngresada INT
 AS
@@ -1697,8 +1748,8 @@ BEGIN
     WHERE Nombre = @NombreArticulo;
 
     SELECT @CodigoBodegaDestino = BodegaDestino
-    FROM Movimiento
-    WHERE IDMovimiento = @IDMovimiento;
+    FROM IngresoInventario
+    WHERE IDIngreso = @IDIngreso;
 
     SELECT @CantidadActual = CantidadProducto
     FROM ListaArticulos
@@ -1715,19 +1766,15 @@ BEGIN
         INSERT INTO ListaArticulos (CodigoBodega, CodigoProducto, CantidadProducto)
         VALUES (@CodigoBodegaDestino, @CodigoFinal, @CantidadIngresada);
     END;
-
-    INSERT INTO ListaIngreso (IDMovimiento, CodigoArticulo, CantidadIngresada)
-    VALUES (@IDMovimiento, @CodigoFinal, @CantidadIngresada);
 END;
 
 
 
+
+
+
+
 	go
-
-
-
-
-    DROP FUNCTION verInventarioBodega;
 CREATE FUNCTION verInventarioBodega()
 RETURNS TABLE
 AS
@@ -1998,4 +2045,56 @@ return
 )
 
 
-select * from detalleFactura()
+
+go
+CREATE PROCEDURE listamovimientoFinal
+    @nombreart VARCHAR(70),
+    @cantidadarticulo INT,
+    @codigomovimiento INT
+AS
+BEGIN
+    DECLARE @codigoart VARCHAR(15);
+    DECLARE @codigoBodegaOrigen VARCHAR(15);
+    DECLARE @codigoBodegaDestino VARCHAR(15);
+    
+    -- Obtener el código del artículo
+    SELECT @codigoart = codigo
+    FROM articulo
+    WHERE @nombreart = nombre;
+
+    -- Obtener los códigos de las bodegas desde el movimiento
+    SELECT 
+        @codigoBodegaOrigen = BodegaOrigen,
+        @codigoBodegaDestino = BodegaDestino
+    FROM Movimiento
+    WHERE IDMovimiento = @codigomovimiento; -- Asumiendo que IDMovimiento es el identificador del movimiento
+
+    -- Insertar en listamovimiento
+    INSERT INTO ListaMovimiento (codigoarticulo, cantidadarticulo, codigomovimiento) 
+    VALUES (@codigoart, @cantidadarticulo, @codigomovimiento);
+
+    -- Descontar productos de la bodega de origen
+    UPDATE ListaArticulos
+    SET CantidadProducto = CantidadProducto - @cantidadarticulo
+    WHERE CodigoBodega = @codigoBodegaOrigen AND CodigoProducto = @codigoart;
+
+    -- Sumar productos a la bodega de destino si existe
+    IF @codigoBodegaDestino IS NOT NULL
+    BEGIN
+        -- Si la bodega de destino no tiene el artículo, insertarlo
+        IF NOT EXISTS (SELECT 1 FROM ListaArticulos 
+                       WHERE CodigoBodega = @codigoBodegaDestino AND CodigoProducto = @codigoart)
+        BEGIN
+            INSERT INTO ListaArticulos (CodigoBodega, CodigoProducto, CantidadProducto) 
+            VALUES (@codigoBodegaDestino, @codigoart, @cantidadarticulo);
+        END
+        ELSE
+        BEGIN
+            UPDATE ListaArticulos
+            SET CantidadProducto = CantidadProducto + @cantidadarticulo
+            WHERE CodigoBodega = @codigoBodegaDestino AND CodigoProducto = @codigoart;
+        END
+    END
+END;
+
+
