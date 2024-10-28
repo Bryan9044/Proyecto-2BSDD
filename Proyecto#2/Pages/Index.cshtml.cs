@@ -1803,13 +1803,13 @@ namespace Proyecto_2.Pages
                 try
                 {
                     connection.Open();
-                    string query = "EXEC agregarFacturaLista @IDLista, @CantidadProducto, @Codigo,@CodigoF";
+                    string query = "EXEC agregarFacturaLista @IDLista, @CantidadProducto, @Nombrepro,@CodigoF";
 
                     using (SqlCommand command = new SqlCommand(query, connection))
                     {
                         command.Parameters.Add(new SqlParameter("@IDLista", projectIDListaF));
                         command.Parameters.Add(new SqlParameter("@CantidadProducto", projectCantidadInveL));
-                        command.Parameters.Add(new SqlParameter("@Codigo", projectArtLista));
+                        command.Parameters.Add(new SqlParameter("@Nombrepro", projectArtLista));
                         command.Parameters.Add(new SqlParameter("@CodigoF", projectCF2));
 
 
